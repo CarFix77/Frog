@@ -31,6 +31,36 @@
             height: 100%;
             object-fit: fill;
         }
+        
+        .balance-container {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        
+        .balance {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            min-width: 150px;
+            text-align: center;
+            border: 2px solid gold;
+        }
+        
+        .balance-left {
+            /* Позиционирование для левой плашки */
+        }
+        
+        .balance-right {
+            /* Позиционирование для правой плашки */
+        }
     </style>
 </head>
 <body>
@@ -38,6 +68,16 @@
         <img src="https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg" 
              class="game-image" 
              alt="Frog Game">
+        
+        <!-- Контейнер для балансов -->
+        <div class="balance-container">
+            <div class="balance balance-left">
+                Баланс: 1,000 ₽
+            </div>
+            <div class="balance balance-right">
+                Баланс: 2,500 ₽
+            </div>
+        </div>
     </div>
 </body>
 </html>
