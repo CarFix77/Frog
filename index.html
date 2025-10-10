@@ -32,34 +32,23 @@
             object-fit: fill;
         }
         
-        .balance-container {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-        }
-        
         .balance {
-            background: rgba(0, 0, 0, 0.7);
+            position: absolute;
             color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
             font-family: Arial, sans-serif;
-            font-size: 18px;
+            font-size: 24px;
             font-weight: bold;
-            min-width: 150px;
-            text-align: center;
-            border: 2px solid gold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
         
         .balance-left {
-            /* Позиционирование для левой плашки */
+            top: 4.5%;
+            left: 11%;
         }
         
         .balance-right {
-            /* Позиционирование для правой плашки */
+            top: 4.5%;
+            right: 11%;
         }
     </style>
 </head>
@@ -69,14 +58,12 @@
              class="game-image" 
              alt="Frog Game">
         
-        <!-- Контейнер для балансов -->
-        <div class="balance-container">
-            <div class="balance balance-left">
-                Баланс: 1,000 ₽
-            </div>
-            <div class="balance balance-right">
-                Баланс: 2,500 ₽
-            </div>
+        <!-- Только цифры поверх деревянных плашек -->
+        <div class="balance balance-left">
+            0
+        </div>
+        <div class="balance balance-right">
+            0
         </div>
     </div>
 </body>
