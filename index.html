@@ -15,15 +15,38 @@
             margin: 0;
             padding: 0;
             background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         
         .game-container {
-            width: 100vw;
-            height: 100vh;
+            width: 100vmin;
+            height: 100vmin;
+            max-width: 100vw;
+            max-height: 100vh;
             background-image: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg');
-            background-size: 100% 100%;
+            background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
+            background-color: #1a5f7a;
+        }
+
+        /* Для вертикальных экранов */
+        @media (orientation: portrait) {
+            .game-container {
+                width: 100vw;
+                height: 100vh;
+            }
+        }
+
+        /* Для горизонтальных экранов */
+        @media (orientation: landscape) {
+            .game-container {
+                width: 100vh;
+                height: 100vw;
+            }
         }
     </style>
 </head>
