@@ -2,23 +2,19 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frog Jump - P2P Game</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
             background: #1a5f7a;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
         }
 
         .game-container {
@@ -28,9 +24,12 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg') no-repeat center center;
-            background-size: cover;
-            background-color: #1a5f7a;
+        }
+
+        .game-image {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
         }
 
         .balance {
@@ -39,96 +38,67 @@
             font-family: Arial, sans-serif;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            z-index: 10;
         }
 
-        /* ЛЕВЫЙ БАЛАНС - все в % и vw */
         .balance-left {
-            top: 3.3%;    /* Высота от верха */
-            left: 11.7%;  /* Отступ слева */
-            font-size: 2.5vw; /* Размер шрифта относительно ширины экрана */
+            top: 3.3%;
+            left: 11.7%;
+            font-size: 11px;
         }
 
-        /* ПРАВЫЙ БАЛАНС - все в % и vw */
         .balance-right {
-            top: 3.0%;    /* Высота от верха */
-            right: 40%;   /* Отступ справа */
-            font-size: 2.8vw; /* Размер шрифта относительно ширины экрана */
+            top: 3.0%;
+            right: 40%;
+            font-size: 14px;
         }
 
-        /* КОНТЕЙНЕР УРОВНЯ */
         .level-container {
             position: absolute;
-            bottom: 8%;   /* Высота от низа */
-            left: 48%;    /* Позиция по горизонтали */
-            transform: translateX(-50%); /* Центрирование */
+            bottom: 14%;
+            left: 51%;
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 1.5vw;   /* Расстояние между цифрой и прогресс-баром */
-            z-index: 10;
+            gap: 8px;
         }
 
-        /* ЦИФРА УРОВНЯ */
         .level-number {
             color: white;
             font-family: Arial, sans-serif;
             font-weight: bold;
-            font-size: 3vw; /* Размер шрифта относительно ширины экрана */
+            font-size: 14px;
+            /* ПОЗИЦИОНИРОВАНИЕ ТОЛЬКО ЦИФРЫ: */
             position: relative;
-            top: -0.3vh; /* Сдвиг вверх */
-            left: -0.8vw; /* Сдвиг влево */
+            top: -3px; /* Вверх-вниз ТОЛЬКО цифры */
+            left: -2px; /* Влево-вправо ТОЛЬКО цифры */
         }
 
-        /* ПРОГРЕСС-БАР */
         .progress-bar {
-            width: 25vw;  /* Ширина относительно ширины экрана */
-            height: 2.5vh; /* Высота относительно высоты экрана */
+            width: 180px;
+            height: 19.5px;
             background: rgba(0, 0, 0, 0.5);
-            border-radius: 1vh; /* Скругление относительно высоты */
+            border-radius: 8px;
             overflow: hidden;
-            border: 0.2vh solid #333; /* Толщина边框 относительно высоты */
+            border: 1px solid #333;
+            /* ПОЗИЦИОНИРОВАНИЕ ТОЛЬКО ПРОГРЕСС-БАРА: */
             position: relative;
-            top: -0.3vh; /* Сдвиг вверх */
-            left: 0.8vw; /* Сдвиг вправо */
+            top: -3px; /* Вверх-вниз ТОЛЬКО прогресс-бар */
+            left: 3px; /* Влево-вправо ТОЛЬКО прогресс-бар */
         }
 
         .progress-fill {
             height: 100%;
             background: #00ff00;
-            width: 30%;   /* Заполнение прогресс-бара */
-        }
-
-        /* Дополнительные медиа-запросы для тонкой настройки */
-        @media (max-width: 768px) {
-            .balance-left {
-                font-size: 2.8vw;
-            }
-            .balance-right {
-                font-size: 3.1vw;
-            }
-            .level-number {
-                font-size: 3.3vw;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .balance-left {
-                font-size: 3.2vw;
-            }
-            .balance-right {
-                font-size: 3.5vw;
-            }
-            .level-number {
-                font-size: 3.7vw;
-            }
-            .progress-bar {
-                width: 28vw;
-            }
+            width: 30%;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
+        <img src="https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg" 
+             class="game-image" 
+             alt="Frog Game">
+
         <!-- Балансы -->
         <div class="balance balance-left">
             0.00000
@@ -147,12 +117,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Скрипт для Telegram Mini App
-        if (window.Telegram && Telegram.WebApp) {
-            Telegram.WebApp.expand();
-        }
-    </script>
 </body>
 </html>
