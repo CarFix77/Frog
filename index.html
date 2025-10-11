@@ -2,19 +2,23 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Frog Jump - P2P Game</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
             background: #1a5f7a;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
         }
 
         .game-container {
@@ -25,7 +29,8 @@
             height: 100vh;
             overflow: hidden;
             background: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg') no-repeat center center;
-            background-size: cover;
+            background-size: contain; /* Меняем на contain для Mini App */
+            background-color: #1a5f7a; /* Фон на случай если изображение не заполнит */
         }
 
         .balance {
@@ -34,6 +39,7 @@
             font-family: Arial, sans-serif;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            z-index: 10;
         }
 
         .balance-left {
@@ -56,6 +62,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            z-index: 10;
         }
 
         .level-number {
@@ -63,10 +70,9 @@
             font-family: Arial, sans-serif;
             font-weight: bold;
             font-size: 14px;
-            /* ЦИФРА: вверх и влево */
             position: relative;
             top: -3px;
-            left: -2px;
+            left: -5px;
         }
 
         .progress-bar {
@@ -76,16 +82,59 @@
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #333;
-            /* ПРОГРЕСС-БАР: вверх и вправо */
             position: relative;
             top: -3px;
-            left: -3px;
+            left: 5px;
         }
 
         .progress-fill {
             height: 100%;
             background: #00ff00;
             width: 30%;
+        }
+
+        /* Стили для Telegram Mini App */
+        @media (max-height: 600px) {
+            .game-container {
+                background-size: cover;
+            }
+            .balance-left {
+                top: 2.5%;
+                font-size: 10px;
+            }
+            .balance-right {
+                top: 2.2%;
+                font-size: 12px;
+            }
+            .level-container {
+                bottom: 6%;
+            }
+        }
+
+        /* Для очень маленьких экранов */
+        @media (max-width: 320px) {
+            .balance-left {
+                left: 10%;
+                font-size: 9px;
+            }
+            .balance-right {
+                right: 38%;
+                font-size: 11px;
+            }
+            .progress-bar {
+                width: 150px;
+                height: 16px;
+            }
+            .level-number {
+                font-size: 12px;
+            }
+        }
+
+        /* Для портретной ориентации */
+        @media (orientation: portrait) and (max-height: 700px) {
+            .level-container {
+                bottom: 5%;
+            }
         }
     </style>
 </head>
@@ -109,5 +158,19 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Скрипт для определения Telegram Mini App
+        if (window.Telegram && Telegram.WebApp) {
+            // Расширяем на весь экран в Mini App
+            Telegram.WebApp.expand();
+            
+            // Добавляем обработчик изменения размера
+            Telegram.WebApp.onEvent('viewportChanged', function() {
+                // Можно добавить логику пересчета позиций при изменении размера
+                console.log('Viewport changed');
+            });
+        }
+    </script>
 </body>
 </html>
