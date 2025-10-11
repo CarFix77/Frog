@@ -24,6 +24,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+            /* Только меняем на background с cover */
             background: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg') no-repeat center center;
             background-size: cover;
         }
@@ -39,13 +40,13 @@
         .balance-left {
             top: 3.3%;
             left: 11.7%;
-            font-size: 16px; /* Фиксированный размер */
+            font-size: 11px;
         }
 
         .balance-right {
             top: 3.0%;
             right: 40%;
-            font-size: 16px; /* Фиксированный размер */
+            font-size: 14px;
         }
 
         .level-container {
@@ -55,19 +56,19 @@
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .level-number {
             color: white;
             font-family: Arial, sans-serif;
             font-weight: bold;
-            font-size: 20px; /* Фиксированный размер */
+            font-size: 14px;
         }
 
         .progress-bar {
-            width: 200px; /* Фиксированная ширина */
-            height: 20px; /* Фиксированная высота */
+            width: 180px;
+            height: 19.5px;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 8px;
             overflow: hidden;
@@ -78,37 +79,6 @@
             height: 100%;
             background: #00ff00;
             width: 30%;
-        }
-
-        /* Адаптация для планшетов */
-        @media (max-width: 768px) {
-            .balance-left, .balance-right {
-                font-size: 14px;
-            }
-            .level-number {
-                font-size: 18px;
-            }
-            .progress-bar {
-                width: 180px;
-                height: 18px;
-            }
-        }
-
-        /* Адаптация для мобильных */
-        @media (max-width: 480px) {
-            .balance-left, .balance-right {
-                font-size: 12px;
-            }
-            .level-number {
-                font-size: 16px;
-            }
-            .progress-bar {
-                width: 160px;
-                height: 16px;
-            }
-            .level-container {
-                gap: 8px;
-            }
         }
     </style>
 </head>
