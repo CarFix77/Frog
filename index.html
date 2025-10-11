@@ -24,9 +24,8 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            /* Используем background вместо img */
             background: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg') no-repeat center center;
-            background-size: cover; /* Важно: cover вместо fill */
+            background-size: cover;
         }
 
         .balance {
@@ -40,13 +39,13 @@
         .balance-left {
             top: 3.3%;
             left: 11.7%;
-            font-size: 2vw; /* Относительный размер */
+            font-size: 16px; /* Фиксированный размер */
         }
 
         .balance-right {
             top: 3.0%;
             right: 40%;
-            font-size: 2vw; /* Относительный размер */
+            font-size: 16px; /* Фиксированный размер */
         }
 
         .level-container {
@@ -56,19 +55,19 @@
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 1vw; /* Относительный gap */
+            gap: 10px;
         }
 
         .level-number {
             color: white;
             font-family: Arial, sans-serif;
             font-weight: bold;
-            font-size: 2vw; /* Относительный размер */
+            font-size: 20px; /* Фиксированный размер */
         }
 
         .progress-bar {
-            width: 25vw; /* Относительная ширина */
-            height: 2.5vh; /* Относительная высота */
+            width: 200px; /* Фиксированная ширина */
+            height: 20px; /* Фиксированная высота */
             background: rgba(0, 0, 0, 0.5);
             border-radius: 8px;
             overflow: hidden;
@@ -80,12 +79,41 @@
             background: #00ff00;
             width: 30%;
         }
+
+        /* Адаптация для планшетов */
+        @media (max-width: 768px) {
+            .balance-left, .balance-right {
+                font-size: 14px;
+            }
+            .level-number {
+                font-size: 18px;
+            }
+            .progress-bar {
+                width: 180px;
+                height: 18px;
+            }
+        }
+
+        /* Адаптация для мобильных */
+        @media (max-width: 480px) {
+            .balance-left, .balance-right {
+                font-size: 12px;
+            }
+            .level-number {
+                font-size: 16px;
+            }
+            .progress-bar {
+                width: 160px;
+                height: 16px;
+            }
+            .level-container {
+                gap: 8px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <!-- Изображение теперь как background -->
-
         <!-- Балансы -->
         <div class="balance balance-left">
             0.00000
