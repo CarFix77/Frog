@@ -29,8 +29,8 @@
             height: 100vh;
             overflow: hidden;
             background: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg') no-repeat center center;
-            background-size: contain; /* Меняем на contain для Mini App */
-            background-color: #1a5f7a; /* Фон на случай если изображение не заполнит */
+            background-size: cover;
+            background-color: #1a5f7a;
         }
 
         .balance {
@@ -42,98 +42,87 @@
             z-index: 10;
         }
 
+        /* ЛЕВЫЙ БАЛАНС - все в % и vw */
         .balance-left {
-            top: 3.3%;
-            left: 11.7%;
-            font-size: 11px;
+            top: 3.3%;    /* Высота от верха */
+            left: 11.7%;  /* Отступ слева */
+            font-size: 2.5vw; /* Размер шрифта относительно ширины экрана */
         }
 
+        /* ПРАВЫЙ БАЛАНС - все в % и vw */
         .balance-right {
-            top: 3.0%;
-            right: 40%;
-            font-size: 14px;
+            top: 3.0%;    /* Высота от верха */
+            right: 40%;   /* Отступ справа */
+            font-size: 2.8vw; /* Размер шрифта относительно ширины экрана */
         }
 
+        /* КОНТЕЙНЕР УРОВНЯ */
         .level-container {
             position: absolute;
-            bottom: 8%;
-            left: 48%;
-            transform: translateX(-50%);
+            bottom: 8%;   /* Высота от низа */
+            left: 48%;    /* Позиция по горизонтали */
+            transform: translateX(-50%); /* Центрирование */
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 1.5vw;   /* Расстояние между цифрой и прогресс-баром */
             z-index: 10;
         }
 
+        /* ЦИФРА УРОВНЯ */
         .level-number {
             color: white;
             font-family: Arial, sans-serif;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 3vw; /* Размер шрифта относительно ширины экрана */
             position: relative;
-            top: -3px;
-            left: -5px;
+            top: -0.3vh; /* Сдвиг вверх */
+            left: -0.8vw; /* Сдвиг влево */
         }
 
+        /* ПРОГРЕСС-БАР */
         .progress-bar {
-            width: 180px;
-            height: 19.5px;
+            width: 25vw;  /* Ширина относительно ширины экрана */
+            height: 2.5vh; /* Высота относительно высоты экрана */
             background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
+            border-radius: 1vh; /* Скругление относительно высоты */
             overflow: hidden;
-            border: 1px solid #333;
+            border: 0.2vh solid #333; /* Толщина边框 относительно высоты */
             position: relative;
-            top: -3px;
-            left: 5px;
+            top: -0.3vh; /* Сдвиг вверх */
+            left: 0.8vw; /* Сдвиг вправо */
         }
 
         .progress-fill {
             height: 100%;
             background: #00ff00;
-            width: 30%;
+            width: 30%;   /* Заполнение прогресс-бара */
         }
 
-        /* Стили для Telegram Mini App */
-        @media (max-height: 600px) {
-            .game-container {
-                background-size: cover;
-            }
+        /* Дополнительные медиа-запросы для тонкой настройки */
+        @media (max-width: 768px) {
             .balance-left {
-                top: 2.5%;
-                font-size: 10px;
+                font-size: 2.8vw;
             }
             .balance-right {
-                top: 2.2%;
-                font-size: 12px;
-            }
-            .level-container {
-                bottom: 6%;
-            }
-        }
-
-        /* Для очень маленьких экранов */
-        @media (max-width: 320px) {
-            .balance-left {
-                left: 10%;
-                font-size: 9px;
-            }
-            .balance-right {
-                right: 38%;
-                font-size: 11px;
-            }
-            .progress-bar {
-                width: 150px;
-                height: 16px;
+                font-size: 3.1vw;
             }
             .level-number {
-                font-size: 12px;
+                font-size: 3.3vw;
             }
         }
 
-        /* Для портретной ориентации */
-        @media (orientation: portrait) and (max-height: 700px) {
-            .level-container {
-                bottom: 5%;
+        @media (max-width: 480px) {
+            .balance-left {
+                font-size: 3.2vw;
+            }
+            .balance-right {
+                font-size: 3.5vw;
+            }
+            .level-number {
+                font-size: 3.7vw;
+            }
+            .progress-bar {
+                width: 28vw;
             }
         }
     </style>
@@ -160,16 +149,9 @@
     </div>
 
     <script>
-        // Скрипт для определения Telegram Mini App
+        // Скрипт для Telegram Mini App
         if (window.Telegram && Telegram.WebApp) {
-            // Расширяем на весь экран в Mini App
             Telegram.WebApp.expand();
-            
-            // Добавляем обработчик изменения размера
-            Telegram.WebApp.onEvent('viewportChanged', function() {
-                // Можно добавить логику пересчета позиций при изменении размера
-                console.log('Viewport changed');
-            });
         }
     </script>
 </body>
