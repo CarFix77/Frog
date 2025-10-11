@@ -24,7 +24,6 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            /* Только меняем на background с cover */
             background: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg') no-repeat center center;
             background-size: cover;
         }
@@ -51,8 +50,8 @@
 
         .level-container {
             position: absolute;
-            bottom: 14%;
-            left: 51%;
+            bottom: 8%;
+            left: 48%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
@@ -64,6 +63,10 @@
             font-family: Arial, sans-serif;
             font-weight: bold;
             font-size: 14px;
+            /* ЦИФРА: вверх и влево */
+            position: relative;
+            top: -3px;
+            left: -5px;
         }
 
         .progress-bar {
@@ -73,6 +76,10 @@
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #333;
+            /* ПРОГРЕСС-БАР: вверх и вправо */
+            position: relative;
+            top: -3px;
+            left: 5px;
         }
 
         .progress-fill {
