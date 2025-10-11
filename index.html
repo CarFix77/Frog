@@ -24,12 +24,9 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-        }
-
-        .game-image {
-            width: 100%;
-            height: 100%;
-            object-fit: fill;
+            /* Используем background вместо img */
+            background: url('https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg') no-repeat center center;
+            background-size: cover; /* Важно: cover вместо fill */
         }
 
         .balance {
@@ -43,13 +40,13 @@
         .balance-left {
             top: 3.3%;
             left: 11.7%;
-            font-size: 11px;
+            font-size: 2vw; /* Относительный размер */
         }
 
         .balance-right {
             top: 3.0%;
             right: 40%;
-            font-size: 14px;
+            font-size: 2vw; /* Относительный размер */
         }
 
         .level-container {
@@ -59,31 +56,23 @@
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 1vw; /* Относительный gap */
         }
 
         .level-number {
             color: white;
             font-family: Arial, sans-serif;
             font-weight: bold;
-            font-size: 14px;
-            /* ПОЗИЦИОНИРОВАНИЕ ТОЛЬКО ЦИФРЫ: */
-            position: relative;
-            top: -3px; /* Вверх-вниз ТОЛЬКО цифры */
-            left: -2px; /* Влево-вправо ТОЛЬКО цифры */
+            font-size: 2vw; /* Относительный размер */
         }
 
         .progress-bar {
-            width: 180px;
-            height: 19.5px;
+            width: 25vw; /* Относительная ширина */
+            height: 2.5vh; /* Относительная высота */
             background: rgba(0, 0, 0, 0.5);
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #333;
-            /* ПОЗИЦИОНИРОВАНИЕ ТОЛЬКО ПРОГРЕСС-БАРА: */
-            position: relative;
-            top: -3px; /* Вверх-вниз ТОЛЬКО прогресс-бар */
-            left: 3px; /* Влево-вправо ТОЛЬКО прогресс-бар */
         }
 
         .progress-fill {
@@ -95,9 +84,7 @@
 </head>
 <body>
     <div class="game-container">
-        <img src="https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/9A062643-A547-47CE-94FA-0A2762AB664B.jpeg" 
-             class="game-image" 
-             alt="Frog Game">
+        <!-- Изображение теперь как background -->
 
         <!-- Балансы -->
         <div class="balance balance-left">
