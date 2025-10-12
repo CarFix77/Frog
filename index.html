@@ -51,6 +51,16 @@
             right: 40%;
             font-size: 14px;
         }
+
+        .play-button {
+            position: absolute;
+            bottom: 59%;
+            left: 25%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 50px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -59,13 +69,30 @@
              class="game-image" 
              alt="Frog Game">
 
-        <!-- Балансы -->
-        <div class="balance balance-left">
-            0.00000
-        </div>
-        <div class="balance balance-right">
-            0
-        </div>
+        <div class="balance balance-left">0.000</div>
+        <div class="balance balance-right">0</div>
+        <img src="https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/5CE07E91-0859-4DAA-B1DE-2EFF5A1F3B1B.png" class="play-button" alt="Play" onclick="startGame()">
     </div>
+
+    <script>
+        function startGame() {
+            console.log('Game started!');
+        }
+
+        // Простой адаптив для Telegram Mini App
+        function adjustForTelegram() {
+            const isTelegram = window.Telegram && Telegram.WebApp;
+            if (isTelegram) {
+                // Можно немного подкорректировать позиции для Mini App
+                const playBtn = document.querySelector('.play-button');
+                playBtn.style.bottom = '58%'; // Чуть поднять/опустить
+                playBtn.style.left = '24%';   // Чуть сдвинуть
+            }
+        }
+
+        // Запускаем при загрузке и при изменении размера
+        window.addEventListener('load', adjustForTelegram);
+        window.addEventListener('resize', adjustForTelegram);
+    </script>
 </body>
 </html>
