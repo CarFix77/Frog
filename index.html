@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <title>Smart Lot Trader</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frog Jump - P2P Game</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,87 +13,1096 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: #1a5f7a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.4;
+            min-height: 100vh;
         }
 
-        .game-container {
-            position: fixed;
+        .container {
+            max-width: 100%;
+            padding: 12px;
+        }
+
+        .section {
+            background: #1c1c1e;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #2c2c2e;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #2c2c2e;
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #2c2c2e;
+            border-radius: 10px;
+            background: #2c2c2e;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #8e8e93;
+            font-weight: 600;
+        }
+
+        .mode-btn.active {
+            border-color: #34C759;
+            background: #34C759;
+            color: #000000;
+        }
+
+        .protection-badge {
+            background: rgba(255, 59, 48, 0.15);
+            border: 2px solid #FF3B30;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .protection-active {
+            background: rgba(52, 199, 89, 0.15);
+            border-color: #34C759;
+        }
+
+        .tg-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 32px;
+        }
+
+        .tg-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .tg-slider {
+            position: absolute;
+            cursor: pointer;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
+            right: 0;
+            bottom: 0;
+            background-color: #3a3a3c;
+            transition: .2s;
+            border-radius: 16px;
         }
 
-        .game-image {
-            width: 100%;
-            height: 100%;
-            object-fit: fill;
-        }
-
-        .balance {
+        .tg-slider:before {
             position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .2s;
+            border-radius: 50%;
+        }
+
+        input:checked + .tg-slider {
+            background-color: #34C759;
+        }
+
+        input:checked + .tg-slider:before {
+            transform: translateX(20px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-item {
+            background: #2c2c2e;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #3a3a3c;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #8e8e93;
+            font-weight: 500;
+        }
+
+        .live-price {
+            background: linear-gradient(135deg, #34C759 0%, #007AFF 100%);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
             color: white;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            border: 1px solid #34C759;
         }
 
-        .balance-left {
-            top: 3.3%;
-            left: 11.7%;
-            font-size: 11px;
+        .current-price {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .balance-right {
-            top: 3.0%;
-            right: 40%;
-            font-size: 14px;
+        .price-change {
+            font-size: 16px;
+            font-weight: 600;
+            opacity: 0.9;
         }
 
-        .play-button {
-            position: absolute;
-            bottom: 59%;
-            left: 25%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 50px;
+        .price-up {
+            color: #34C759;
+        }
+
+        .price-down {
+            color: #FF3B30;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .tg-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #3a3a3c;
+            border-radius: 12px;
+            background: #2c2c2e;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .tg-input:focus {
+            outline: none;
+            border-color: #34C759;
+            background: #3a3a3c;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
             cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: #34C759;
+            color: #000000;
+        }
+
+        .btn-secondary {
+            background: #3a3a3c;
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .amount-btn {
+            padding: 14px;
+            border: 2px solid #3a3a3c;
+            border-radius: 10px;
+            background: #2c2c2e;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            color: #ffffff;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .amount-btn:active {
+            background: #3a3a3c;
+        }
+
+        .manual-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .manual-btn {
+            padding: 20px;
+            border: 3px solid #3a3a3c;
+            border-radius: 14px;
+            background: #2c2c2e;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .manual-btn.buy {
+            border-color: #34C759;
+            color: #34C759;
+        }
+
+        .manual-btn.sell {
+            border-color: #FF3B30;
+            color: #FF3B30;
+        }
+
+        .manual-btn:active {
+            transform: scale(0.95);
+            background: #3a3a3c;
+        }
+
+        .logs-container {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 13px;
+            background: #2c2c2e;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #3a3a3c;
+        }
+
+        .log-entry {
+            padding: 8px 0;
+            border-bottom: 1px solid #3a3a3c;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #8e8e93;
+            margin-right: 12px;
+            font-weight: 500;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 13px;
+            color: #8e8e93;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .bot-amount-display {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 800;
+            margin: 20px 0;
+            color: #ffffff;
+        }
+
+        .micro-profit {
+            font-size: 15px;
+            color: #34C759;
+            font-weight: 600;
+            text-align: center;
+            margin: 12px 0;
+        }
+
+        .price-history {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .blink-up {
+            animation: blinkGreen 0.5s;
+        }
+
+        .blink-down {
+            animation: blinkRed 0.5s;
+        }
+
+        @keyframes blinkGreen {
+            0% { background-color: rgba(52, 199, 89, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        @keyframes blinkRed {
+            0% { background-color: rgba(255, 59, 48, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        /* Стили для скроллбара */
+        .logs-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .logs-container::-webkit-scrollbar-track {
+            background: #2c2c2e;
+            border-radius: 2px;
+        }
+
+        .logs-container::-webkit-scrollbar-thumb {
+            background: #34C759;
+            border-radius: 2px;
+        }
+
+        .logs-container::-webkit-scrollbar-thumb:hover {
+            background: #30B856;
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <img src="https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/IMG_3284.jpeg" 
-             class="game-image" 
-             alt="Frog Game">
+    <div class="container">
+        <!-- Live Price -->
+        <div class="live-price">
+            <div class="current-price" id="livePrice">190.81₽</div>
+            <div class="price-change" id="liveChange">
+                <span id="changeAmount">+0.00₽</span> • 
+                <span id="changePercent">+0.00%</span> •
+                <span id="updateTime">12:00:00</span>
+            </div>
+            <div class="price-history">
+                <span>MIN: <span id="minPrice">190.76₽</span></span>
+                <span>MAX: <span id="maxPrice">190.86₽</span></span>
+            </div>
+        </div>
 
-        <div class="balance balance-left">0.000</div>
-        <div class="balance balance-right">0</div>
-        <img src="https://raw.githubusercontent.com/CarFix77/-/refs/heads/main/5CE07E91-0859-4DAA-B1DE-2EFF5A1F3B1B.png" class="play-button" alt="Play" onclick="startGame()">
+        <!-- Режим работы -->
+        <div class="section">
+            <div class="section-title">Режим работы</div>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('auto')">🤖 Авто</button>
+                <button class="mode-btn" onclick="setMode('semi')">👨‍💻 Полу-авто</button>
+                <button class="mode-btn" onclick="setMode('manual')">✋ Ручной</button>
+            </div>
+            
+            <div class="protection-badge" id="protectionBadge">
+                🛡️ Защита от убытков: <strong>АКТИВНА</strong><br>
+                <small>Бот остановится при падении ниже цены покупки</small>
+            </div>
+        </div>
+
+        <!-- Статус -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title" id="modeTitle">🤖 Авто-трейдинг</div>
+                <label class="tg-switch">
+                    <input type="checkbox" id="autoTradeToggle">
+                    <span class="tg-slider"></span>
+                </label>
+            </div>
+            <div class="timer" id="timer">Обновление: 1с</div>
+        </div>
+
+        <!-- Ручное управление -->
+        <div class="section" id="manualSection" style="display: none;">
+            <div class="section-title">Ручное управление</div>
+            <div class="manual-controls">
+                <button class="manual-btn buy" onclick="manualBuy()">🟢 КУПИТЬ</button>
+                <button class="manual-btn sell" onclick="manualSell()">🔴 ПРОДАТЬ</button>
+            </div>
+            <div style="text-align: center; font-size: 13px; color: #8e8e93;">
+                Нажмите для ручной покупки/продажи по текущей цене
+            </div>
+        </div>
+
+        <!-- Статистика -->
+        <div class="section">
+            <div class="section-title">Статистика по лотам</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="operationsCount">0</div>
+                    <div class="stat-label">Сделок</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalProfit">+0.00₽</div>
+                    <div class="stat-label">Прибыль</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="profitability">0%</div>
+                    <div class="stat-label">Доходность</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="aiAccuracy">95%</div>
+                    <div class="stat-label">Точность AI</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lot Trading -->
+        <div class="section">
+            <div class="section-title">Трейдинг лотами</div>
+            <div class="lot-trading">
+                <div style="text-align: center; margin-bottom: 12px;">
+                    <strong id="aiDecision">Мониторю цену в реальном времени...</strong>
+                </div>
+                <div id="aiReasoning" style="text-align: center; font-size: 14px; color: #8e8e93;">
+                    Цена обновляется каждую секунду • Защита от убытков активна
+                </div>
+                
+                <div class="lot-info">
+                    <div class="lot-item">
+                        <div>Цена покупки</div>
+                        <div id="buyPriceDisplay">190.81₽</div>
+                    </div>
+                    <div class="lot-item">
+                        <div>Текущий спред</div>
+                        <div id="spread">0.01₽</div>
+                    </div>
+                    <div class="lot-item">
+                        <div>Позиция</div>
+                        <div id="position">⚪ Нет</div>
+                    </div>
+                    <div class="lot-item">
+                        <div>Прибыль/сделка</div>
+                        <div id="profitPerTrade">0.01₽</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="micro-profit">
+                💰 0.01₽ прибыль за каждую сделку • Защита от убытков активна
+            </div>
+        </div>
+
+        <!-- Капитал -->
+        <div class="section">
+            <div class="section-title">Количество лотов</div>
+            <div class="bot-amount-display" id="botAmountDisplay">0 лотов</div>
+            
+            <div class="input-group">
+                <label class="input-label">Количество лотов для торговли</label>
+                <input type="number" class="tg-input" id="lotCountInput" placeholder="1" value="1" min="1" max="1000">
+            </div>
+            
+            <div class="quick-amounts">
+                <button class="amount-btn" onclick="setLotCount(1)">1 лот</button>
+                <button class="amount-btn" onclick="setLotCount(5)">5 лотов</button>
+                <button class="amount-btn" onclick="setLotCount(10)">10 лотов</button>
+                <button class="amount-btn" onclick="setLotCount(50)">50 лотов</button>
+                <button class="amount-btn" onclick="setLotCount(100)">100 лотов</button>
+                <button class="amount-btn" onclick="setLotCount(500)">500 лотов</button>
+            </div>
+            
+            <button class="btn btn-primary" onclick="saveLotCount()">Сохранить</button>
+        </div>
+
+        <!-- Настройки трейдинга -->
+        <div class="section">
+            <div class="section-title">Настройки трейдинга</div>
+            
+            <div class="input-group">
+                <label class="input-label">Цена покупки (₽)</label>
+                <input type="number" step="0.01" class="tg-input" id="buyPrice" value="190.81" min="1" max="1000">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Цель прибыли (₽ за лот)</label>
+                <input type="number" step="0.01" class="tg-input" id="targetProfit" value="0.01" min="0.01" max="1">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Стоп-лосс (₽ за лот)</label>
+                <input type="number" step="0.01" class="tg-input" id="stopLoss" value="0.01" min="0.01" max="1">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Защита от убытков</label>
+                <select class="tg-input" id="lossProtection">
+                    <option value="auto">Авто-остановка при убытках</option>
+                    <option value="alert">Только предупреждение</option>
+                    <option value="off">Отключить</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="saveTradingSettings()">Сохранить настройки</button>
+        </div>
+
+        <!-- Логи -->
+        <div class="section">
+            <div class="section-title">Логи операций</div>
+            <div class="logs-container" id="logsContainer">
+                <div class="log-entry">
+                    <span class="log-time">12:00:00</span>
+                    <span>📊 Smart Trader запущен. Режим: Авто • Защита активна</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        function startGame() {
-            console.log('Game started!');
-        }
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
 
-        // Простой адаптив для Telegram Mini App
-        function adjustForTelegram() {
-            const isTelegram = window.Telegram && Telegram.WebApp;
-            if (isTelegram) {
-                // Можно немного подкорректировать позиции для Mini App
-                const playBtn = document.querySelector('.play-button');
-                playBtn.style.bottom = '58%'; // Чуть поднять/опустить
-                playBtn.style.left = '24%';   // Чуть сдвинуть
+        // Состояние для умного трейдинга
+        let appState = {
+            mode: 'auto',
+            autoTrading: false,
+            operationsCount: 0,
+            totalProfit: 0,
+            lotCount: 0,
+            priceTimer: null,
+            tradeTimer: null,
+            timerCount: 1,
+            aiAccuracy: 95,
+            currentPosition: null,
+            currentPrice: 190.81,
+            previousPrice: 190.81,
+            priceChange: 0,
+            priceChangePercent: 0,
+            minPrice: 190.76,
+            maxPrice: 190.86,
+            tradingSettings: {
+                buyPrice: 190.81,
+                targetProfit: 0.01,
+                stopLoss: 0.01,
+                lossProtection: 'auto'
+            },
+            priceHistory: [],
+            lastUpdate: new Date(),
+            protectionTriggered: false
+        };
+
+        // Загрузка сохраненных данных
+        function loadSavedData() {
+            const saved = localStorage.getItem('smartLotTraderDark');
+            if (saved) {
+                const data = JSON.parse(saved);
+                Object.assign(appState, data);
+                
+                document.getElementById('lotCountInput').value = appState.lotCount;
+                document.getElementById('buyPrice').value = appState.tradingSettings.buyPrice;
+                document.getElementById('targetProfit').value = appState.tradingSettings.targetProfit;
+                document.getElementById('stopLoss').value = appState.tradingSettings.stopLoss;
+                document.getElementById('lossProtection').value = appState.tradingSettings.lossProtection;
+                
+                updateUI();
+                updateModeDisplay();
             }
         }
 
-        // Запускаем при загрузке и при изменении размера
-        window.addEventListener('load', adjustForTelegram);
-        window.addEventListener('resize', adjustForTelegram);
+        // Установка режима работы
+        function setMode(mode) {
+            appState.mode = mode;
+            
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateModeDisplay();
+            
+            if (mode === 'manual') {
+                appState.autoTrading = false;
+                document.getElementById('autoTradeToggle').checked = false;
+                stopTrading();
+            }
+            
+            addLog(`🔄 Режим изменен: ${getModeName(mode)}`);
+            saveToStorage();
+        }
+
+        // Обновление отображения режима
+        function updateModeDisplay() {
+            const modeTitle = document.getElementById('modeTitle');
+            const manualSection = document.getElementById('manualSection');
+            const autoToggle = document.getElementById('autoTradeToggle');
+            
+            modeTitle.textContent = getModeTitle(appState.mode);
+            
+            if (appState.mode === 'semi' || appState.mode === 'manual') {
+                manualSection.style.display = 'block';
+            } else {
+                manualSection.style.display = 'none';
+            }
+            
+            autoToggle.disabled = appState.mode === 'manual';
+            updateUI();
+        }
+
+        // Получение названия режима
+        function getModeName(mode) {
+            const names = {
+                'auto': 'Авто',
+                'semi': 'Полу-авто', 
+                'manual': 'Ручной'
+            };
+            return names[mode];
+        }
+
+        // Получение заголовка режима
+        function getModeTitle(mode) {
+            const titles = {
+                'auto': '🤖 Авто-трейдинг',
+                'semi': '👨‍💻 Полу-авто режим',
+                'manual': '✋ Ручной трейдинг'
+            };
+            return titles[mode];
+        }
+
+        // Обновление интерфейса
+        function updateUI() {
+            document.getElementById('operationsCount').textContent = appState.operationsCount;
+            document.getElementById('totalProfit').textContent = `${appState.totalProfit >= 0 ? '+' : ''}${appState.totalProfit.toFixed(2)}₽`;
+            document.getElementById('profitability').textContent = appState.lotCount > 0 ? 
+                `${((appState.totalProfit / (appState.lotCount * appState.tradingSettings.buyPrice)) * 100).toFixed(3)}%` : '0%';
+            document.getElementById('aiAccuracy').textContent = `${appState.aiAccuracy}%`;
+            document.getElementById('botAmountDisplay').textContent = `${appState.lotCount} ${getLotWord(appState.lotCount)}`;
+            document.getElementById('autoTradeToggle').checked = appState.autoTrading;
+
+            document.getElementById('buyPriceDisplay').textContent = `${appState.tradingSettings.buyPrice.toFixed(2)}₽`;
+            document.getElementById('position').textContent = appState.currentPosition ? '🟢 Куплено' : '⚪ Нет';
+            document.getElementById('profitPerTrade').textContent = `${(appState.tradingSettings.targetProfit * appState.lotCount).toFixed(2)}₽`;
+
+            const protectionBadge = document.getElementById('protectionBadge');
+            if (appState.protectionTriggered) {
+                protectionBadge.innerHTML = '🚨 ЗАЩИТА СРАБОТАЛА! <strong>ТРЕЙДИНГ ОСТАНОВЛЕН</strong><br><small>Цена упала ниже закупочной</small>';
+                protectionBadge.className = 'protection-badge';
+            } else if (appState.tradingSettings.lossProtection === 'auto') {
+                protectionBadge.innerHTML = '🛡️ Защита от убытков: <strong>АКТИВНА</strong><br><small>Бот остановится при падении ниже цены покупки</small>';
+                protectionBadge.className = 'protection-badge protection-active';
+            } else {
+                protectionBadge.innerHTML = '⚠️ Защита от убытков: <strong>ОТКЛЮЧЕНА</strong><br><small>Трейдинг продолжится при убытках</small>';
+                protectionBadge.className = 'protection-badge';
+            }
+        }
+
+        // Обновление цены в реальном времени
+        function updateLivePrice() {
+            appState.previousPrice = appState.currentPrice;
+
+            const change = (Math.random() - 0.5) * 0.1;
+            let newPrice = appState.currentPrice + change;
+            
+            newPrice = Math.max(appState.minPrice, Math.min(appState.maxPrice, newPrice));
+            newPrice = parseFloat(newPrice.toFixed(2));
+            
+            appState.currentPrice = newPrice;
+            appState.priceChange = newPrice - appState.previousPrice;
+            appState.priceChangePercent = (appState.priceChange / appState.previousPrice) * 100;
+            appState.lastUpdate = new Date();
+
+            checkLossProtection();
+            updatePriceDisplay();
+            
+            appState.priceHistory.push({
+                price: appState.currentPrice,
+                change: appState.priceChange,
+                timestamp: Date.now()
+            });
+            
+            if (appState.priceHistory.length > 50) {
+                appState.priceHistory.shift();
+            }
+
+            saveToStorage();
+        }
+
+        // Проверка защиты от убытков
+        function checkLossProtection() {
+            if (appState.currentPosition && appState.tradingSettings.lossProtection === 'auto') {
+                const entryPrice = appState.currentPosition.price;
+                const currentLoss = appState.currentPrice - entryPrice;
+                
+                if (currentLoss < -0.01 && !appState.protectionTriggered) {
+                    appState.protectionTriggered = true;
+                    appState.autoTrading = false;
+                    document.getElementById('autoTradeToggle').checked = false;
+                    stopTrading();
+                    
+                    addLog(`🚨 ЗАЩИТА: Цена упала ниже закупочной! Трейдинг остановлен`);
+                    addLog(`💸 Текущий убыток: ${currentLoss.toFixed(2)}₽ за лот`);
+                }
+            }
+        }
+
+        // Обновление отображения цены
+        function updatePriceDisplay() {
+            const livePriceElement = document.getElementById('livePrice');
+            const changeAmountElement = document.getElementById('changeAmount');
+            const changePercentElement = document.getElementById('changePercent');
+            const updateTimeElement = document.getElementById('updateTime');
+
+            livePriceElement.textContent = `${appState.currentPrice.toFixed(2)}₽`;
+
+            const changeAmount = appState.priceChange;
+            const changePercent = appState.priceChangePercent;
+            
+            changeAmountElement.textContent = `${changeAmount >= 0 ? '+' : ''}${changeAmount.toFixed(2)}₽`;
+            changePercentElement.textContent = `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%`;
+
+            if (changeAmount > 0) {
+                changeAmountElement.className = 'price-up';
+                changePercentElement.className = 'price-up';
+                livePriceElement.classList.add('blink-up');
+                setTimeout(() => livePriceElement.classList.remove('blink-up'), 500);
+            } else if (changeAmount < 0) {
+                changeAmountElement.className = 'price-down';
+                changePercentElement.className = 'price-down';
+                livePriceElement.classList.add('blink-down');
+                setTimeout(() => livePriceElement.classList.remove('blink-down'), 500);
+            } else {
+                changeAmountElement.className = '';
+                changePercentElement.className = '';
+            }
+
+            updateTimeElement.textContent = appState.lastUpdate.toLocaleTimeString('ru-RU');
+            document.getElementById('minPrice').textContent = `${appState.minPrice.toFixed(2)}₽`;
+            document.getElementById('maxPrice').textContent = `${appState.maxPrice.toFixed(2)}₽`;
+
+            const spread = Math.abs(appState.currentPrice - appState.tradingSettings.buyPrice);
+            document.getElementById('spread').textContent = `${spread.toFixed(2)}₽`;
+        }
+
+        // Ручная покупка
+        function manualBuy() {
+            if (appState.lotCount <= 0) {
+                addLog('❌ Установите количество лотов');
+                return;
+            }
+
+            if (appState.currentPosition) {
+                addLog('⚠️ У вас уже есть открытая позиция');
+                return;
+            }
+
+            appState.currentPosition = {
+                type: 'BUY',
+                lotCount: appState.lotCount,
+                price: appState.currentPrice,
+                timestamp: Date.now()
+            };
+            
+            addLog(`👨‍💻 РУЧНАЯ ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} по ${appState.currentPrice.toFixed(2)}₽`);
+            updateUI();
+            saveToStorage();
+        }
+
+        // Ручная продажа
+        function manualSell() {
+            if (!appState.currentPosition) {
+                addLog('❌ Нет открытой позиции для продажи');
+                return;
+            }
+
+            const entryPrice = appState.currentPosition.price;
+            const profitPerLot = appState.currentPrice - entryPrice;
+            const totalProfit = profitPerLot * appState.lotCount;
+            
+            appState.totalProfit += totalProfit;
+            appState.operationsCount++;
+            appState.currentPosition = null;
+
+            if (totalProfit > 0) {
+                addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
+            } else {
+                addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
+            }
+            
+            updateUI();
+            saveToStorage();
+        }
+
+        // Правильное склонение слова "лот"
+        function getLotWord(count) {
+            if (count % 10 === 1 && count % 100 !== 11) return 'лот';
+            if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return 'лота';
+            return 'лотов';
+        }
+
+        // Установка количества лотов
+        function setLotCount(count) {
+            document.getElementById('lotCountInput').value = count;
+        }
+
+        // Сохранение количества лотов
+        function saveLotCount() {
+            const count = parseInt(document.getElementById('lotCountInput').value);
+            
+            if (!count || count <= 0) {
+                addLog('❌ Введите количество лотов');
+                return;
+            }
+            
+            appState.lotCount = count;
+            updateUI();
+            saveToStorage();
+            addLog(`✅ Установлено: ${count} ${getLotWord(count)}`);
+        }
+
+        // Сохранение настроек трейдинга
+        function saveTradingSettings() {
+            appState.tradingSettings = {
+                buyPrice: parseFloat(document.getElementById('buyPrice').value),
+                targetProfit: parseFloat(document.getElementById('targetProfit').value),
+                stopLoss: parseFloat(document.getElementById('stopLoss').value),
+                lossProtection: document.getElementById('lossProtection').value
+            };
+            
+            appState.minPrice = appState.tradingSettings.buyPrice - 0.05;
+            appState.maxPrice = appState.tradingSettings.buyPrice + 0.05;
+            appState.protectionTriggered = false;
+            
+            updateUI();
+            saveToStorage();
+            addLog('✅ Настройки трейдинга сохранены');
+        }
+
+        // Запуск обновления цены в реальном времени
+        function startLivePriceUpdates() {
+            if (appState.priceTimer) clearInterval(appState.priceTimer);
+            appState.priceTimer = setInterval(() => {
+                updateLivePrice();
+            }, 1000);
+        }
+
+        // Запуск трейдинга
+        function startTrading() {
+            if (appState.tradeTimer) clearInterval(appState.tradeTimer);
+            
+            appState.timerCount = 2;
+            updateTimer();
+            
+            appState.tradeTimer = setInterval(() => {
+                appState.timerCount--;
+                updateTimer();
+                
+                if (appState.timerCount <= 0) {
+                    if (appState.autoTrading && appState.mode !== 'manual') {
+                        executeLotTrade();
+                    }
+                    appState.timerCount = 2;
+                }
+            }, 1000);
+        }
+
+        // Остановка трейдинга
+        function stopTrading() {
+            if (appState.tradeTimer) {
+                clearInterval(appState.tradeTimer);
+                appState.tradeTimer = null;
+            }
+        }
+
+        function updateTimer() {
+            document.getElementById('timer').textContent = `Обновление: ${appState.timerCount}с`;
+        }
+
+        // Логика трейдинга
+        function executeLotTrade() {
+            if (appState.lotCount <= 0 || appState.protectionTriggered) {
+                return;
+            }
+
+            const decision = makeTradingDecision();
+            updateAIDisplay(decision);
+            
+            if (decision.shouldTrade) {
+                executeTransaction(decision);
+            }
+
+            updateUI();
+            saveToStorage();
+        }
+
+        // Принятие торговых решений
+        function makeTradingDecision() {
+            let shouldTrade = false;
+            let tradeType = '';
+            let reasoning = '';
+
+            if (!appState.currentPosition) {
+                const spread = Math.abs(appState.currentPrice - appState.tradingSettings.buyPrice);
+                if (spread <= 0.02) {
+                    shouldTrade = true;
+                    tradeType = 'BUY';
+                    reasoning = `🤖 AI: Цена ${appState.currentPrice.toFixed(2)}₽ близка к целевой`;
+                } else {
+                    reasoning = `🤖 AI: Жду ${appState.tradingSettings.buyPrice}₽`;
+                }
+            } else {
+                const profitPerLot = appState.currentPrice - appState.tradingSettings.buyPrice;
+                
+                if (profitPerLot >= appState.tradingSettings.targetProfit) {
+                    shouldTrade = true;
+                    tradeType = 'SELL';
+                    reasoning = `🤖 AI: Цель +${profitPerLot.toFixed(2)}₽`;
+                } else if (profitPerLot <= -appState.tradingSettings.stopLoss) {
+                    shouldTrade = true;
+                    tradeType = 'SELL';
+                    reasoning = `🤖 AI: Стоп-лосс ${profitPerLot.toFixed(2)}₽`;
+                } else {
+                    reasoning = `🤖 AI: Удерживаю ${profitPerLot.toFixed(2)}₽`;
+                }
+            }
+
+            return {
+                shouldTrade,
+                tradeType,
+                reasoning,
+                signal: shouldTrade ? tradeType : 'HOLD'
+            };
+        }
+
+        // Обновление отображения AI
+        function updateAIDisplay(decision) {
+            const signalTexts = {
+                'BUY': '🤖 ПОКУПКА',
+                'SELL': '🤖 ПРОДАЖА', 
+                'HOLD': '🤖 МОНИТОРИНГ'
+            };
+
+            document.getElementById('aiDecision').textContent = signalTexts[decision.signal];
+            document.getElementById('aiReasoning').textContent = decision.reasoning;
+        }
+
+        // Выполнение сделки
+        function executeTransaction(decision) {
+            const { tradeType } = decision;
+            
+            if (tradeType === 'BUY' && !appState.currentPosition) {
+                appState.currentPosition = {
+                    type: 'BUY',
+                    lotCount: appState.lotCount,
+                    price: appState.currentPrice,
+                    timestamp: Date.now()
+                };
+                addLog(`🤖 АВТО-ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} по ${appState.currentPrice.toFixed(2)}₽`);
+                
+            } else if (tradeType === 'SELL' && appState.currentPosition) {
+                const entryPrice = appState.currentPosition.price;
+                const profitPerLot = appState.currentPrice - entryPrice;
+                const totalProfit = profitPerLot * appState.lotCount;
+                
+                appState.totalProfit += totalProfit;
+                appState.operationsCount++;
+                appState.currentPosition = null;
+
+                if (totalProfit > 0) {
+                    appState.aiAccuracy = Math.min(99.9, appState.aiAccuracy + 0.1);
+                    addLog(`🤖 АВТО-ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
+                } else {
+                    appState.aiAccuracy = Math.max(85, appState.aiAccuracy - 0.5);
+                    addLog(`🤖 АВТО-ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
+                }
+            }
+        }
+
+        // Добавление лога
+        function addLog(message) {
+            const logsContainer = document.getElementById('logsContainer');
+            const time = new Date().toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerHTML = `<span class="log-time">${time}</span><span>${message}</span>`;
+            
+            logsContainer.appendChild(logEntry);
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+            
+            const logs = logsContainer.querySelectorAll('.log-entry');
+            if (logs.length > 15) logs[0].remove();
+        }
+
+        // Сохранение
+        function saveToStorage() {
+            localStorage.setItem('smartLotTraderDark', JSON.stringify(appState));
+        }
+
+        // Обработчик переключения
+        document.getElementById('autoTradeToggle').addEventListener('change', function(e) {
+            appState.autoTrading = e.target.checked;
+            
+            if (appState.autoTrading) {
+                if (appState.lotCount <= 0) {
+                    addLog('❌ Установите количество лотов');
+                    e.target.checked = false;
+                    appState.autoTrading = false;
+                    return;
+                }
+                
+                if (appState.protectionTriggered) {
+                    addLog('🚨 Защита сработала! Сначала сбросьте настройки');
+                    e.target.checked = false;
+                    appState.autoTrading = false;
+                    return;
+                }
+                
+                addLog(`🤖 Авто-трейдинг запущен в режиме: ${getModeName(appState.mode)}`);
+                startTrading();
+            } else {
+                addLog('⏸️ Авто-трейдинг остановлен');
+                stopTrading();
+            }
+            
+            saveToStorage();
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            startLivePriceUpdates();
+            startTrading();
+        });
     </script>
 </body>
 </html>
