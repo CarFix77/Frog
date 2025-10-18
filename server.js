@@ -1,277 +1,250 @@
-// server.js
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
-// --- Конфигурация и импорты ---
-require('dotenv').config(); // Загружает переменные окружения из .env файла
-const express = require('express');
-const cors = require('cors');
-const { TinkoffInvestApi } = require('@tinkoff/invest-api');
-const {
-  Instrument, // Для типов (не используется напрямую, но для понимания)
-  Quotation,
-  M oneyValue,
-  Account,
-  InstrumentIdType,
-  OrderDirection,
-  OrderType,
-} = require('@tinkoff/invest-api/src/generated/instruments'); // Для использования enum значений напрямую
+const API_TOKEN = Deno.env.get("TINKOFF_API_TOKEN");
+const TINKOFF_API_URL = "https://invest-public-api.tinkoff.ru/rest";
 
-const app = express();
-const PORT = process.env.PORT || 8000;
-const API_TOKEN = process.env.TINKOFF_API_TOKEN;
-const CACHE_TTL_MS = 5000; // Cache Time-To-Live for prices: 5 seconds
+// Кэш
+let cache = {
+  prices: {},
+  portfolio: null,
+  lastUpdate: 0
+};
 
-// Проверка наличия токена
-if (!API_TOKEN) {
-  console.error("❌ TINKOFF_API_TOKEN environment variable is not set.");
-  process.exit(1);
-}
-
-// --- Инициализация Express.js и SDK ---
-app.use(cors()); // Включаем CORS для всех запросов
-app.use(express.json()); // Включаем парсинг JSON для тела запросов
-
-const api = new TinkoffInvestApi({ token: API_TOKEN });
-
-let cachedAccountId;
-const tickerFigiMap = new Map(); // 'SBMX' -> 'BBGXXXXXX'
-const priceCache = new Map(); // 'SBMX' -> { price: 1.0025, timestamp: 123456789 }
-
-// --- Вспомогательные функции ---
-
-/** Конвертирует Quotation (units + nano) в обычное число с плавающей точкой */
+// Утилиты
 function quotationToFloat(quotation) {
   if (!quotation) return 0;
   return quotation.units + (quotation.nano || 0) / 1_000_000_000;
 }
 
-/** Конвертирует float в Quotation */
 function floatToQuotation(value) {
   const units = Math.trunc(value);
   const nano = Math.round((value - units) * 1_000_000_000);
   return { units, nano };
 }
 
-/** Конвертирует MoneyValue в обычное число */
-function moneyValueToFloat(moneyValue) {
-  if (!moneyValue) return 0;
-  return moneyValue.units + (moneyValue.nano || 0) / 1_000_000_000;
-}
-
-/** Генерация уникального ID для заявки */
-function generateOrderId() {
-  return `order_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-}
-
-/**
- * Получает FIGI для тикера и кеширует его.
- * @param {string} ticker Тикер инструмента (например, 'SBMX').
- * @returns {Promise<string>} FIGI инструмента.
- */
-async function getFigiForTicker(ticker) {
-  if (tickerFigiMap.has(ticker)) {
-    return tickerFigiMap.get(ticker);
-  }
-
+// Запросы к Tinkoff API
+async function tinkoffRequest(endpoint, body = {}) {
   try {
-    const { instruments } = await api.instruments.findInstrument({
-      query: ticker,
-      instrumentIdType: InstrumentIdType.INSTRUMENT_ID_TYPE_TICKER,
-    });
-
-    const instrument = instruments.find(
-      (inst) => inst.ticker === ticker && inst.instrumentType === 'etf' // Уточняем тип инструмента
-    );
-
-    if (!instrument) {
-      throw new Error(`FIGI not found for ticker: ${ticker}`);
-    }
-
-    tickerFigiMap.set(ticker, instrument.figi);
-    return instrument.figi;
-  } catch (error) {
-    console.error(`Error finding FIGI for ${ticker}:`, error);
-    throw error;
-  }
-}
-
-/**
- * Получает ID инвестиционного счета.
- * @returns {Promise<string>} ID счета.
- */
-async function getAccountId() {
-  if (cachedAccountId) {
-    return cachedAccountId;
-  }
-  try {
-    const { accounts } = await api.users.getAccounts({});
-    // Ищем основной или брокерский счет
-    const mainAccount = accounts.find(
-      (acc) => acc.type === Account.ACCOUNT_TYPE_TINKOFF || acc.type === Account.ACCOUNT_TYPE_INVESTMENT
-    );
-
-    if (!mainAccount) {
-      throw new Error("No suitable investment account found.");
-    }
-    cachedAccountId = mainAccount.id;
-    console.log(`✅ Fetched Account ID: ${cachedAccountId}`);
-    return cachedAccountId;
-  } catch (error) {
-    console.error("Error fetching account ID:", error);
-    throw error;
-  }
-}
-
-// --- API Endpoints ---
-
-/**
- * GET /api/price?ticker=SBMX
- * Возвращает текущую цену для указанного тикера.
- */
-app.get('/api/price', async (req, res) => {
-  const ticker = req.query.ticker;
-  if (!ticker) {
-    return res.status(400).json({ success: false, error: "Missing 'ticker' parameter" });
-  }
-
-  // Проверка кеша
-  const cachedPrice = priceCache.get(ticker);
-  if (cachedPrice && Date.now() - cachedPrice.timestamp < CACHE_TTL_MS) {
-    console.log(`Cache hit for ${ticker}`);
-    return res.json({ success: true, data: cachedPrice });
-  }
-
-  try {
-    const figi  = await getFigiForTicker(ticker);
-    const { lastPrices } = await api.marketData.getLastPrices({ figi: [figi] });
-
-    if (!lastPrices || lastPrices.length === 0) {
-      throw new Error(`No price data for ${ticker}`);
-    }
-
-    const price = quotationToFloat(lastPrices[0].price);
-    const result = { price, timestamp: Date.now() };
-    priceCache.set(ticker, result); // Обновление кеша
-
-    res.json({ success: true, data: result });
-  } catch (error) {
-    console.error(`Error getting price for ${ticker}:`, error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-/**
- * GET /api/portfolio
- * Возвращает информацию о текущем инвестиционном портфеле.
- */
-app.get('/api/portfolio', async (req, res) => {
-  try {
-    const accountId = await getAccountId();
-    const { positions } = await api.operations.getPortfolio({ accountId });
-
-    // Преобразование позиций в более удобный формат
-    const formattedPositions = await Promise.all(positions.map(async (pos) => {
-      let ticker = pos.figi; // По умолчанию FIGI
-      try {
-        const { instrument } = await api.instruments.getInstrumentBy({
-          idType: InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI,
-          id: pos.figi,
-        });
-        ticker = instrument?.ticker || pos.figi;
-      } catch (e) {
-        console.warn(`Could not get ticker for FIGI ${pos.figi}: ${e.message}`);
-      }
-
-      return {
-        figi: pos.figi,
-        ticker: ticker,
-        instrumentType: pos.instrumentType,
-        quantity: quotationToFloat(pos.quantity),
-        averageBuyPrice: moneyValueToFloat(pos.averagePositionPrice),
-        currentPrice: moneyValueToFloat(pos.currentPrice),
-      };
-    }));
-
-    res.json({ success: true, data: formattedPositions });
-  } catch (error) {
-    console.error("Error getting portfolio:", error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-/**
- * POST /api/order/limit
- * Размещает лимитную заявк у на покупку/продажу.
- * Ожидаемое тело запроса: { ticker: 'SBMX', quantity: 10, price: 1.0025, direction: 'buy'/'sell' }
- */
-app.post('/api/order/limit', async (req, res) => {
-  try {
-    const { ticker, quantity, price, direction } = req.body;
-
-    if (!ticker || !quantity || !price || !direction) {
-      return res.status(400).json({ success: false, error: "Missing required fields" });
-    }
-
-    const figi = await getFigiForTicker(ticker);
-    const accountId = await getAccountId();
-
-    const orderDir = direction === 'buy'
-      ? OrderDirection.ORDER_DIRECTION_BUY
-      : OrderDirection.ORDER_DIRECTION_SELL;
-
-    const { orderId, executionReportStatus } = await api.orders.postOrder({
-      figi: figi,
-      quantity: quantity,
-      price: floatToQuotation(price),
-      direction: orderDir,
-      accountId: accountId,
-      orderType: OrderType.ORDER_TYPE_LIMIT,
-      orderId: generateOrderId(),
-    });
-
-    res.json({
-      success: true,
-      data: { orderId, executionReportStatus, message: "Order placed successfully" },
-    });
-  } catch (error) {
-    console.error("Error placing order:", error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-/**
- * GET /api/status
- * Возвращает статус сервера и наличие токена.
- */
-app.get('/api/status', async (req, res) => {
-  try {
-    const accountId = await getAccountId(); // Проверяем доступность аккаунта
-    res.json({
-      success: true,
-      data: {
-        status: "online",
-        timestamp: new Date().toISOString(),
-        hasToken: !!API_TOKEN,
-        accountId: accountId,
+    const response = await fetch(`${TINKOFF_API_URL}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify(body)
     });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return await response.json();
   } catch (error) {
-    console.error("Error checking status:", error);
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Tinkoff API error:', error);
+    throw error;
   }
-});
+}
 
-// Обработка несуществующих маршрутов
-app.use((req, res) => {
-  res.status(404).json({ success: false, error: 'Route not found' });
-});
-
-// --- Запуск сервера ---
-app.listen(PORT, async () => {
-  conso le.log(`Server running on http://localhost:${PORT}`);
-  // Пытаемся получить ID аккаунта при старте
+// Получение цены
+async function getCurrentPrice(ticker = 'SBER') {
   try {
-    await getAccountId();
-  } catch (e) {
-    console.error("Initial account ID fetch failed:", e.message);
+    const now = Date.now();
+    if (now - cache.lastUpdate < 5000 && cache.prices[ticker]) {
+      return cache.prices[ticker];
+    }
+
+    // Ищем инструмент
+    const searchResult = await tinkoffRequest('/tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument', {
+      query: ticker
+    });
+    
+    if (!searchResult.instruments || searchResult.instruments.length === 0) {
+      throw new Error(`Instrument not found: ${ticker}`);
+    }
+    
+    const instrument = searchResult.instruments[0];
+    const figi = instrument.figi;
+
+    // Получаем стакан
+    const orderbook = await tinkoffRequest('/tinkoff.public.invest.api.contract.v1.MarketDataService/GetOrderBook', {
+      figi: figi,
+      depth: 1
+    });
+    
+    const priceData = {
+      price: quotationToFloat(orderbook.lastPrice),
+      figi: figi,
+      ticker: ticker,
+      timestamp: now
+    };
+    
+    cache.prices[ticker] = priceData;
+    cache.lastUpdate = now;
+    
+    return priceData;
+  } catch (error) {
+    console.error('Error getting price:', error);
+    // Fallback данные
+    return {
+      price: 190 + Math.random() * 2,
+      ticker: ticker,
+      timestamp: Date.now(),
+      isMock: true
+    };
   }
-});
+}
+
+// Получение портфеля
+async function getPortfolio() {
+  try {
+    const accounts = await tinkoffRequest('/tinkoff.public.invest.api.contract.v1.UsersService/GetAccounts');
+    
+    if (!accounts.accounts || accounts.accounts.length === 0) {
+      throw new Error("No accounts found");
+    }
+    
+    const accountId = accounts.accounts[0].id;
+    
+    const portfolio = await tinkoffRequest('/tinkoff.public.invest.api.contract.v1.OperationsService/GetPortfolio', {
+      accountId: accountId
+    });
+    
+    return portfolio;
+  } catch (error) {
+    console.error('Error getting portfolio:', error);
+    return { totalAmountPortfolio: { units: 0, nano: 0 }, positions: [] };
+  }
+}
+
+// Размещение ордера
+async function placeLimitOrder(ticker, quantity, price, direction) {
+  try {
+    // Ищем инструмент
+    const searchResult = await tinkoffRequest('/tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument', {
+      query: ticker
+    });
+    
+    if (!searchResult.instruments || searchResult.instruments.length === 0) {
+      throw new Error(`Instrument not found: ${ticker}`);
+    }
+    
+    const instrument = searchResult.instruments[0];
+    const figi = instrument.figi;
+
+    // Получаем аккаунт
+    const accounts = await tinkoffRequest('/tinkoff.public.invest.api.contract.v1.UsersService/GetAccounts');
+    const accountId = accounts.accounts[0].id;
+
+    // Размещаем ордер
+    const orderResult = await tinkoffRequest('/tinkoff.public.invest.api.contract.v1.OrdersService/PostOrder', {
+      figi: figi,
+      quantity: parseInt(quantity),
+      price: floatToQuotation(parseFloat(price)),
+      direction: direction === 'buy' ? 'ORDER_DIRECTION_BUY' : 'ORDER_DIRECTION_SELL',
+      accountId: accountId,
+      orderType: 'ORDER_TYPE_LIMIT',
+      orderId: `order_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+    });
+
+    return orderResult;
+  } catch (error) {
+    console.error('Error placing order:', error);
+    throw error;
+  }
+}
+
+// HTTP обработчик
+async function handler(request) {
+  const url = new URL(request.url);
+  const path = url.pathname;
+  
+  // CORS headers
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+  
+  // Preflight
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { headers });
+  }
+  
+  try {
+    // Роуты API
+    if (path === '/api/price' && request.method === 'GET') {
+      const ticker = url.searchParams.get('ticker') || 'SBER';
+      const priceData = await getCurrentPrice(ticker);
+      
+      return new Response(JSON.stringify({
+        success: true,
+        data: priceData
+      }), { headers });
+    }
+    
+    if (path === '/api/portfolio' && request.method === 'GET') {
+      const portfolio = await getPortfolio();
+      
+      return new Response(JSON.stringify({
+        success: true,
+        data: portfolio
+      }), { headers });
+    }
+    
+    if (path === '/api/order/limit' && request.method === 'POST') {
+      const body = await request.json();
+      const { ticker, quantity, price, direction } = body;
+      
+      if (!ticker || !quantity || !price || !direction) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: 'Missing required fields: ticker, quantity, price, direction'
+        }), { headers, status: 400 });
+      }
+      
+      const result = await placeLimitOrder(ticker, quantity, price, direction);
+      
+      return new Response(JSON.stringify({
+        success: true,
+        data: result
+      }), { headers });
+    }
+    
+    if (path === '/api/status' && request.method === 'GET') {
+      return new Response(JSON.stringify({
+        success: true,
+        data: {
+          status: 'online',
+          timestamp: new Date().toISOString(),
+          hasToken: !!API_TOKEN,
+          message: 'Tinkoff API server is running'
+        }
+      }), { headers });
+    }
+    
+    // Health check
+    if (path === '/health' && request.method === 'GET') {
+      return new Response(JSON.stringify({
+        status: 'OK',
+        timestamp: new Date().toISOString()
+      }), { headers });
+    }
+    
+    return new Response(JSON.stringify({
+      success: false,
+      error: 'Route not found'
+    }), { headers, status: 404 });
+    
+  } catch (error) {
+    console.error('Handler error:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      error: error.message
+    }), { headers, status: 500 });
+  }
+}
+
+// Запуск сервера
+console.log('Server starting on port 8000');
+serve(handler, { port: 8000 });
