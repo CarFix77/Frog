@@ -385,7 +385,6 @@
             100% { background-color: transparent; }
         }
 
-        /* Стили для скроллбара */
         .logs-container::-webkit-scrollbar {
             width: 4px;
         }
@@ -403,6 +402,20 @@
         .logs-container::-webkit-scrollbar-thumb:hover {
             background: #30B856;
         }
+
+        .server-status {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .status-online {
+            color: #34C759;
+        }
+
+        .status-offline {
+            color: #FF3B30;
+        }
     </style>
 </head>
 <body>
@@ -418,6 +431,9 @@
             <div class="price-history">
                 <span>MIN: <span id="minPrice">190.76₽</span></span>
                 <span>MAX: <span id="maxPrice">190.86₽</span></span>
+            </div>
+            <div class="server-status" id="serverStatus">
+                <span class="status-offline">🔴 Сервер недоступен</span>
             </div>
         </div>
 
@@ -508,14 +524,14 @@
                         <div id="position">⚪ Нет</div>
                     </div>
                     <div class="lot-item">
-                        <div>Прибыль/сделка</div>
-                        <div id="profitPerTrade">0.01₽</div>
+                        <div>Прибыль/лот</div>
+                        <div id="profitPerLot">0.01₽</div>
                     </div>
                 </div>
             </div>
 
             <div class="micro-profit">
-                💰 0.01₽ прибыль за каждую сделку • Защита от убытков активна
+                💰 0.01₽ прибыль за каждый лот • Защита от убытков активна
             </div>
         </div>
 
@@ -544,6 +560,11 @@
         <!-- Настройки трейдинга -->
         <div class="section">
             <div class="section-title">Настройки трейдинга</div>
+            
+            <div class="input-group">
+                <label class="input-label">Тикер инструмента</label>
+                <input type="text" class="tg-input" id="ticker" value="SBER" placeholder="SBER">
+            </div>
             
             <div class="input-group">
                 <label class="input-label">Цена покупки (₽)</label>
@@ -589,6 +610,59 @@
         tg.expand();
         tg.ready();
 
+        // API клиент для взаимодействия с сервером
+        const apiClient = {
+            baseUrl: 'https://carfix77-frog-14.deno.dev',
+            
+            async request(endpoint, options = {}) {
+                try {
+                    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        ...options
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    if (!result.success) {
+                        throw new Error(result.error);
+                    }
+                    
+                    return result;
+                } catch (error) {
+                    console.error('API request failed:', error);
+                    throw error;
+                }
+            },
+            
+            async getPrice(ticker = 'SBER') {
+                const result = await this.request(`/api/price?ticker=${ticker}`);
+                return result.data;
+            },
+            
+            async getPortfolio() {
+                const result = await this.request('/api/portfolio');
+                return result.data;
+            },
+            
+            async placeLimitOrder(orderData) {
+                const result = await this.request('/api/order/limit', {
+                    method: 'POST',
+                    body: JSON.stringify(orderData)
+                });
+                return result.data;
+            },
+            
+            async getStatus() {
+                const result = await this.request('/api/status');
+                return result.data;
+            }
+        };
+
         // Состояние для умного трейдинга
         let appState = {
             mode: 'auto',
@@ -608,6 +682,7 @@
             minPrice: 190.76,
             maxPrice: 190.86,
             tradingSettings: {
+                ticker: 'SBER',
                 buyPrice: 190.81,
                 targetProfit: 0.01,
                 stopLoss: 0.01,
@@ -615,7 +690,9 @@
             },
             priceHistory: [],
             lastUpdate: new Date(),
-            protectionTriggered: false
+            protectionTriggered: false,
+            serverConnected: false,
+            realTrading: false
         };
 
         // Загрузка сохраненных данных
@@ -626,6 +703,7 @@
                 Object.assign(appState, data);
                 
                 document.getElementById('lotCountInput').value = appState.lotCount;
+                document.getElementById('ticker').value = appState.tradingSettings.ticker;
                 document.getElementById('buyPrice').value = appState.tradingSettings.buyPrice;
                 document.getElementById('targetProfit').value = appState.tradingSettings.targetProfit;
                 document.getElementById('stopLoss').value = appState.tradingSettings.stopLoss;
@@ -633,6 +711,30 @@
                 
                 updateUI();
                 updateModeDisplay();
+            }
+        }
+
+        // Инициализация торгового сервера
+        async function initializeTrading() {
+            try {
+                const status = await apiClient.getStatus();
+                appState.serverConnected = true;
+                appState.realTrading = status.hasToken;
+                
+                const statusElement = document.getElementById('serverStatus');
+                if (status.hasToken) {
+                    statusElement.innerHTML = '<span class="status-online">🟢 Сервер подключен • Реальный трейдинг</span>';
+                    addLog('✅ Подключение к Tinkoff API установлено');
+                } else {
+                    statusElement.innerHTML = '<span class="status-online">🟡 Сервер подключен • Демо-режим</span>';
+                    addLog('⚠️ Сервер в демо-режиме (нет токена Tinkoff)');
+                }
+                
+            } catch (error) {
+                console.error('Server connection failed:', error);
+                appState.serverConnected = false;
+                document.getElementById('serverStatus').innerHTML = '<span class="status-offline">🔴 Сервер недоступен • Локальный режим</span>';
+                addLog('❌ Сервер недоступен, работа в локальном режиме');
             }
         }
 
@@ -707,7 +809,7 @@
 
             document.getElementById('buyPriceDisplay').textContent = `${appState.tradingSettings.buyPrice.toFixed(2)}₽`;
             document.getElementById('position').textContent = appState.currentPosition ? '🟢 Куплено' : '⚪ Нет';
-            document.getElementById('profitPerTrade').textContent = `${(appState.tradingSettings.targetProfit * appState.lotCount).toFixed(2)}₽`;
+            document.getElementById('profitPerLot').textContent = `${appState.tradingSettings.targetProfit.toFixed(2)}₽`;
 
             const protectionBadge = document.getElementById('protectionBadge');
             if (appState.protectionTriggered) {
@@ -723,33 +825,33 @@
         }
 
         // Обновление цены в реальном времени
-        function updateLivePrice() {
-            appState.previousPrice = appState.currentPrice;
-
-            const change = (Math.random() - 0.5) * 0.1;
-            let newPrice = appState.currentPrice + change;
+        async function updateLivePrice() {
+            try {
+                const priceData = await apiClient.getPrice(appState.tradingSettings.ticker);
+                
+                appState.previousPrice = appState.currentPrice;
+                appState.currentPrice = priceData.price;
+                appState.priceChange = appState.currentPrice - appState.previousPrice;
+                appState.priceChangePercent = (appState.priceChange / appState.previousPrice) * 100;
+                appState.lastUpdate = new Date(priceData.timestamp);
+                
+                // Обновляем мин/макс цены
+                if (appState.currentPrice < appState.minPrice) appState.minPrice = appState.currentPrice;
+                if (appState.currentPrice > appState.maxPrice) appState.maxPrice = appState.currentPrice;
+                
+            } catch (error) {
+                // Fallback на локальную логику если сервер недоступен
+                appState.previousPrice = appState.currentPrice;
+                const change = (Math.random() - 0.5) * 0.1;
+                appState.currentPrice = Math.max(appState.minPrice, Math.min(appState.maxPrice, appState.currentPrice + change));
+                appState.currentPrice = parseFloat(appState.currentPrice.toFixed(2));
+                appState.priceChange = appState.currentPrice - appState.previousPrice;
+                appState.priceChangePercent = (appState.priceChange / appState.previousPrice) * 100;
+                appState.lastUpdate = new Date();
+            }
             
-            newPrice = Math.max(appState.minPrice, Math.min(appState.maxPrice, newPrice));
-            newPrice = parseFloat(newPrice.toFixed(2));
-            
-            appState.currentPrice = newPrice;
-            appState.priceChange = newPrice - appState.previousPrice;
-            appState.priceChangePercent = (appState.priceChange / appState.previousPrice) * 100;
-            appState.lastUpdate = new Date();
-
             checkLossProtection();
             updatePriceDisplay();
-            
-            appState.priceHistory.push({
-                price: appState.currentPrice,
-                change: appState.priceChange,
-                timestamp: Date.now()
-            });
-            
-            if (appState.priceHistory.length > 50) {
-                appState.priceHistory.shift();
-            }
-
             saveToStorage();
         }
 
@@ -759,13 +861,13 @@
                 const entryPrice = appState.currentPosition.price;
                 const currentLoss = appState.currentPrice - entryPrice;
                 
-                if (currentLoss < -0.01 && !appState.protectionTriggered) {
+                if (currentLoss < -appState.tradingSettings.stopLoss && !appState.protectionTriggered) {
                     appState.protectionTriggered = true;
                     appState.autoTrading = false;
                     document.getElementById('autoTradeToggle').checked = false;
                     stopTrading();
                     
-                    addLog(`🚨 ЗАЩИТА: Цена упала ниже закупочной! Трейдинг остановлен`);
+                    addLog(`🚨 ЗАЩИТА: Цена упала ниже стоп-лосса! Трейдинг остановлен`);
                     addLog(`💸 Текущий убыток: ${currentLoss.toFixed(2)}₽ за лот`);
                 }
             }
@@ -810,7 +912,7 @@
         }
 
         // Ручная покупка
-        function manualBuy() {
+        async function manualBuy() {
             if (appState.lotCount <= 0) {
                 addLog('❌ Установите количество лотов');
                 return;
@@ -821,41 +923,79 @@
                 return;
             }
 
-            appState.currentPosition = {
-                type: 'BUY',
-                lotCount: appState.lotCount,
-                price: appState.currentPrice,
-                timestamp: Date.now()
-            };
-            
-            addLog(`👨‍💻 РУЧНАЯ ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} по ${appState.currentPrice.toFixed(2)}₽`);
-            updateUI();
-            saveToStorage();
+            try {
+                if (appState.serverConnected && appState.realTrading) {
+                    const orderResult = await apiClient.placeLimitOrder({
+                        ticker: appState.tradingSettings.ticker,
+                        quantity: appState.lotCount,
+                        price: appState.currentPrice,
+                        direction: 'buy'
+                    });
+                    addLog(`👨‍💻 РУЧНАЯ ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽`);
+                    addLog(`📋 Ордер размещен: ${orderResult.orderId}`);
+                } else {
+                    addLog(`👨‍💻 РУЧНАЯ ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽ (демо)`);
+                }
+                
+                appState.currentPosition = {
+                    type: 'BUY',
+                    lotCount: appState.lotCount,
+                    price: appState.currentPrice,
+                    timestamp: Date.now()
+                };
+                
+                updateUI();
+                saveToStorage();
+                
+            } catch (error) {
+                addLog(`❌ Ошибка покупки: ${error.message}`);
+            }
         }
 
         // Ручная продажа
-        function manualSell() {
+        async function manualSell() {
             if (!appState.currentPosition) {
                 addLog('❌ Нет открытой позиции для продажи');
                 return;
             }
 
-            const entryPrice = appState.currentPosition.price;
-            const profitPerLot = appState.currentPrice - entryPrice;
-            const totalProfit = profitPerLot * appState.lotCount;
-            
-            appState.totalProfit += totalProfit;
-            appState.operationsCount++;
-            appState.currentPosition = null;
+            try {
+                const entryPrice = appState.currentPosition.price;
+                const profitPerLot = appState.currentPrice - entryPrice;
+                const totalProfit = profitPerLot * appState.lotCount;
+                
+                if (appState.serverConnected && appState.realTrading) {
+                    const orderResult = await apiClient.placeLimitOrder({
+                        ticker: appState.tradingSettings.ticker,
+                        quantity: appState.lotCount,
+                        price: appState.currentPrice,
+                        direction: 'sell'
+                    });
+                    
+                    if (totalProfit > 0) {
+                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
+                    } else {
+                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
+                    }
+                    addLog(`📋 Ордер размещен: ${orderResult.orderId}`);
+                } else {
+                    if (totalProfit > 0) {
+                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли (демо)`);
+                    } else {
+                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка (демо)`);
+                    }
+                }
+                
+                appState.totalProfit += totalProfit;
+                appState.operationsCount++;
+                appState.currentPosition = null;
 
-            if (totalProfit > 0) {
-                addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
-            } else {
-                addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
+                updateUI();
+                saveToStorage();
+                
+            } catch (error) {
+                addLog(`❌ Ошибка продажи: ${error.message}`);
             }
-            
-            updateUI();
-            saveToStorage();
         }
 
         // Правильное склонение слова "лот"
@@ -888,6 +1028,7 @@
         // Сохранение настроек трейдинга
         function saveTradingSettings() {
             appState.tradingSettings = {
+                ticker: document.getElementById('ticker').value,
                 buyPrice: parseFloat(document.getElementById('buyPrice').value),
                 targetProfit: parseFloat(document.getElementById('targetProfit').value),
                 stopLoss: parseFloat(document.getElementById('stopLoss').value),
@@ -944,7 +1085,7 @@
         }
 
         // Логика трейдинга
-        function executeLotTrade() {
+        async function executeLotTrade() {
             if (appState.lotCount <= 0 || appState.protectionTriggered) {
                 return;
             }
@@ -953,7 +1094,7 @@
             updateAIDisplay(decision);
             
             if (decision.shouldTrade) {
-                executeTransaction(decision);
+                await executeTransaction(decision);
             }
 
             updateUI();
@@ -971,9 +1112,9 @@
                 if (spread <= 0.02) {
                     shouldTrade = true;
                     tradeType = 'BUY';
-                    reasoning = `🤖 AI: Цена ${appState.currentPrice.toFixed(2)}₽ близка к целевой`;
+                    reasoning = `🤖 AI: Цена ${appState.currentPrice.toFixed(2)}₽ близка к целевой ${appState.tradingSettings.buyPrice}₽`;
                 } else {
-                    reasoning = `🤖 AI: Жду ${appState.tradingSettings.buyPrice}₽`;
+                    reasoning = `🤖 AI: Жду цену ${appState.tradingSettings.buyPrice}₽ (текущая ${appState.currentPrice.toFixed(2)}₽)`;
                 }
             } else {
                 const profitPerLot = appState.currentPrice - appState.tradingSettings.buyPrice;
@@ -981,13 +1122,13 @@
                 if (profitPerLot >= appState.tradingSettings.targetProfit) {
                     shouldTrade = true;
                     tradeType = 'SELL';
-                    reasoning = `🤖 AI: Цель +${profitPerLot.toFixed(2)}₽`;
+                    reasoning = `🤖 AI: Достигнута цель +${profitPerLot.toFixed(2)}₽ за лот`;
                 } else if (profitPerLot <= -appState.tradingSettings.stopLoss) {
                     shouldTrade = true;
                     tradeType = 'SELL';
-                    reasoning = `🤖 AI: Стоп-лосс ${profitPerLot.toFixed(2)}₽`;
+                    reasoning = `🤖 AI: Сработал стоп-лосс ${profitPerLot.toFixed(2)}₽ за лот`;
                 } else {
-                    reasoning = `🤖 AI: Удерживаю ${profitPerLot.toFixed(2)}₽`;
+                    reasoning = `🤖 AI: Удерживаю позицию ${profitPerLot.toFixed(2)}₽ за лот`;
                 }
             }
 
@@ -1012,33 +1153,75 @@
         }
 
         // Выполнение сделки
-        function executeTransaction(decision) {
+        async function executeTransaction(decision) {
             const { tradeType } = decision;
             
             if (tradeType === 'BUY' && !appState.currentPosition) {
-                appState.currentPosition = {
-                    type: 'BUY',
-                    lotCount: appState.lotCount,
-                    price: appState.currentPrice,
-                    timestamp: Date.now()
-                };
-                addLog(`🤖 АВТО-ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} по ${appState.currentPrice.toFixed(2)}₽`);
+                try {
+                    if (appState.serverConnected && appState.realTrading) {
+                        const orderResult = await apiClient.placeLimitOrder({
+                            ticker: appState.tradingSettings.ticker,
+                            quantity: appState.lotCount,
+                            price: appState.currentPrice,
+                            direction: 'buy'
+                        });
+                        addLog(`🤖 АВТО-ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽`);
+                        addLog(`📋 Ордер: ${orderResult.orderId}`);
+                    } else {
+                        addLog(`🤖 АВТО-ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽ (демо)`);
+                    }
+                    
+                    appState.currentPosition = {
+                        type: 'BUY',
+                        lotCount: appState.lotCount,
+                        price: appState.currentPrice,
+                        timestamp: Date.now()
+                    };
+                    
+                } catch (error) {
+                    addLog(`❌ Ошибка авто-покупки: ${error.message}`);
+                }
                 
             } else if (tradeType === 'SELL' && appState.currentPosition) {
-                const entryPrice = appState.currentPosition.price;
-                const profitPerLot = appState.currentPrice - entryPrice;
-                const totalProfit = profitPerLot * appState.lotCount;
-                
-                appState.totalProfit += totalProfit;
-                appState.operationsCount++;
-                appState.currentPosition = null;
+                try {
+                    const entryPrice = appState.currentPosition.price;
+                    const profitPerLot = appState.currentPrice - entryPrice;
+                    const totalProfit = profitPerLot * appState.lotCount;
+                    
+                    if (appState.serverConnected && appState.realTrading) {
+                        const orderResult = await apiClient.placeLimitOrder({
+                            ticker: appState.tradingSettings.ticker,
+                            quantity: appState.lotCount,
+                            price: appState.currentPrice,
+                            direction: 'sell'
+                        });
+                        
+                        if (totalProfit > 0) {
+                            addLog(`🤖 АВТО-ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
+                        } else {
+                            addLog(`🤖 АВТО-ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
+                        }
+                        addLog(`📋 Ордер: ${orderResult.orderId}`);
+                    } else {
+                        if (totalProfit > 0) {
+                            addLog(`🤖 АВТО-ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли (демо)`);
+                        } else {
+                            addLog(`🤖 АВТО-ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка (демо)`);
+                        }
+                    }
+                    
+                    appState.totalProfit += totalProfit;
+                    appState.operationsCount++;
+                    appState.currentPosition = null;
 
-                if (totalProfit > 0) {
-                    appState.aiAccuracy = Math.min(99.9, appState.aiAccuracy + 0.1);
-                    addLog(`🤖 АВТО-ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
-                } else {
-                    appState.aiAccuracy = Math.max(85, appState.aiAccuracy - 0.5);
-                    addLog(`🤖 АВТО-ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
+                    if (totalProfit > 0) {
+                        appState.aiAccuracy = Math.min(99.9, appState.aiAccuracy + 0.1);
+                    } else {
+                        appState.aiAccuracy = Math.max(85, appState.aiAccuracy - 0.5);
+                    }
+                    
+                } catch (error) {
+                    addLog(`❌ Ошибка авто-продажи: ${error.message}`);
                 }
             }
         }
@@ -1100,6 +1283,7 @@
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedData();
+            initializeTrading();
             startLivePriceUpdates();
             startTrading();
         });
