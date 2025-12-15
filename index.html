@@ -1,1292 +1,1087 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Smart Lot Trader</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Wave Music</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #FF2E2E;
+            --primary-dark: #CC0000;
+            --primary-light: #FF6B6B;
+            --accent: #00C853;
+            --accent-dark: #00A844;
+
+            --bg-dark: #000000;
+            --bg-card: #1A1A1A;
+            --bg-surface: #242424;
+            --bg-hover: #2C2C2C;
+
+            --border: #333333;
+            --border-light: #404040;
+
+            --text-primary: #FFFFFF;
+            --text-secondary: #B3B3B3;
+            --text-tertiary: #666666;
+
+            --gradient-primary: linear-gradient(135deg, #FF2E2E 0%, #FF6B00 100%);
+            --gradient-accent: linear-gradient(135deg, #00C853 0%, #00D4AA 100%);
+
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.6);
+
+            --glow-primary: 0 0 20px rgba(255, 46, 46, 0.3);
+            --glow-accent: 0 0 20px rgba(0, 200, 83, 0.3);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000000;
-            color: #ffffff;
-            line-height: 1.4;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 100%;
-            padding: 12px;
-        }
-
-        .section {
-            background: #1c1c1e;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid #2c2c2e;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .mode-selector {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            background: #2c2c2e;
-            padding: 8px;
-            border-radius: 12px;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid #2c2c2e;
-            border-radius: 10px;
-            background: #2c2c2e;
-            font-size: 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #8e8e93;
-            font-weight: 600;
-        }
-
-        .mode-btn.active {
-            border-color: #34C759;
-            background: #34C759;
-            color: #000000;
-        }
-
-        .protection-badge {
-            background: rgba(255, 59, 48, 0.15);
-            border: 2px solid #FF3B30;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .protection-active {
-            background: rgba(52, 199, 89, 0.15);
-            border-color: #34C759;
-        }
-
-        .tg-switch {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
             position: relative;
-            display: inline-block;
-            width: 52px;
-            height: 32px;
         }
 
-        .tg-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .tg-slider {
-            position: absolute;
-            cursor: pointer;
+        /* Красивый узор на фоне */
+        .pattern-bg {
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #3a3a3c;
-            transition: .2s;
-            border-radius: 16px;
+            background: 
+                /* Волны */
+                radial-gradient(circle at 20% 80%, rgba(255, 46, 46, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 0, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(0, 200, 83, 0.05) 0%, transparent 40%),
+                /* Звуковые волны */
+                repeating-linear-gradient(45deg, 
+                    transparent, 
+                    transparent 20px, 
+                    rgba(255, 46, 46, 0.02) 20px, 
+                    rgba(255, 46, 46, 0.02) 40px),
+                repeating-linear-gradient(-45deg, 
+                    transparent, 
+                    transparent 30px, 
+                    rgba(255, 107, 0, 0.02) 30px, 
+                    rgba(255, 107, 0, 0.02) 60px);
+            z-index: -2;
+            overflow: hidden;
         }
 
-        .tg-slider:before {
-            position: absolute;
-            content: "";
-            height: 24px;
-            width: 24px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .2s;
-            border-radius: 50%;
+        /* Градиентный оверлей */
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(0, 0, 0, 0.95) 0%,
+                rgba(26, 0, 0, 0.8) 50%,
+                rgba(0, 26, 0, 0.6) 100%);
+            z-index: -1;
         }
 
-        input:checked + .tg-slider {
-            background-color: #34C759;
-        }
-
-        input:checked + .tg-slider:before {
-            transform: translateX(20px);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .stat-item {
-            background: #2c2c2e;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid #3a3a3c;
-        }
-
-        .stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: #8e8e93;
-            font-weight: 500;
-        }
-
-        .live-price {
-            background: linear-gradient(135deg, #34C759 0%, #007AFF 100%);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 16px;
-            color: white;
-            text-align: center;
-            border: 1px solid #34C759;
-        }
-
-        .current-price {
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .price-change {
-            font-size: 16px;
-            font-weight: 600;
-            opacity: 0.9;
-        }
-
-        .price-up {
-            color: #34C759;
-        }
-
-        .price-down {
-            color: #FF3B30;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-label {
-            display: block;
-            font-size: 16px;
-            margin-bottom: 8px;
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        .tg-input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid #3a3a3c;
-            border-radius: 12px;
-            background: #2c2c2e;
-            font-size: 16px;
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        .tg-input:focus {
-            outline: none;
-            border-color: #34C759;
-            background: #3a3a3c;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 12px;
-            transition: all 0.2s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: #34C759;
-            color: #000000;
-        }
-
-        .btn-secondary {
-            background: #3a3a3c;
-            color: #ffffff;
-        }
-
-        .btn-danger {
-            background: #FF3B30;
-            color: white;
-        }
-
-        .quick-amounts {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .amount-btn {
-            padding: 14px;
-            border: 2px solid #3a3a3c;
-            border-radius: 10px;
-            background: #2c2c2e;
-            font-size: 14px;
-            text-align: center;
-            cursor: pointer;
-            color: #ffffff;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .amount-btn:active {
-            background: #3a3a3c;
-        }
-
-        .manual-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .manual-btn {
-            padding: 20px;
-            border: 3px solid #3a3a3c;
-            border-radius: 14px;
-            background: #2c2c2e;
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .manual-btn.buy {
-            border-color: #34C759;
-            color: #34C759;
-        }
-
-        .manual-btn.sell {
-            border-color: #FF3B30;
-            color: #FF3B30;
-        }
-
-        .manual-btn:active {
-            transform: scale(0.95);
-            background: #3a3a3c;
-        }
-
-        .logs-container {
-            max-height: 200px;
-            overflow-y: auto;
-            font-size: 13px;
-            background: #2c2c2e;
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid #3a3a3c;
-        }
-
-        .log-entry {
-            padding: 8px 0;
-            border-bottom: 1px solid #3a3a3c;
-        }
-
-        .log-entry:last-child {
-            border-bottom: none;
-        }
-
-        .log-time {
-            color: #8e8e93;
-            margin-right: 12px;
-            font-weight: 500;
-        }
-
-        .timer {
-            text-align: center;
-            font-size: 13px;
-            color: #8e8e93;
-            margin-top: 12px;
-            font-weight: 500;
-        }
-
-        .bot-amount-display {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 800;
-            margin: 20px 0;
-            color: #ffffff;
-        }
-
-        .micro-profit {
-            font-size: 15px;
-            color: #34C759;
-            font-weight: 600;
-            text-align: center;
-            margin: 12px 0;
-        }
-
-        .price-history {
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            font-size: 12px;
-            color: rgba(255,255,255,0.7);
-            margin-top: 12px;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .settings-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-light);
+            transform: rotate(30deg);
+        }
+
+        .settings-btn::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: var(--text-primary);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+            margin: 0 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 48px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-card);
+            box-shadow: 0 0 0 3px rgba(255, 46, 46, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--text-secondary);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") center/contain no-repeat;
+            pointer-events: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            transition: all 0.2s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-light);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 80px;
+            padding-bottom: 140px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Секция "Мой звук" - по центру */
+        .sound-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 70vh;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .sound-title {
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 20px rgba(255, 46, 46, 0.3);
+        }
+
+        .sound-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            line-height: 1.5;
+            max-width: 500px;
+        }
+
+        /* Кнопки */
+        .sound-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .sound-btn {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 30px;
+            padding: 18px 50px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .sound-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl), var(--glow-primary);
+        }
+
+        .sound-btn.secondary {
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .sound-btn.secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Подборки музыки */
+        .moods-section {
+            margin: 40px 0 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+        }
+
+        .moods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .mood-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mood-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .mood-card:hover {
+            transform: translateY(-6px);
+            background: var(--bg-hover);
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .mood-title {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mood-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .mood-icon::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+        }
+
+        .mood-icon.genres::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
+        }
+
+        .mood-icon.activities::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7'/%3E%3C/svg%3E");
+        }
+
+        .mood-icon.moods::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z'/%3E%3C/svg%3E");
+        }
+
+        .mood-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Табы контента */
+        .content-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            border-radius: 10px;
             font-weight: 500;
         }
 
-        .blink-up {
-            animation: blinkGreen 0.5s;
+        .tab:hover {
+            background: var(--bg-surface);
+            color: var(--text-primary);
         }
 
-        .blink-down {
-            animation: blinkRed 0.5s;
+        .tab.active {
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
-        @keyframes blinkGreen {
-            0% { background-color: rgba(52, 199, 89, 0.3); }
-            100% { background-color: transparent; }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 4px;
         }
 
-        @keyframes blinkRed {
-            0% { background-color: rgba(255, 59, 48, 0.3); }
-            100% { background-color: transparent; }
+        /* Коллекции */
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0 100px;
         }
 
-        .logs-container::-webkit-scrollbar {
-            width: 4px;
+        .collection-card {
+            background: var(--bg-card);
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
         }
 
-        .logs-container::-webkit-scrollbar-track {
-            background: #2c2c2e;
-            border-radius: 2px;
+        .collection-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-xl), var(--glow-primary);
         }
 
-        .logs-container::-webkit-scrollbar-thumb {
-            background: #34C759;
-            border-radius: 2px;
+        .collection-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
-        .logs-container::-webkit-scrollbar-thumb:hover {
-            background: #30B856;
+        .collection-card:hover .collection-image {
+            transform: scale(1.08);
         }
 
-        .server-status {
-            text-align: center;
+        .collection-info {
+            padding: 20px;
+        }
+
+        .collection-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .collection-artist {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .collection-badge {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 12px;
             font-size: 12px;
-            margin-top: 8px;
+            font-weight: 700;
         }
 
-        .status-online {
-            color: #34C759;
+        /* Player */
+        .player {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            height: 70px;
+            background: var(--bg-card);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 20px;
+            z-index: 999;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-xl);
         }
 
-        .status-offline {
-            color: #FF3B30;
+        .player-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: var(--shadow-md);
+        }
+
+        .player-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-artist {
+            font-size: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-light);
+            transform: scale(1.05);
+        }
+
+        .control-btn.heart::before,
+        .control-btn.next::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--text-primary);
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+        }
+
+        .control-btn.heart::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+        }
+
+        .control-btn.next::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z'/%3E%3C/svg%3E");
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-xl), var(--glow-primary);
+        }
+
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 22px;
+            height: 22px;
+            background: white;
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn.playing::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
+        }
+
+        .play-btn:not(.playing)::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 12px 0;
+            transition: all 0.2s ease;
+            position: relative;
+            min-height: 80px;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 0 0 3px 3px;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 6px;
+            background: currentColor;
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:nth-child(1) .nav-icon {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
+        }
+
+        .nav-item:nth-child(2) .nav-icon {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z'/%3E%3C/svg%3E");
+        }
+
+        .nav-item:nth-child(3) .nav-icon {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm4 8h-8v-1c0-1.33 2.67-2 4-2s4 .67 4 2v1z'/%3E%3C/svg%3E");
+        }
+
+        .nav-item:nth-child(4) .nav-icon {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08a6.993 6.993 0 0 0 5.91-5.78c.1-.6-.39-1.14-1-1.14z'/%3E%3C/svg%3E");
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* Scrollbar */
+        .main-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Live Price -->
-        <div class="live-price">
-            <div class="current-price" id="livePrice">190.81₽</div>
-            <div class="price-change" id="liveChange">
-                <span id="changeAmount">+0.00₽</span> • 
-                <span id="changePercent">+0.00%</span> •
-                <span id="updateTime">12:00:00</span>
-            </div>
-            <div class="price-history">
-                <span>MIN: <span id="minPrice">190.76₽</span></span>
-                <span>MAX: <span id="maxPrice">190.86₽</span></span>
-            </div>
-            <div class="server-status" id="serverStatus">
-                <span class="status-offline">🔴 Сервер недоступен</span>
+    <!-- Красивый узор на фоне -->
+    <div class="pattern-bg"></div>
+    <div class="gradient-overlay"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <button class="settings-btn" title="Настройки"></button>
+        </div>
+        
+        <div class="search-bar">
+            <div class="search-icon"></div>
+            <input type="text" class="search-input" placeholder="Найти треки, исполнителей, альбомы">
+        </div>
+        
+        <div class="header-right">
+            <div class="user-avatar" id="userAvatar" onclick="showUserMenu()">
+                <div class="user-avatar-placeholder">A</div>
             </div>
         </div>
+    </div>
 
-        <!-- Режим работы -->
-        <div class="section">
-            <div class="section-title">Режим работы</div>
-            <div class="mode-selector">
-                <button class="mode-btn active" onclick="setMode('auto')">🤖 Авто</button>
-                <button class="mode-btn" onclick="setMode('semi')">👨‍💻 Полу-авто</button>
-                <button class="mode-btn" onclick="setMode('manual')">✋ Ручной</button>
-            </div>
-            
-            <div class="protection-badge" id="protectionBadge">
-                🛡️ Защита от убытков: <strong>АКТИВНА</strong><br>
-                <small>Бот остановится при падении ниже цены покупки</small>
-            </div>
-        </div>
-
-        <!-- Статус -->
-        <div class="section">
-            <div class="section-header">
-                <div class="section-title" id="modeTitle">🤖 Авто-трейдинг</div>
-                <label class="tg-switch">
-                    <input type="checkbox" id="autoTradeToggle">
-                    <span class="tg-slider"></span>
-                </label>
-            </div>
-            <div class="timer" id="timer">Обновление: 1с</div>
-        </div>
-
-        <!-- Ручное управление -->
-        <div class="section" id="manualSection" style="display: none;">
-            <div class="section-title">Ручное управление</div>
-            <div class="manual-controls">
-                <button class="manual-btn buy" onclick="manualBuy()">🟢 КУПИТЬ</button>
-                <button class="manual-btn sell" onclick="manualSell()">🔴 ПРОДАТЬ</button>
-            </div>
-            <div style="text-align: center; font-size: 13px; color: #8e8e93;">
-                Нажмите для ручной покупки/продажи по текущей цене
-            </div>
-        </div>
-
-        <!-- Статистика -->
-        <div class="section">
-            <div class="section-title">Статистика по лотам</div>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-value" id="operationsCount">0</div>
-                    <div class="stat-label">Сделок</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="totalProfit">+0.00₽</div>
-                    <div class="stat-label">Прибыль</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="profitability">0%</div>
-                    <div class="stat-label">Доходность</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="aiAccuracy">95%</div>
-                    <div class="stat-label">Точность AI</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lot Trading -->
-        <div class="section">
-            <div class="section-title">Трейдинг лотами</div>
-            <div class="lot-trading">
-                <div style="text-align: center; margin-bottom: 12px;">
-                    <strong id="aiDecision">Мониторю цену в реальном времени...</strong>
-                </div>
-                <div id="aiReasoning" style="text-align: center; font-size: 14px; color: #8e8e93;">
-                    Цена обновляется каждую секунду • Защита от убытков активна
-                </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-container">
+            <!-- Секция "Мой звук" - по центру -->
+            <div class="sound-section">
+                <h1 class="sound-title">МОЙ ЗВУК</h1>
+                <div class="sound-subtitle">Музыкальные рекомендации для вас</div>
                 
-                <div class="lot-info">
-                    <div class="lot-item">
-                        <div>Цена покупки</div>
-                        <div id="buyPriceDisplay">190.81₽</div>
+                <div class="sound-buttons">
+                    <button class="sound-btn" onclick="configureSound()">
+                        Настроить
+                    </button>
+                    <button class="sound-btn secondary" onclick="playSound()">
+                        Воспроизвести
+                    </button>
+                </div>
+            </div>
+
+            <!-- Подборки музыки -->
+            <div class="moods-section">
+                <h2 class="section-title">Подборки музыки</h2>
+                <div class="moods-grid">
+                    <div class="mood-card" onclick="openCategory('genres')">
+                        <div class="mood-title">
+                            <div class="mood-icon genres"></div>
+                            Жанры
+                        </div>
+                        <div class="mood-subtitle">Рок, поп, хип-хоп, джаз, электроника</div>
                     </div>
-                    <div class="lot-item">
-                        <div>Текущий спред</div>
-                        <div id="spread">0.01₽</div>
+                    <div class="mood-card" onclick="openCategory('activities')">
+                        <div class="mood-title">
+                            <div class="mood-icon activities"></div>
+                            Занятия
+                        </div>
+                        <div class="mood-subtitle">Для работы, тренировки, отдыха, учебы</div>
                     </div>
-                    <div class="lot-item">
-                        <div>Позиция</div>
-                        <div id="position">⚪ Нет</div>
-                    </div>
-                    <div class="lot-item">
-                        <div>Прибыль/лот</div>
-                        <div id="profitPerLot">0.01₽</div>
+                    <div class="mood-card" onclick="openCategory('moods')">
+                        <div class="mood-title">
+                            <div class="mood-icon moods"></div>
+                            Настроения
+                        </div>
+                        <div class="mood-subtitle">Веселое, грустное, энергичное, спокойное</div>
                     </div>
                 </div>
             </div>
 
-            <div class="micro-profit">
-                💰 0.01₽ прибыль за каждый лот • Защита от убытков активна
-            </div>
-        </div>
-
-        <!-- Капитал -->
-        <div class="section">
-            <div class="section-title">Количество лотов</div>
-            <div class="bot-amount-display" id="botAmountDisplay">0 лотов</div>
-            
-            <div class="input-group">
-                <label class="input-label">Количество лотов для торговли</label>
-                <input type="number" class="tg-input" id="lotCountInput" placeholder="1" value="1" min="1" max="1000">
-            </div>
-            
-            <div class="quick-amounts">
-                <button class="amount-btn" onclick="setLotCount(1)">1 лот</button>
-                <button class="amount-btn" onclick="setLotCount(5)">5 лотов</button>
-                <button class="amount-btn" onclick="setLotCount(10)">10 лотов</button>
-                <button class="amount-btn" onclick="setLotCount(50)">50 лотов</button>
-                <button class="amount-btn" onclick="setLotCount(100)">100 лотов</button>
-                <button class="amount-btn" onclick="setLotCount(500)">500 лотов</button>
-            </div>
-            
-            <button class="btn btn-primary" onclick="saveLotCount()">Сохранить</button>
-        </div>
-
-        <!-- Настройки трейдинга -->
-        <div class="section">
-            <div class="section-title">Настройки трейдинга</div>
-            
-            <div class="input-group">
-                <label class="input-label">Тикер инструмента</label>
-                <input type="text" class="tg-input" id="ticker" value="SBER" placeholder="SBER">
-            </div>
-            
-            <div class="input-group">
-                <label class="input-label">Цена покупки (₽)</label>
-                <input type="number" step="0.01" class="tg-input" id="buyPrice" value="190.81" min="1" max="1000">
-            </div>
-            
-            <div class="input-group">
-                <label class="input-label">Цель прибыли (₽ за лот)</label>
-                <input type="number" step="0.01" class="tg-input" id="targetProfit" value="0.01" min="0.01" max="1">
-            </div>
-            
-            <div class="input-group">
-                <label class="input-label">Стоп-лосс (₽ за лот)</label>
-                <input type="number" step="0.01" class="tg-input" id="stopLoss" value="0.01" min="0.01" max="1">
+            <!-- Табы контента -->
+            <div class="content-tabs">
+                <button class="tab active" onclick="switchTab('for-you')">Для вас</button>
+                <button class="tab" onclick="switchTab('trends')">Тренды</button>
+                <button class="tab" onclick="switchTab('new')">Новинки</button>
             </div>
 
-            <div class="input-group">
-                <label class="input-label">Защита от убытков</label>
-                <select class="tg-input" id="lossProtection">
-                    <option value="auto">Авто-остановка при убытках</option>
-                    <option value="alert">Только предупреждение</option>
-                    <option value="off">Отключить</option>
-                </select>
-            </div>
-            
-            <button class="btn btn-secondary" onclick="saveTradingSettings()">Сохранить настройки</button>
-        </div>
+            <!-- Коллекции -->
+            <div class="collections-grid">
+                <div class="collection-card" onclick="playCollection('guf-melis')">
+                    <img src="https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/600x600" 
+                         class="collection-image" 
+                         alt="GUF, Melis Treat">
+                    <div class="collection-info">
+                        <div class="collection-title">GUF, Melis Treat</div>
+                        <div class="collection-artist">Лучшие треки русских рэп-исполнителей</div>
+                    </div>
+                </div>
 
-        <!-- Логи -->
-        <div class="section">
-            <div class="section-title">Логи операций</div>
-            <div class="logs-container" id="logsContainer">
-                <div class="log-entry">
-                    <span class="log-time">12:00:00</span>
-                    <span>📊 Smart Trader запущен. Режим: Авто • Защита активна</span>
+                <div class="collection-card" onclick="playCollection('asta-la-vista')">
+                    <img src="https://avatars.yandex.net/get-music-content/3801605/e4c7b1f3.a.16937297-1/600x600" 
+                         class="collection-image" 
+                         alt="Аста ла виста">
+                    <div class="collection-info">
+                        <div class="collection-title">Аста ла виста</div>
+                        <div class="collection-artist">Скриптонит, FEDUK и другие</div>
+                    </div>
+                </div>
+
+                <div class="collection-card" onclick="playCollection('romantik-vandal')">
+                    <img src="https://avatars.yandex.net/get-music-content/3801605/96813002.a.16937297-1/600x600" 
+                         class="collection-image" 
+                         alt="Романтик и Вандал">
+                    <div class="collection-info">
+                        <div class="collection-title">Романтик и Вандал</div>
+                        <div class="collection-artist">BUSHIDO ZHO - новые хиты 2024</div>
+                    </div>
+                </div>
+
+                <div class="collection-card" onclick="playCollection('besitsya')">
+                    <img src="https://avatars.yandex.net/get-music-content/3801605/8f38f2f3.a.16937297-1/600x600" 
+                         class="collection-image" 
+                         alt="БЕСИТСЯ">
+                    <div class="collection-info">
+                        <div class="collection-title">БЕСИТСЯ</div>
+                        <div class="collection-artist">Toxi®, Big Baby Tape</div>
+                    </div>
+                </div>
+
+                <div class="collection-card" onclick="playCollection('trends')">
+                    <img src="https://avatars.yandex.net/get-music-content/3801605/9b6b7765.a.16937297-1/600x600" 
+                         class="collection-image" 
+                         alt="Тренды">
+                    <div class="collection-info">
+                        <div class="collection-title">СКРИПТОНИТ</div>
+                        <div class="collection-artist">Самые популярные треки недели</div>
+                    </div>
+                </div>
+
+                <div class="collection-card" onclick="playCollection('new-month')">
+                    <img src="https://avatars.yandex.net/get-music-content/118603/32a52ce5.a.1657590-1/600x600" 
+                         class="collection-image" 
+                         alt="Новинки">
+                    <div class="collection-info">
+                        <div class="collection-title">Громкие новинки</div>
+                        <div class="collection-artist">Их ждали! Свежие релизы месяца</div>
+                        <div class="collection-badge">НОВОЕ</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Player -->
+    <div class="player">
+        <img src="https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/400x400" 
+             class="player-cover" 
+             alt="Трек">
+        <div class="player-info">
+            <div class="player-title">Blinding Lights</div>
+            <div class="player-artist">The Weeknd • After Hours</div>
+        </div>
+        <div class="player-controls">
+            <button class="control-btn heart"></button>
+            <button class="play-btn playing" id="playerPlayBtn"></button>
+            <button class="control-btn next"></button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchPage('music')">
+            <div class="nav-icon"></div>
+            <div class="nav-label">Музыка</div>
+        </button>
+        <button class="nav-item" onclick="switchPage('library')">
+            <div class="nav-icon"></div>
+            <div class="nav-label">Коллекция</div>
+        </button>
+        <button class="nav-item" onclick="switchPage('radio')">
+            <div class="nav-icon"></div>
+            <div class="nav-label">Радио</div>
+        </button>
+        <button class="nav-item" onclick="switchPage('podcasts')">
+            <div class="nav-icon"></div>
+            <div class="nav-label">Подкасты</div>
+        </button>
+    </div>
+
     <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
-
-        // API клиент для взаимодействия с сервером
-        const apiClient = {
-            baseUrl: 'https://carfix77-frog-14.deno.dev',
-            
-            async request(endpoint, options = {}) {
-                try {
-                    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        ...options
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    if (!result.success) {
-                        throw new Error(result.error);
-                    }
-                    
-                    return result;
-                } catch (error) {
-                    console.error('API request failed:', error);
-                    throw error;
-                }
-            },
-            
-            async getPrice(ticker = 'SBER') {
-                const result = await this.request(`/api/price?ticker=${ticker}`);
-                return result.data;
-            },
-            
-            async getPortfolio() {
-                const result = await this.request('/api/portfolio');
-                return result.data;
-            },
-            
-            async placeLimitOrder(orderData) {
-                const result = await this.request('/api/order/limit', {
-                    method: 'POST',
-                    body: JSON.stringify(orderData)
-                });
-                return result.data;
-            },
-            
-            async getStatus() {
-                const result = await this.request('/api/status');
-                return result.data;
+        // Состояние приложения
+        const appState = {
+            currentPage: 'music',
+            currentTrack: {
+                title: 'Blinding Lights',
+                artist: 'The Weeknd',
+                album: 'After Hours',
+                cover: 'https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/400x400',
+                isPlaying: false
             }
         };
-
-        // Состояние для умного трейдинга
-        let appState = {
-            mode: 'auto',
-            autoTrading: false,
-            operationsCount: 0,
-            totalProfit: 0,
-            lotCount: 0,
-            priceTimer: null,
-            tradeTimer: null,
-            timerCount: 1,
-            aiAccuracy: 95,
-            currentPosition: null,
-            currentPrice: 190.81,
-            previousPrice: 190.81,
-            priceChange: 0,
-            priceChangePercent: 0,
-            minPrice: 190.76,
-            maxPrice: 190.86,
-            tradingSettings: {
-                ticker: 'SBER',
-                buyPrice: 190.81,
-                targetProfit: 0.01,
-                stopLoss: 0.01,
-                lossProtection: 'auto'
-            },
-            priceHistory: [],
-            lastUpdate: new Date(),
-            protectionTriggered: false,
-            serverConnected: false,
-            realTrading: false
-        };
-
-        // Загрузка сохраненных данных
-        function loadSavedData() {
-            const saved = localStorage.getItem('smartLotTraderDark');
-            if (saved) {
-                const data = JSON.parse(saved);
-                Object.assign(appState, data);
-                
-                document.getElementById('lotCountInput').value = appState.lotCount;
-                document.getElementById('ticker').value = appState.tradingSettings.ticker;
-                document.getElementById('buyPrice').value = appState.tradingSettings.buyPrice;
-                document.getElementById('targetProfit').value = appState.tradingSettings.targetProfit;
-                document.getElementById('stopLoss').value = appState.tradingSettings.stopLoss;
-                document.getElementById('lossProtection').value = appState.tradingSettings.lossProtection;
-                
-                updateUI();
-                updateModeDisplay();
-            }
-        }
-
-        // Инициализация торгового сервера
-        async function initializeTrading() {
-            try {
-                const status = await apiClient.getStatus();
-                appState.serverConnected = true;
-                appState.realTrading = status.hasToken;
-                
-                const statusElement = document.getElementById('serverStatus');
-                if (status.hasToken) {
-                    statusElement.innerHTML = '<span class="status-online">🟢 Сервер подключен • Реальный трейдинг</span>';
-                    addLog('✅ Подключение к Tinkoff API установлено');
-                } else {
-                    statusElement.innerHTML = '<span class="status-online">🟡 Сервер подключен • Демо-режим</span>';
-                    addLog('⚠️ Сервер в демо-режиме (нет токена Tinkoff)');
-                }
-                
-            } catch (error) {
-                console.error('Server connection failed:', error);
-                appState.serverConnected = false;
-                document.getElementById('serverStatus').innerHTML = '<span class="status-offline">🔴 Сервер недоступен • Локальный режим</span>';
-                addLog('❌ Сервер недоступен, работа в локальном режиме');
-            }
-        }
-
-        // Установка режима работы
-        function setMode(mode) {
-            appState.mode = mode;
-            
-            document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            updateModeDisplay();
-            
-            if (mode === 'manual') {
-                appState.autoTrading = false;
-                document.getElementById('autoTradeToggle').checked = false;
-                stopTrading();
-            }
-            
-            addLog(`🔄 Режим изменен: ${getModeName(mode)}`);
-            saveToStorage();
-        }
-
-        // Обновление отображения режима
-        function updateModeDisplay() {
-            const modeTitle = document.getElementById('modeTitle');
-            const manualSection = document.getElementById('manualSection');
-            const autoToggle = document.getElementById('autoTradeToggle');
-            
-            modeTitle.textContent = getModeTitle(appState.mode);
-            
-            if (appState.mode === 'semi' || appState.mode === 'manual') {
-                manualSection.style.display = 'block';
-            } else {
-                manualSection.style.display = 'none';
-            }
-            
-            autoToggle.disabled = appState.mode === 'manual';
-            updateUI();
-        }
-
-        // Получение названия режима
-        function getModeName(mode) {
-            const names = {
-                'auto': 'Авто',
-                'semi': 'Полу-авто', 
-                'manual': 'Ручной'
-            };
-            return names[mode];
-        }
-
-        // Получение заголовка режима
-        function getModeTitle(mode) {
-            const titles = {
-                'auto': '🤖 Авто-трейдинг',
-                'semi': '👨‍💻 Полу-авто режим',
-                'manual': '✋ Ручной трейдинг'
-            };
-            return titles[mode];
-        }
-
-        // Обновление интерфейса
-        function updateUI() {
-            document.getElementById('operationsCount').textContent = appState.operationsCount;
-            document.getElementById('totalProfit').textContent = `${appState.totalProfit >= 0 ? '+' : ''}${appState.totalProfit.toFixed(2)}₽`;
-            document.getElementById('profitability').textContent = appState.lotCount > 0 ? 
-                `${((appState.totalProfit / (appState.lotCount * appState.tradingSettings.buyPrice)) * 100).toFixed(3)}%` : '0%';
-            document.getElementById('aiAccuracy').textContent = `${appState.aiAccuracy}%`;
-            document.getElementById('botAmountDisplay').textContent = `${appState.lotCount} ${getLotWord(appState.lotCount)}`;
-            document.getElementById('autoTradeToggle').checked = appState.autoTrading;
-
-            document.getElementById('buyPriceDisplay').textContent = `${appState.tradingSettings.buyPrice.toFixed(2)}₽`;
-            document.getElementById('position').textContent = appState.currentPosition ? '🟢 Куплено' : '⚪ Нет';
-            document.getElementById('profitPerLot').textContent = `${appState.tradingSettings.targetProfit.toFixed(2)}₽`;
-
-            const protectionBadge = document.getElementById('protectionBadge');
-            if (appState.protectionTriggered) {
-                protectionBadge.innerHTML = '🚨 ЗАЩИТА СРАБОТАЛА! <strong>ТРЕЙДИНГ ОСТАНОВЛЕН</strong><br><small>Цена упала ниже закупочной</small>';
-                protectionBadge.className = 'protection-badge';
-            } else if (appState.tradingSettings.lossProtection === 'auto') {
-                protectionBadge.innerHTML = '🛡️ Защита от убытков: <strong>АКТИВНА</strong><br><small>Бот остановится при падении ниже цены покупки</small>';
-                protectionBadge.className = 'protection-badge protection-active';
-            } else {
-                protectionBadge.innerHTML = '⚠️ Защита от убытков: <strong>ОТКЛЮЧЕНА</strong><br><small>Трейдинг продолжится при убытках</small>';
-                protectionBadge.className = 'protection-badge';
-            }
-        }
-
-        // Обновление цены в реальном времени
-        async function updateLivePrice() {
-            try {
-                const priceData = await apiClient.getPrice(appState.tradingSettings.ticker);
-                
-                appState.previousPrice = appState.currentPrice;
-                appState.currentPrice = priceData.price;
-                appState.priceChange = appState.currentPrice - appState.previousPrice;
-                appState.priceChangePercent = (appState.priceChange / appState.previousPrice) * 100;
-                appState.lastUpdate = new Date(priceData.timestamp);
-                
-                // Обновляем мин/макс цены
-                if (appState.currentPrice < appState.minPrice) appState.minPrice = appState.currentPrice;
-                if (appState.currentPrice > appState.maxPrice) appState.maxPrice = appState.currentPrice;
-                
-            } catch (error) {
-                // Fallback на локальную логику если сервер недоступен
-                appState.previousPrice = appState.currentPrice;
-                const change = (Math.random() - 0.5) * 0.1;
-                appState.currentPrice = Math.max(appState.minPrice, Math.min(appState.maxPrice, appState.currentPrice + change));
-                appState.currentPrice = parseFloat(appState.currentPrice.toFixed(2));
-                appState.priceChange = appState.currentPrice - appState.previousPrice;
-                appState.priceChangePercent = (appState.priceChange / appState.previousPrice) * 100;
-                appState.lastUpdate = new Date();
-            }
-            
-            checkLossProtection();
-            updatePriceDisplay();
-            saveToStorage();
-        }
-
-        // Проверка защиты от убытков
-        function checkLossProtection() {
-            if (appState.currentPosition && appState.tradingSettings.lossProtection === 'auto') {
-                const entryPrice = appState.currentPosition.price;
-                const currentLoss = appState.currentPrice - entryPrice;
-                
-                if (currentLoss < -appState.tradingSettings.stopLoss && !appState.protectionTriggered) {
-                    appState.protectionTriggered = true;
-                    appState.autoTrading = false;
-                    document.getElementById('autoTradeToggle').checked = false;
-                    stopTrading();
-                    
-                    addLog(`🚨 ЗАЩИТА: Цена упала ниже стоп-лосса! Трейдинг остановлен`);
-                    addLog(`💸 Текущий убыток: ${currentLoss.toFixed(2)}₽ за лот`);
-                }
-            }
-        }
-
-        // Обновление отображения цены
-        function updatePriceDisplay() {
-            const livePriceElement = document.getElementById('livePrice');
-            const changeAmountElement = document.getElementById('changeAmount');
-            const changePercentElement = document.getElementById('changePercent');
-            const updateTimeElement = document.getElementById('updateTime');
-
-            livePriceElement.textContent = `${appState.currentPrice.toFixed(2)}₽`;
-
-            const changeAmount = appState.priceChange;
-            const changePercent = appState.priceChangePercent;
-            
-            changeAmountElement.textContent = `${changeAmount >= 0 ? '+' : ''}${changeAmount.toFixed(2)}₽`;
-            changePercentElement.textContent = `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%`;
-
-            if (changeAmount > 0) {
-                changeAmountElement.className = 'price-up';
-                changePercentElement.className = 'price-up';
-                livePriceElement.classList.add('blink-up');
-                setTimeout(() => livePriceElement.classList.remove('blink-up'), 500);
-            } else if (changeAmount < 0) {
-                changeAmountElement.className = 'price-down';
-                changePercentElement.className = 'price-down';
-                livePriceElement.classList.add('blink-down');
-                setTimeout(() => livePriceElement.classList.remove('blink-down'), 500);
-            } else {
-                changeAmountElement.className = '';
-                changePercentElement.className = '';
-            }
-
-            updateTimeElement.textContent = appState.lastUpdate.toLocaleTimeString('ru-RU');
-            document.getElementById('minPrice').textContent = `${appState.minPrice.toFixed(2)}₽`;
-            document.getElementById('maxPrice').textContent = `${appState.maxPrice.toFixed(2)}₽`;
-
-            const spread = Math.abs(appState.currentPrice - appState.tradingSettings.buyPrice);
-            document.getElementById('spread').textContent = `${spread.toFixed(2)}₽`;
-        }
-
-        // Ручная покупка
-        async function manualBuy() {
-            if (appState.lotCount <= 0) {
-                addLog('❌ Установите количество лотов');
-                return;
-            }
-
-            if (appState.currentPosition) {
-                addLog('⚠️ У вас уже есть открытая позиция');
-                return;
-            }
-
-            try {
-                if (appState.serverConnected && appState.realTrading) {
-                    const orderResult = await apiClient.placeLimitOrder({
-                        ticker: appState.tradingSettings.ticker,
-                        quantity: appState.lotCount,
-                        price: appState.currentPrice,
-                        direction: 'buy'
-                    });
-                    addLog(`👨‍💻 РУЧНАЯ ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽`);
-                    addLog(`📋 Ордер размещен: ${orderResult.orderId}`);
-                } else {
-                    addLog(`👨‍💻 РУЧНАЯ ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽ (демо)`);
-                }
-                
-                appState.currentPosition = {
-                    type: 'BUY',
-                    lotCount: appState.lotCount,
-                    price: appState.currentPrice,
-                    timestamp: Date.now()
-                };
-                
-                updateUI();
-                saveToStorage();
-                
-            } catch (error) {
-                addLog(`❌ Ошибка покупки: ${error.message}`);
-            }
-        }
-
-        // Ручная продажа
-        async function manualSell() {
-            if (!appState.currentPosition) {
-                addLog('❌ Нет открытой позиции для продажи');
-                return;
-            }
-
-            try {
-                const entryPrice = appState.currentPosition.price;
-                const profitPerLot = appState.currentPrice - entryPrice;
-                const totalProfit = profitPerLot * appState.lotCount;
-                
-                if (appState.serverConnected && appState.realTrading) {
-                    const orderResult = await apiClient.placeLimitOrder({
-                        ticker: appState.tradingSettings.ticker,
-                        quantity: appState.lotCount,
-                        price: appState.currentPrice,
-                        direction: 'sell'
-                    });
-                    
-                    if (totalProfit > 0) {
-                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
-                    } else {
-                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
-                    }
-                    addLog(`📋 Ордер размещен: ${orderResult.orderId}`);
-                } else {
-                    if (totalProfit > 0) {
-                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли (демо)`);
-                    } else {
-                        addLog(`👨‍💻 РУЧНАЯ ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка (демо)`);
-                    }
-                }
-                
-                appState.totalProfit += totalProfit;
-                appState.operationsCount++;
-                appState.currentPosition = null;
-
-                updateUI();
-                saveToStorage();
-                
-            } catch (error) {
-                addLog(`❌ Ошибка продажи: ${error.message}`);
-            }
-        }
-
-        // Правильное склонение слова "лот"
-        function getLotWord(count) {
-            if (count % 10 === 1 && count % 100 !== 11) return 'лот';
-            if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return 'лота';
-            return 'лотов';
-        }
-
-        // Установка количества лотов
-        function setLotCount(count) {
-            document.getElementById('lotCountInput').value = count;
-        }
-
-        // Сохранение количества лотов
-        function saveLotCount() {
-            const count = parseInt(document.getElementById('lotCountInput').value);
-            
-            if (!count || count <= 0) {
-                addLog('❌ Введите количество лотов');
-                return;
-            }
-            
-            appState.lotCount = count;
-            updateUI();
-            saveToStorage();
-            addLog(`✅ Установлено: ${count} ${getLotWord(count)}`);
-        }
-
-        // Сохранение настроек трейдинга
-        function saveTradingSettings() {
-            appState.tradingSettings = {
-                ticker: document.getElementById('ticker').value,
-                buyPrice: parseFloat(document.getElementById('buyPrice').value),
-                targetProfit: parseFloat(document.getElementById('targetProfit').value),
-                stopLoss: parseFloat(document.getElementById('stopLoss').value),
-                lossProtection: document.getElementById('lossProtection').value
-            };
-            
-            appState.minPrice = appState.tradingSettings.buyPrice - 0.05;
-            appState.maxPrice = appState.tradingSettings.buyPrice + 0.05;
-            appState.protectionTriggered = false;
-            
-            updateUI();
-            saveToStorage();
-            addLog('✅ Настройки трейдинга сохранены');
-        }
-
-        // Запуск обновления цены в реальном времени
-        function startLivePriceUpdates() {
-            if (appState.priceTimer) clearInterval(appState.priceTimer);
-            appState.priceTimer = setInterval(() => {
-                updateLivePrice();
-            }, 1000);
-        }
-
-        // Запуск трейдинга
-        function startTrading() {
-            if (appState.tradeTimer) clearInterval(appState.tradeTimer);
-            
-            appState.timerCount = 2;
-            updateTimer();
-            
-            appState.tradeTimer = setInterval(() => {
-                appState.timerCount--;
-                updateTimer();
-                
-                if (appState.timerCount <= 0) {
-                    if (appState.autoTrading && appState.mode !== 'manual') {
-                        executeLotTrade();
-                    }
-                    appState.timerCount = 2;
-                }
-            }, 1000);
-        }
-
-        // Остановка трейдинга
-        function stopTrading() {
-            if (appState.tradeTimer) {
-                clearInterval(appState.tradeTimer);
-                appState.tradeTimer = null;
-            }
-        }
-
-        function updateTimer() {
-            document.getElementById('timer').textContent = `Обновление: ${appState.timerCount}с`;
-        }
-
-        // Логика трейдинга
-        async function executeLotTrade() {
-            if (appState.lotCount <= 0 || appState.protectionTriggered) {
-                return;
-            }
-
-            const decision = makeTradingDecision();
-            updateAIDisplay(decision);
-            
-            if (decision.shouldTrade) {
-                await executeTransaction(decision);
-            }
-
-            updateUI();
-            saveToStorage();
-        }
-
-        // Принятие торговых решений
-        function makeTradingDecision() {
-            let shouldTrade = false;
-            let tradeType = '';
-            let reasoning = '';
-
-            if (!appState.currentPosition) {
-                const spread = Math.abs(appState.currentPrice - appState.tradingSettings.buyPrice);
-                if (spread <= 0.02) {
-                    shouldTrade = true;
-                    tradeType = 'BUY';
-                    reasoning = `🤖 AI: Цена ${appState.currentPrice.toFixed(2)}₽ близка к целевой ${appState.tradingSettings.buyPrice}₽`;
-                } else {
-                    reasoning = `🤖 AI: Жду цену ${appState.tradingSettings.buyPrice}₽ (текущая ${appState.currentPrice.toFixed(2)}₽)`;
-                }
-            } else {
-                const profitPerLot = appState.currentPrice - appState.tradingSettings.buyPrice;
-                
-                if (profitPerLot >= appState.tradingSettings.targetProfit) {
-                    shouldTrade = true;
-                    tradeType = 'SELL';
-                    reasoning = `🤖 AI: Достигнута цель +${profitPerLot.toFixed(2)}₽ за лот`;
-                } else if (profitPerLot <= -appState.tradingSettings.stopLoss) {
-                    shouldTrade = true;
-                    tradeType = 'SELL';
-                    reasoning = `🤖 AI: Сработал стоп-лосс ${profitPerLot.toFixed(2)}₽ за лот`;
-                } else {
-                    reasoning = `🤖 AI: Удерживаю позицию ${profitPerLot.toFixed(2)}₽ за лот`;
-                }
-            }
-
-            return {
-                shouldTrade,
-                tradeType,
-                reasoning,
-                signal: shouldTrade ? tradeType : 'HOLD'
-            };
-        }
-
-        // Обновление отображения AI
-        function updateAIDisplay(decision) {
-            const signalTexts = {
-                'BUY': '🤖 ПОКУПКА',
-                'SELL': '🤖 ПРОДАЖА', 
-                'HOLD': '🤖 МОНИТОРИНГ'
-            };
-
-            document.getElementById('aiDecision').textContent = signalTexts[decision.signal];
-            document.getElementById('aiReasoning').textContent = decision.reasoning;
-        }
-
-        // Выполнение сделки
-        async function executeTransaction(decision) {
-            const { tradeType } = decision;
-            
-            if (tradeType === 'BUY' && !appState.currentPosition) {
-                try {
-                    if (appState.serverConnected && appState.realTrading) {
-                        const orderResult = await apiClient.placeLimitOrder({
-                            ticker: appState.tradingSettings.ticker,
-                            quantity: appState.lotCount,
-                            price: appState.currentPrice,
-                            direction: 'buy'
-                        });
-                        addLog(`🤖 АВТО-ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽`);
-                        addLog(`📋 Ордер: ${orderResult.orderId}`);
-                    } else {
-                        addLog(`🤖 АВТО-ПОКУПКА: ${appState.lotCount} ${getLotWord(appState.lotCount)} ${appState.tradingSettings.ticker} по ${appState.currentPrice.toFixed(2)}₽ (демо)`);
-                    }
-                    
-                    appState.currentPosition = {
-                        type: 'BUY',
-                        lotCount: appState.lotCount,
-                        price: appState.currentPrice,
-                        timestamp: Date.now()
-                    };
-                    
-                } catch (error) {
-                    addLog(`❌ Ошибка авто-покупки: ${error.message}`);
-                }
-                
-            } else if (tradeType === 'SELL' && appState.currentPosition) {
-                try {
-                    const entryPrice = appState.currentPosition.price;
-                    const profitPerLot = appState.currentPrice - entryPrice;
-                    const totalProfit = profitPerLot * appState.lotCount;
-                    
-                    if (appState.serverConnected && appState.realTrading) {
-                        const orderResult = await apiClient.placeLimitOrder({
-                            ticker: appState.tradingSettings.ticker,
-                            quantity: appState.lotCount,
-                            price: appState.currentPrice,
-                            direction: 'sell'
-                        });
-                        
-                        if (totalProfit > 0) {
-                            addLog(`🤖 АВТО-ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли`);
-                        } else {
-                            addLog(`🤖 АВТО-ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка`);
-                        }
-                        addLog(`📋 Ордер: ${orderResult.orderId}`);
-                    } else {
-                        if (totalProfit > 0) {
-                            addLog(`🤖 АВТО-ПРОДАЖА: +${totalProfit.toFixed(2)}₽ прибыли (демо)`);
-                        } else {
-                            addLog(`🤖 АВТО-ПРОДАЖА: ${totalProfit.toFixed(2)}₽ убытка (демо)`);
-                        }
-                    }
-                    
-                    appState.totalProfit += totalProfit;
-                    appState.operationsCount++;
-                    appState.currentPosition = null;
-
-                    if (totalProfit > 0) {
-                        appState.aiAccuracy = Math.min(99.9, appState.aiAccuracy + 0.1);
-                    } else {
-                        appState.aiAccuracy = Math.max(85, appState.aiAccuracy - 0.5);
-                    }
-                    
-                } catch (error) {
-                    addLog(`❌ Ошибка авто-продажи: ${error.message}`);
-                }
-            }
-        }
-
-        // Добавление лога
-        function addLog(message) {
-            const logsContainer = document.getElementById('logsContainer');
-            const time = new Date().toLocaleTimeString('ru-RU', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            logEntry.innerHTML = `<span class="log-time">${time}</span><span>${message}</span>`;
-            
-            logsContainer.appendChild(logEntry);
-            logsContainer.scrollTop = logsContainer.scrollHeight;
-            
-            const logs = logsContainer.querySelectorAll('.log-entry');
-            if (logs.length > 15) logs[0].remove();
-        }
-
-        // Сохранение
-        function saveToStorage() {
-            localStorage.setItem('smartLotTraderDark', JSON.stringify(appState));
-        }
-
-        // Обработчик переключения
-        document.getElementById('autoTradeToggle').addEventListener('change', function(e) {
-            appState.autoTrading = e.target.checked;
-            
-            if (appState.autoTrading) {
-                if (appState.lotCount <= 0) {
-                    addLog('❌ Установите количество лотов');
-                    e.target.checked = false;
-                    appState.autoTrading = false;
-                    return;
-                }
-                
-                if (appState.protectionTriggered) {
-                    addLog('🚨 Защита сработала! Сначала сбросьте настройки');
-                    e.target.checked = false;
-                    appState.autoTrading = false;
-                    return;
-                }
-                
-                addLog(`🤖 Авто-трейдинг запущен в режиме: ${getModeName(appState.mode)}`);
-                startTrading();
-            } else {
-                addLog('⏸️ Авто-трейдинг остановлен');
-                stopTrading();
-            }
-            
-            saveToStorage();
-        });
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
-            loadSavedData();
-            initializeTrading();
-            startLivePriceUpdates();
-            startTrading();
+            updatePlayer();
+            setupEventListeners();
         });
+
+        // Настройка звука
+        function configureSound() {
+            console.log('Настройка "Моего звука"');
+            alert('Настройка персонализированных музыкальных рекомендаций. Вы можете выбрать любимые жанры, исполнителей и настроения.');
+        }
+
+        // Воспроизведение звука
+        function playSound() {
+            console.log('Воспроизведение "Моего звука"');
+            
+            // Запускаем случайный плейлист
+            const collections = ['guf-melis', 'asta-la-vista', 'romantik-vandal', 'besitsya', 'trends', 'new-month'];
+            const randomCollection = collections[Math.floor(Math.random() * collections.length)];
+            
+            playCollection(randomCollection);
+            
+            showNotification('Запущен "Мой звук" - персонализированная подборка');
+        }
+
+        // Обновление плеера
+        function updatePlayer() {
+            const playerCover = document.querySelector('.player-cover');
+            const playerTitle = document.querySelector('.player-title');
+            const playerArtist = document.querySelector('.player-artist');
+            
+            if (playerCover) playerCover.src = appState.currentTrack.cover;
+            if (playerTitle) playerTitle.textContent = appState.currentTrack.title;
+            if (playerArtist) playerArtist.textContent = `${appState.currentTrack.artist} • ${appState.currentTrack.album}`;
+        }
+
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            // Кнопка плеера
+            const playBtn = document.getElementById('playerPlayBtn');
+            if (playBtn) {
+                playBtn.addEventListener('click', function() {
+                    appState.currentTrack.isPlaying = !appState.currentTrack.isPlaying;
+                    this.classList.toggle('playing');
+                    
+                    if (appState.currentTrack.isPlaying) {
+                        showNotification('Воспроизведение начато');
+                    } else {
+                        showNotification('Воспроизведение остановлено');
+                    }
+                });
+            }
+
+            // Карточки музыки
+            document.querySelectorAll('.collection-card, .mood-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+
+        // Воспроизведение подборки
+        function playCollection(collectionId) {
+            const collections = {
+                'guf-melis': {
+                    title: 'GUF, Melis Treat',
+                    artist: 'Русский хип-хоп',
+                    cover: 'https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/600x600'
+                },
+                'asta-la-vista': {
+                    title: 'Аста ла виста',
+                    artist: 'Скриптонит, FEDUK',
+                    cover: 'https://avatars.yandex.net/get-music-content/3801605/e4c7b1f3.a.16937297-1/600x600'
+                },
+                'romantik-vandal': {
+                    title: 'Романтик и Вандал',
+                    artist: 'BUSHIDO ZHO',
+                    cover: 'https://avatars.yandex.net/get-music-content/3801605/96813002.a.16937297-1/600x600'
+                },
+                'besitsya': {
+                    title: 'БЕСИТСЯ',
+                    artist: 'Toxi®, Big Baby Tape',
+                    cover: 'https://avatars.yandex.net/get-music-content/3801605/8f38f2f3.a.16937297-1/600x600'
+                },
+                'trends': {
+                    title: 'СКРИПТОНИТ',
+                    artist: 'Тренды',
+                    cover: 'https://avatars.yandex.net/get-music-content/3801605/9b6b7765.a.16937297-1/600x600'
+                },
+                'new-month': {
+                    title: 'Громкие новинки',
+                    artist: 'Новые релизы',
+                    cover: 'https://avatars.yandex.net/get-music-content/118603/32a52ce5.a.1657590-1/600x600'
+                }
+            };
+
+            const collection = collections[collectionId];
+            if (collection) {
+                appState.currentTrack = {
+                    title: collection.title,
+                    artist: collection.artist,
+                    album: 'Плейлист',
+                    cover: collection.cover,
+                    isPlaying: true
+                };
+
+                updatePlayer();
+                
+                const playerBtn = document.getElementById('playerPlayBtn');
+                if (playerBtn) playerBtn.classList.add('playing');
+                
+                showNotification(`Запущен плейлист: ${collection.title}`);
+            }
+        }
+
+        // Показать меню пользователя
+        function showUserMenu() {
+            console.log('Открыто меню пользователя');
+            alert('Меню пользователя: Профиль, Настройки, Выйти');
+        }
+
+        // Вспомогательные функции
+        function openCategory(categoryId) {
+            console.log('Открыта категория:', categoryId);
+        }
+
+        function switchTab(tabId) {
+            console.log('Переключение на таб:', tabId);
+        }
+
+        function switchPage(pageId) {
+            appState.currentPage = pageId;
+            console.log('Переключение на страницу:', pageId);
+        }
+
+        function showNotification(message) {
+            console.log('Notification:', message);
+        }
     </script>
 </body>
 </html>
