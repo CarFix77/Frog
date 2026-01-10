@@ -20,6 +20,10 @@
             --accent-dark: #00A844;
             --purple: #9C27B0;
             --blue: #2196F3;
+            --cyan: #00BCD4;
+            --orange: #FF9800;
+            --pink: #E91E63;
+            --indigo: #3F51B5;
 
             --bg-dark: #000000;
             --bg-card: #1A1A1A;
@@ -37,6 +41,10 @@
             --gradient-accent: linear-gradient(135deg, #00C853 0%, #00D4AA 100%);
             --gradient-purple: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);
             --gradient-blue: linear-gradient(135deg, #2196F3 0%, #03A9F4 100%);
+            --gradient-cyan: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+            --gradient-orange: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            --gradient-pink: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+            --gradient-indigo: linear-gradient(135deg, #3F51B5 0%, #303F9F 100%);
 
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -45,6 +53,8 @@
 
             --glow-primary: 0 0 20px rgba(255, 46, 46, 0.3);
             --glow-accent: 0 0 20px rgba(0, 200, 83, 0.3);
+            --glow-cyan: 0 0 20px rgba(0, 188, 212, 0.3);
+            --glow-orange: 0 0 20px rgba(255, 152, 0, 0.3);
         }
 
         body {
@@ -55,7 +65,7 @@
             position: relative;
         }
 
-        /* КРАСИВЫЙ ПАРТИКЛ ФОН */
+        /* Фон с частицами */
         .particles-bg {
             position: fixed;
             top: 0;
@@ -67,16 +77,6 @@
             overflow: hidden;
         }
 
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: var(--primary);
-            opacity: 0;
-            pointer-events: none;
-            filter: blur(15px);
-        }
-
-        /* Градиентные слои */
         .gradient-layer {
             position: fixed;
             top: 0;
@@ -84,59 +84,10 @@
             right: 0;
             bottom: 0;
             z-index: -1;
-            opacity: 0.1;
+            opacity: 0.05;
             background: 
                 radial-gradient(circle at 20% 80%, var(--primary) 0%, transparent 40%),
-                radial-gradient(circle at 80% 20%, var(--purple) 0%, transparent 40%),
-                radial-gradient(circle at 40% 40%, var(--blue) 0%, transparent 40%),
-                radial-gradient(circle at 60% 60%, var(--accent) 0%, transparent 40%);
-            animation: gradientShift 15s ease-in-out infinite alternate;
-        }
-
-        @keyframes gradientShift {
-            0% {
-                transform: scale(1);
-                opacity: 0.08;
-            }
-            100% {
-                transform: scale(1.1);
-                opacity: 0.15;
-            }
-        }
-
-        /* Волны звука на весь экран */
-        .sound-waves-bg {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            opacity: 0.05;
-        }
-
-        .sound-wave {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid;
-            border-radius: 50%;
-            animation: soundWave 4s linear infinite;
-        }
-
-        @keyframes soundWave {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 0.8;
-            }
-            100% {
-                width: 100vw;
-                height: 100vw;
-                opacity: 0;
-            }
+                radial-gradient(circle at 80% 20%, var(--purple) 0%, transparent 40%);
         }
 
         /* Header */
@@ -264,7 +215,7 @@
             font-size: 18px;
         }
 
-        /* Main Content Container */
+        /* Main Content */
         .main-content {
             padding-top: 60px;
             padding-bottom: 140px;
@@ -281,58 +232,30 @@
             padding: 0 20px;
         }
 
-        /* ЛЕВАЯ И ПРАВАЯ ГРАНИЦЫ */
-        .content-wrapper::before,
-        .content-wrapper::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: linear-gradient(to bottom, 
-                transparent, 
-                rgba(255, 46, 46, 0.3), 
-                transparent);
-            z-index: 1;
-        }
-
-        .content-wrapper::before {
-            left: calc(50% - 600px);
-        }
-
-        .content-wrapper::after {
-            right: calc(50% - 600px);
-        }
-
         /* Главная секция - Мой звук */
         .sound-hero-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 60vh;
-            padding: 40px 20px;
+            min-height: 40vh;
+            padding: 40px 20px 20px;
             position: relative;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
-        /* Заголовок */
         .sound-hero-title {
-            font-size: 72px;
+            font-size: 48px;
             font-weight: 900;
             background: linear-gradient(45deg, 
                 var(--primary) 0%,
-                var(--purple) 25%,
-                var(--blue) 50%,
-                var(--accent) 75%,
-                var(--primary) 100%);
+                var(--purple) 50%,
+                var(--blue) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            background-size: 200% auto;
-            animation: gradientShift 4s ease-in-out infinite;
-            letter-spacing: 3px;
+            letter-spacing: 1px;
             margin-bottom: 15px;
             position: relative;
         }
@@ -340,133 +263,31 @@
         .sound-hero-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 200px;
-            height: 4px;
+            width: 120px;
+            height: 3px;
             background: var(--gradient-primary);
             border-radius: 2px;
         }
 
-        /* Подзаголовок */
         .sound-hero-subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            max-width: 600px;
-            line-height: 1.6;
-            position: relative;
-            padding: 0 20px;
-        }
-
-        .sound-hero-subtitle::before,
-        .sound-hero-subtitle::after {
-            content: '♫';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-size: 20px;
-            animation: noteFloat 2s ease-in-out infinite;
-        }
-
-        .sound-hero-subtitle::before {
-            left: 0;
-        }
-
-        .sound-hero-subtitle::after {
-            right: 0;
-        }
-
-        @keyframes noteFloat {
-            0%, 100% {
-                transform: translateY(-50%) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-60%) rotate(10deg);
-            }
-        }
-
-        /* Эксклюзивные кнопки */
-        .sound-hero-actions {
-            display: flex;
-            gap: 25px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .hero-action-btn {
-            position: relative;
-            padding: 18px 45px;
             font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            min-width: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            max-width: 500px;
+            line-height: 1.5;
         }
 
-        .hero-action-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.2), 
-                transparent);
-            transition: left 0.7s ease;
-        }
-
-        .hero-action-btn:hover::before {
-            left: 100%;
-        }
-
-        .hero-action-btn.primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .hero-action-btn.secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 0 0 rgba(255, 46, 46, 0.4);
-        }
-
-        .hero-action-btn:hover {
-            transform: translateY(-5px) scale(1.02);
-        }
-
-        .hero-action-btn.primary:hover {
-            box-shadow: var(--shadow-xl), var(--glow-primary);
-        }
-
-        .hero-action-btn.secondary:hover {
-            background: var(--primary);
-            box-shadow: 0 0 20px 5px rgba(255, 46, 46, 0.4);
-        }
-
-        /* Визуализатор звука */
+        /* АНИМАЦИЯ ПОЛОС */
         .sound-visualizer {
             display: flex;
             align-items: flex-end;
             justify-content: center;
             gap: 6px;
             height: 80px;
-            margin-top: 30px;
+            margin-top: 20px;
             position: relative;
         }
 
@@ -501,15 +322,56 @@
             }
         }
 
+        .sound-hero-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-action-btn {
+            position: relative;
+            padding: 15px 35px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .hero-action-btn.primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .hero-action-btn.secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--primary);
+        }
+
+        .hero-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
         /* Подборки музыки */
         .moods-section {
-            margin: 40px 0 30px;
+            margin: 30px 0;
         }
 
         .section-title {
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: var(--text-primary);
             position: relative;
             display: inline-block;
@@ -540,7 +402,7 @@
             flex-direction: column;
             gap: 12px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             border: 1px solid var(--border);
             position: relative;
             overflow: hidden;
@@ -557,10 +419,10 @@
         }
 
         .mood-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-4px);
             background: var(--bg-hover);
             border-color: var(--border-light);
-            box-shadow: var(--shadow-xl);
+            box-shadow: var(--shadow-lg);
         }
 
         .mood-title {
@@ -580,30 +442,6 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            flex-shrink: 0;
-        }
-
-        .mood-icon::before {
-            content: '';
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            background: white;
-            mask-position: center;
-            mask-repeat: no-repeat;
-            mask-size: contain;
-        }
-
-        .mood-icon.genres::before {
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E");
-        }
-
-        .mood-icon.activities::before {
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7'/%3E%3C/svg%3E");
-        }
-
-        .mood-icon.moods::before {
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z'/%3E%3C/svg%3E");
         }
 
         .mood-subtitle {
@@ -624,8 +462,8 @@
         .tab {
             background: none;
             border: none;
-            padding: 10px 20px;
-            font-size: 15px;
+            padding: 12px 24px;
+            font-size: 16px;
             color: var(--text-secondary);
             cursor: pointer;
             position: relative;
@@ -642,6 +480,7 @@
         .tab.active {
             color: var(--text-primary);
             font-weight: 600;
+            background: var(--bg-surface);
         }
 
         .tab.active::after {
@@ -655,12 +494,927 @@
             border-radius: 2px;
         }
 
-        /* Коллекции */
+        /* Контейнер для контента табов */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* СТРАНИЦА НАСТРОЕК */
+        .settings-page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+            padding: 20px 0 100px;
+        }
+
+        .settings-page.active {
+            display: block;
+        }
+
+        .settings-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .settings-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-title::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .settings-title.language::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z'/%3E%3C/svg%3E") center/16px no-repeat var(--primary);
+        }
+
+        .settings-title.support::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z'/%3E%3C/svg%3E") center/16px no-repeat var(--primary);
+        }
+
+        .settings-title.subscription::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E") center/16px no-repeat var(--primary);
+        }
+
+        /* Языки */
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .language-option {
+            background: var(--bg-surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .language-option:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .language-option.active {
+            border-color: var(--primary);
+            background: rgba(255, 46, 46, 0.1);
+        }
+
+        .language-flag {
+            width: 40px;
+            height: 30px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .language-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .language-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .language-natives {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Техподдержка */
+        .support-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .support-option {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .support-option:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .support-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .support-icon::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: white;
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+        }
+
+        .support-option:nth-child(1) .support-icon::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z'/%3E%3C/svg%3E");
+        }
+
+        .support-option:nth-child(2) .support-icon::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z'/%3E%3C/svg%3E");
+        }
+
+        .support-option:nth-child(3) .support-icon::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+        }
+
+        .support-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .support-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .support-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* КРАСИВЫЙ ЗАГОЛОВОК ПОДПИСКИ */
+        .subscription-header {
+            text-align: center;
+            margin-bottom: 30px; /* Уменьшили отступ */
+            padding: 25px 20px; /* Уменьшили padding */
+            background: linear-gradient(135deg, 
+                rgba(255, 46, 46, 0.1),
+                rgba(156, 39, 176, 0.1));
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subscription-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .subscription-title {
+            font-size: 42px; /* Уменьшили размер */
+            font-weight: 900;
+            background: linear-gradient(45deg, 
+                var(--primary) 20%,
+                var(--purple) 50%,
+                var(--blue) 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px; /* Увеличили отступ для кнопки */
+            position: relative;
+            display: inline-block;
+        }
+
+        .subscription-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            right: 25%;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .subscription-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 15px auto 0; /* Уменьшили отступ */
+            line-height: 1.5;
+        }
+
+        /* Кнопка подключения TON кошелька - ЦЕНТРИРОВАННАЯ */
+        .ton-connect-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--gradient-blue);
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            min-width: 280px;
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+        }
+
+        .ton-connect-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(33, 150, 243, 0.6);
+        }
+
+        .ton-connect-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .ton-connect-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ton-connect-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+        }
+
+        /* ОБНОВЛЕННЫЕ ПОДПИСКИ */
+        .subscription-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .plan-card {
+            background: linear-gradient(145deg, var(--bg-card), var(--bg-dark));
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(255, 46, 46, 0.1);
+        }
+
+        .plan-card.popular {
+            border-color: var(--primary);
+            background: linear-gradient(145deg, 
+                rgba(255, 46, 46, 0.15),
+                rgba(26, 26, 26, 0.95)
+            );
+            position: relative;
+        }
+
+        /* ИСПРАВЛЕННАЯ надпись ПОПУЛЯРНЫЙ ВЫБОР - КОРОЧЕ и правильно */
+        .plan-card.popular::after {
+            content: 'ПОПУЛЯРНЫЙ';
+            position: absolute;
+            top: 20px; /* Подняли еще выше */
+            right: -35px; /* Подвинули левее */
+            background: linear-gradient(45deg, var(--primary), var(--orange));
+            color: white;
+            padding: 8px 40px; /* Уменьшили ширину */
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            transform: rotate(45deg);
+            box-shadow: var(--shadow-lg);
+            z-index: 10; /* Увеличили z-index */
+            width: 160px; /* Уменьшили ширину */
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 5; /* Увеличили z-index */
+        }
+
+        .plan-period {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .plan-price-container {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 5; /* Увеличили z-index */
+        }
+
+        .plan-price {
+            font-size: 60px;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(45deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+        }
+
+        .plan-card.popular .plan-price {
+            background: linear-gradient(45deg, var(--primary), #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .plan-currency {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-left: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+            z-index: 5; /* Увеличили z-index */
+        }
+
+        /* УВЕЛИЧЕННАЯ ИКОНКА TON */
+        .ton-icon-large {
+            width: 36px;
+            height: 36px;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 5; /* Увеличили z-index */
+        }
+
+        .ton-icon-large svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 4px rgba(0, 152, 234, 0.5));
+        }
+
+        .plan-savings {
+            background: linear-gradient(45deg, var(--primary), var(--orange));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 10px;
+            box-shadow: var(--shadow-sm);
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 5; /* Увеличили z-index */
+        }
+
+        /* ИСПРАВЛЕННЫЕ КРУЖКИ С ГАЛОЧКАМИ */
+        .plan-features {
+            flex: 1;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 5; /* Увеличили z-index */
+        }
+
+        .plan-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 0;
+        }
+
+        .plan-feature::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(45deg, var(--accent), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 200, 83, 0.3);
+            margin-top: 2px;
+        }
+
+        .plan-feature::after {
+            content: '✓';
+            position: absolute;
+            left: 5px;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            top: 6px;
+        }
+
+        .plan-card.popular .plan-feature::before {
+            background: linear-gradient(45deg, var(--primary), var(--orange));
+            box-shadow: 0 4px 8px rgba(255, 46, 46, 0.3);
+        }
+
+        .plan-button {
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            z-index: 5; /* Увеличили z-index */
+        }
+
+        .plan-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transition: left 0.5s ease;
+        }
+
+        .plan-button:hover::before {
+            left: 100%;
+        }
+
+        .plan-card .plan-button {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            box-shadow: 
+                0 8px 25px rgba(255, 46, 46, 0.4);
+        }
+
+        .plan-card.popular .plan-button {
+            background: linear-gradient(135deg, var(--primary), #ff6b00);
+            color: white;
+            box-shadow: 
+                0 10px 30px rgba(255, 46, 46, 0.5);
+        }
+
+        .plan-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 35px rgba(255, 46, 46, 0.6);
+        }
+
+        /* Контейнер для промокода - ИСПРАВЛЕННЫЙ */
+        .promocode-container {
+            margin-top: 40px;
+            padding: 25px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .promocode-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .promocode-title::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF9800'%3E%3Cpath d='M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .promocode-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .promocode-input {
+            flex: 1;
+            padding: 14px 20px;
+            background: var(--bg-surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            min-width: 0; /* Важно для flex */
+        }
+
+        .promocode-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-card);
+            box-shadow: 0 0 0 3px rgba(255, 46, 46, 0.1);
+        }
+
+        .promocode-btn {
+            padding: 14px 24px; /* Уменьшили padding */
+            background: var(--gradient-accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0; /* Не сжимается */
+        }
+
+        .promocode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .promocode-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* СТРАНИЦА КОЛЛЕКЦИИ */
+        .collection-page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+            padding: 20px 0 100px;
+        }
+
+        .collection-page.active {
+            display: block;
+        }
+
+        .empty-collection {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 2px dashed var(--border);
+            margin-bottom: 30px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .empty-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 400px;
+            margin: 0 auto 20px;
+            line-height: 1.5;
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .collection-track-item {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .collection-track-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            background: var(--bg-hover);
+        }
+
+        .collection-track-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+        }
+
+        .collection-track-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .collection-track-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .collection-track-artist {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .collection-track-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* НОВЫЙ СТИЛЬ ДЛЯ "ДЛЯ ВАС" - ТРЕКИ ВМЕСТО АЛЬБОМОВ */
+        .for-you-section {
+            margin-bottom: 40px;
+        }
+
+        .for-you-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .for-you-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .for-you-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .scroll-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .scroll-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-light);
+        }
+
+        .scroll-btn::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: var(--text-primary);
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+        }
+
+        .scroll-btn.prev::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z'/%3E%3C/svg%3E");
+        }
+
+        .scroll-btn.next::before {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'/%3E%3C/svg%3E");
+        }
+
+        .for-you-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 0 20px;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .for-you-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* СТИЛЬ КАРТОЧЕК ТРЕКОВ ДЛЯ "ДЛЯ ВАС" */
+        .track-card-for-you {
+            min-width: 220px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .track-card-for-you:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-xl), var(--glow-primary);
+        }
+
+        .track-image-for-you {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+        }
+
+        .track-card-for-you:hover .track-image-for-you {
+            transform: scale(1.05);
+        }
+
+        .track-info-for-you {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .track-title-for-you {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-artist-for-you {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-meta-for-you {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: auto;
+        }
+
+        .track-badge-for-you {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 8px;
+            background: var(--gradient-accent);
+            color: white;
+            align-self: flex-start;
+        }
+
+        /* Коллекции (для Тренды и Новинки) - остаются альбомами */
         .collections-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
-            margin: 30px 0 100px;
+            margin: 20px 0 60px;
         }
 
         .collection-card {
@@ -668,25 +1422,27 @@
             border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             border: 1px solid var(--border);
+            position: relative;
         }
 
         .collection-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-6px);
             border-color: var(--primary);
             box-shadow: var(--shadow-xl), var(--glow-primary);
         }
 
         .collection-image {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
             transition: transform 0.6s ease;
+            background: linear-gradient(135deg, var(--bg-surface), var(--border));
         }
 
         .collection-card:hover .collection-image {
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
 
         .collection-info {
@@ -698,22 +1454,272 @@
             font-weight: 600;
             margin-bottom: 6px;
             color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .collection-artist {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .collection-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 12px;
+            color: var(--text-tertiary);
         }
 
         .collection-badge {
             display: inline-block;
-            background: var(--gradient-primary);
-            color: white;
             padding: 4px 10px;
             border-radius: 10px;
             font-size: 11px;
             font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .collection-badge.trending {
+            background: var(--gradient-purple);
+            color: white;
+        }
+
+        .collection-badge.new {
+            background: var(--gradient-blue);
+            color: white;
+        }
+
+        /* Страница альбома (для Тренды и Новинки) */
+        .album-page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .album-page.active {
+            display: block;
+        }
+
+        .album-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .album-cover-large {
+            width: 250px;
+            height: 250px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: var(--shadow-xl);
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+        }
+
+        .album-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .album-type {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .album-name-large {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            line-height: 1.2;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .album-artist-large {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .album-meta-large {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .album-meta-large span {
+            white-space: nowrap;
+        }
+
+        .album-actions {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .play-album-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .play-album-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--glow-primary);
+        }
+
+        /* Список треков в альбоме */
+        .tracks-list-section {
+            margin-top: 40px;
+        }
+
+        .tracks-list-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .tracks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .track-item-album {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .track-item-album:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-light);
+            transform: translateX(5px);
+        }
+
+        .track-number-album {
+            width: 40px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .track-image-album {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+        }
+
+        .track-info-album {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .track-title-album {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-artist-album {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-duration-album {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+            margin-left: 15px;
+            white-space: nowrap;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
         }
 
         /* Player */
@@ -737,11 +1743,13 @@
         }
 
         .player-cover {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
             object-fit: cover;
             box-shadow: var(--shadow-md);
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--bg-surface), var(--border));
         }
 
         .player-info {
@@ -750,16 +1758,16 @@
         }
 
         .player-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .player-artist {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
@@ -770,6 +1778,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-shrink: 0;
         }
 
         .control-btn {
@@ -781,12 +1790,18 @@
             cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
+            flex-shrink: 0;
         }
 
         .control-btn:hover {
             background: var(--bg-hover);
             border-color: var(--border-light);
             transform: scale(1.05);
+        }
+
+        .control-btn.liked {
+            background: var(--primary);
+            border-color: var(--primary);
         }
 
         .control-btn.heart::before,
@@ -804,6 +1819,10 @@
             mask-size: contain;
         }
 
+        .control-btn.liked::before {
+            background: white;
+        }
+
         .control-btn.heart::before {
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
         }
@@ -819,9 +1838,10 @@
             border-radius: 50%;
             border: none;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             position: relative;
             box-shadow: var(--shadow-lg);
+            flex-shrink: 0;
         }
 
         .play-btn:hover {
@@ -910,7 +1930,6 @@
             mask-position: center;
             mask-repeat: no-repeat;
             mask-size: contain;
-            transition: all 0.2s ease;
         }
 
         .nav-item:nth-child(1) .nav-icon {
@@ -919,14 +1938,6 @@
 
         .nav-item:nth-child(2) .nav-icon {
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z'/%3E%3C/svg%3E");
-        }
-
-        .nav-item:nth-child(3) .nav-icon {
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm4 8h-8v-1c0-1.33 2.67-2 4-2s4 .67 4 2v1z'/%3E%3C/svg%3E");
-        }
-
-        .nav-item:nth-child(4) .nav-icon {
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08a6.993 6.993 0 0 0 5.91-5.78c.1-.6-.39-1.14-1-1.14z'/%3E%3C/svg%3E");
         }
 
         .nav-label {
@@ -952,22 +1963,72 @@
         .main-content::-webkit-scrollbar-thumb:hover {
             background: var(--primary-light);
         }
+
+        /* ИКОНКИ ДЛЯ КОЛЛЕКЦИЙ */
+        .collection-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        .icon-tracks {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666666'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .icon-plays {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666666'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        /* Уведомления - СИНИЕ вместо красных */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--blue); /* СИНИЙ вместо красного */
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- ФОН С ПАРТИКЛАМИ -->
-    <div class="particles-bg" id="particlesBg"></div>
-
-    <!-- Градиентный слой -->
+    <!-- Фон -->
+    <div class="particles-bg"></div>
     <div class="gradient-layer"></div>
-
-    <!-- Волны звука на фон -->
-    <div class="sound-waves-bg" id="soundWavesBg"></div>
 
     <!-- Header -->
     <div class="header">
         <div class="header-left">
-            <button class="settings-btn" title="Настройки"></button>
+            <button class="settings-btn" title="Настройки" onclick="openSettings()"></button>
         </div>
 
         <div class="search-bar">
@@ -984,129 +2045,208 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- КОНТЕЙНЕР С ГРАНИЦАМИ -->
         <div class="content-wrapper">
-            <!-- Главная секция - Мой звук -->
-            <div class="sound-hero-section">
-                <h1 class="sound-hero-title">МОЙ ЗВУК</h1>
+            <!-- Главная страница -->
+            <div class="main-page" id="mainPage">
+                <!-- Главная секция - Мой звук -->
+                <div class="sound-hero-section">
+                    <h1 class="sound-hero-title">МОЙ ЗВУК</h1>
+                    <div class="sound-hero-subtitle">
+                        Персональные рекомендации на основе ваших предпочтений
+                    </div>
 
-                <div class="sound-hero-subtitle">
-                    Эксклюзивные музыкальные рекомендации, созданные специально для вас
+                    <!-- Анимация полос -->
+                    <div class="sound-visualizer" id="soundVisualizer"></div>
+
+                    <div class="sound-hero-actions">
+                        <button class="hero-action-btn primary" onclick="configureSound()">
+                            Настроить звук
+                        </button>
+                        <button class="hero-action-btn secondary" onclick="playSound()">
+                            Слушать
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Визуализатор звука -->
-                <div class="sound-visualizer" id="soundVisualizer">
-                    <!-- Будет создано динамически -->
+                <!-- Подборки музыки -->
+                <div class="moods-section">
+                    <h2 class="section-title">Подборки музыки</h2>
+                    <div class="moods-grid">
+                        <div class="mood-card" onclick="openCategory('genres')">
+                            <div class="mood-title">
+                                <div class="mood-icon"></div>
+                                Жанры
+                            </div>
+                            <div class="mood-subtitle">Рок, поп, хип-хоп, джаз, электроника</div>
+                        </div>
+                        <div class="mood-card" onclick="openCategory('activities')">
+                            <div class="mood-title">
+                                <div class="mood-icon"></div>
+                                Занятия
+                            </div>
+                            <div class="mood-subtitle">Для работы, тренировки, отдыха, учебы</div>
+                        </div>
+                        <div class="mood-card" onclick="openCategory('moods')">
+                            <div class="mood-title">
+                                <div class="mood-icon"></div>
+                                Настроения
+                            </div>
+                            <div class="mood-subtitle">Веселое, грустное, энергичное, спокойное</div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Кнопки действий -->
-                <div class="sound-hero-actions">
-                    <button class="hero-action-btn primary" onclick="configureSound()">
-                        <span class="action-icon settings-icon"></span>
-                        Настроить
-                    </button>
-                    <button class="hero-action-btn secondary" onclick="playSound()">
-                        <span class="action-icon play-icon"></span>
-                        Воспроизвести
-                    </button>
+                <!-- Табы контента -->
+                <div class="content-tabs">
+                    <button class="tab active" onclick="switchTab('for-you')">Для вас</button>
+                    <button class="tab" onclick="switchTab('trends')">Тренды</button>
+                    <button class="tab" onclick="switchTab('new')">Новинки</button>
+                </div>
+
+                <!-- Контент для таба "Для вас" - ТОЛЬКО ТРЕКИ -->
+                <div class="tab-content active" id="tab-for-you">
+                    <div class="for-you-section">
+                        <div class="for-you-header">
+                            <div>
+                                <div class="for-you-title">На основе ваших предпочтений</div>
+                                <div class="for-you-subtitle">Треки, которые вам понравятся</div>
+                            </div>
+                            <div class="scroll-buttons">
+                                <button class="scroll-btn prev" onclick="scrollForYou('prev')"></button>
+                                <button class="scroll-btn next" onclick="scrollForYou('next')"></button>
+                            </div>
+                        </div>
+                        <div class="for-you-scroll" id="forYouScroll">
+                            <!-- Треки заполняются динамически -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Контент для таба "Тренды" - АЛЬБОМЫ -->
+                <div class="tab-content" id="tab-trends">
+                    <div class="collections-grid" id="grid-trends">
+                        <!-- Заполняется динамически -->
+                    </div>
+                </div>
+
+                <!-- Контент для таба "Новинки" - АЛЬБОМЫ -->
+                <div class="tab-content" id="tab-new">
+                    <div class="collections-grid" id="grid-new">
+                        <!-- Заполняется динамически -->
+                    </div>
                 </div>
             </div>
 
-            <!-- Подборки музыки -->
-            <div class="moods-section">
-                <h2 class="section-title">Подборки музыки</h2>
-                <div class="moods-grid">
-                    <div class="mood-card" onclick="openCategory('genres')">
-                        <div class="mood-title">
-                            <div class="mood-icon genres"></div>
-                            Жанры
-                        </div>
-                        <div class="mood-subtitle">Рок, поп, хип-хоп, джаз, электроника</div>
+            <!-- Страница настроек -->
+            <div class="settings-page" id="settingsPage">
+                <button class="back-btn" onclick="goBack()">
+                    ← Назад
+                </button>
+
+                <!-- Язык -->
+                <div class="settings-section">
+                    <h2 class="settings-title language">Язык</h2>
+                    <div class="languages-grid" id="languagesGrid">
+                        <!-- Заполняется динамически -->
                     </div>
-                    <div class="mood-card" onclick="openCategory('activities')">
-                        <div class="mood-title">
-                            <div class="mood-icon activities"></div>
-                            Занятия
+                </div>
+
+                <!-- Техподдержка -->
+                <div class="settings-section">
+                    <h2 class="settings-title support">Техподдержка</h2>
+                    <div class="support-options">
+                        <div class="support-option" onclick="contactSupport('chat')">
+                            <div class="support-icon"></div>
+                            <div class="support-info">
+                                <div class="support-title">Онлайн-чат</div>
+                                <div class="support-description">Быстрые ответы на ваши вопросы 24/7</div>
+                            </div>
                         </div>
-                        <div class="mood-subtitle">Для работы, тренировки, отдыха, учебы</div>
+                        <div class="support-option" onclick="contactSupport('email')">
+                            <div class="support-icon"></div>
+                            <div class="support-info">
+                                <div class="support-title">Email поддержка</div>
+                                <div class="support-description">Подробные ответы на complex@support.soundwave.com</div>
+                            </div>
+                        </div>
+                        <div class="support-option" onclick="openFAQ()">
+                            <div class="support-icon"></div>
+                            <div class="support-info">
+                                <div class="support-title">FAQ и помощь</div>
+                                <div class="support-description">Ответы на часто задаваемые вопросы</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mood-card" onclick="openCategory('moods')">
-                        <div class="mood-title">
-                            <div class="mood-icon moods"></div>
-                            Настроения
+                </div>
+
+                <!-- Управление подпиской -->
+                <div class="settings-section">
+                    <div class="subscription-header">
+                        <h1 class="subscription-title">ПОДПИСКА</h1>
+                        <!-- Кнопка подключения TON кошелька - ЦЕНТРИРОВАННАЯ -->
+                        <button class="ton-connect-btn" onclick="connectTonWallet()">
+                            <div class="ton-connect-icon">
+                                <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="50" cy="50" r="50" fill="white"/>
+                                    <path d="M72 36C72 31.5 68.5 28 64 28H36C31.5 28 28 31.5 28 36V38C28 39.5 28.5 41 29.5 42L47.5 69C48.5 70.5 51.5 70.5 52.5 69L70.5 42C71.5 41 72 39.5 72 38V36Z" stroke="#0098EA" stroke-width="6" stroke-linejoin="round"/>
+                                    <path d="M50 28V68" stroke="#0098EA" stroke-width="6" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            Подключить TON кошелек
+                        </button>
+                    </div>
+
+                    <div class="subscription-plans" id="subscriptionPlans">
+                        <!-- Заполняется динамически -->
+                    </div>
+
+                    <!-- Контейнер для промокода -->
+                    <div class="promocode-container">
+                        <div class="promocode-title">Промокод</div>
+                        <div class="promocode-input-container">
+                            <input type="text" class="promocode-input" placeholder="Введите промокод" id="promocodeInput">
+                            <button class="promocode-btn" onclick="applyPromocode()">Применить</button>
                         </div>
-                        <div class="mood-subtitle">Веселое, грустное, энергичное, спокойное</div>
+                        <div class="promocode-description">
+                            Введите промокод для получения скидки на подписку
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Табы контента -->
-            <div class="content-tabs">
-                <button class="tab active" onclick="switchTab('for-you')">Для вас</button>
-                <button class="tab" onclick="switchTab('trends')">Тренды</button>
-                <button class="tab" onclick="switchTab('new')">Новинки</button>
+            <!-- Страница коллекции -->
+            <div class="collection-page" id="collectionPage">
+                <button class="back-btn" onclick="goBack()">
+                    ← Назад
+                </button>
+
+                <!-- Пока коллекция пуста -->
+                <div class="empty-collection" id="emptyCollection" style="display: block;">
+                    <div class="empty-icon">🎵</div>
+                    <div class="empty-title">Коллекция пуста</div>
+                    <div class="empty-subtitle">
+                        Чтобы добавить трек в коллекцию, нажмите на сердечко ❤️ рядом с ним
+                    </div>
+                </div>
+
+                <!-- Когда появляются треки -->
+                <div class="collection-grid" id="collectionGrid" style="display: none;">
+                    <!-- Заполняется динамически при добавлении треков -->
+                </div>
             </div>
 
-            <!-- Коллекции -->
-            <div class="collections-grid">
-                <div class="collection-card" onclick="playCollection('guf-melis')">
-                    <img src="https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/600x600" 
-                         class="collection-image" 
-                         alt="GUF, Melis Treat">
-                    <div class="collection-info">
-                        <div class="collection-title">GUF, Melis Treat</div>
-                        <div class="collection-artist">Лучшие треки русских рэп-исполнителей</div>
-                    </div>
+            <!-- Страница альбома -->
+            <div class="album-page" id="albumPage">
+                <button class="back-btn" onclick="goBack()">
+                    ← Назад
+                </button>
+                <div class="album-header" id="albumHeader">
+                    <!-- Заполняется динамически -->
                 </div>
-
-                <div class="collection-card" onclick="playCollection('asta-la-vista')">
-                    <img src="https://avatars.yandex.net/get-music-content/3801605/e4c7b1f3.a.16937297-1/600x600" 
-                         class="collection-image" 
-                         alt="Аста ла виста">
-                    <div class="collection-info">
-                        <div class="collection-title">Аста ла виста</div>
-                        <div class="collection-artist">Скриптонит, FEDUK и другие</div>
-                    </div>
-                </div>
-
-                <div class="collection-card" onclick="playCollection('romantik-vandal')">
-                    <img src="https://avatars.yandex.net/get-music-content/3801605/96813002.a.16937297-1/600x600" 
-                         class="collection-image" 
-                         alt="Романтик и Вандал">
-                    <div class="collection-info">
-                        <div class="collection-title">Романтик и Вандал</div>
-                        <div class="collection-artist">BUSHIDO ZHO - новые хиты 2024</div>
-                    </div>
-                </div>
-
-                <div class="collection-card" onclick="playCollection('besitsya')">
-                    <img src="https://avatars.yandex.net/get-music-content/3801605/8f38f2f3.a.16937297-1/600x600" 
-                         class="collection-image" 
-                         alt="БЕСИТСЯ">
-                    <div class="collection-info">
-                        <div class="collection-title">БЕСИТСЯ</div>
-                        <div class="collection-artist">Toxi®, Big Baby Tape</div>
-                    </div>
-                </div>
-
-                <div class="collection-card" onclick="playCollection('trends')">
-                    <img src="https://avatars.yandex.net/get-music-content/3801605/9b6b7765.a.16937297-1/600x600" 
-                         class="collection-image" 
-                         alt="Тренды">
-                    <div class="collection-info">
-                        <div class="collection-title">СКРИПТОНИТ</div>
-                        <div class="collection-artist">Самые популярные треки недели</div>
-                    </div>
-                </div>
-
-                <div class="collection-card" onclick="playCollection('new-month')">
-                    <img src="https://avatars.yandex.net/get-music-content/118603/32a52ce5.a.1657590-1/600x600" 
-                         class="collection-image" 
-                         alt="Новинки">
-                    <div class="collection-info">
-                        <div class="collection-title">Громкие новинки</div>
-                        <div class="collection-artist">Их ждали! Свежие релизы месяца</div>
-                        <div class="collection-badge">НОВОЕ</div>
+                <div class="tracks-list-section">
+                    <div class="tracks-list-title">Треки</div>
+                    <div class="tracks-container" id="tracksList">
+                        <!-- Заполняется динамически -->
                     </div>
                 </div>
             </div>
@@ -1115,16 +2255,14 @@
 
     <!-- Player -->
     <div class="player">
-        <img src="https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/400x400" 
-             class="player-cover" 
-             alt="Трек">
+        <div class="player-cover"></div>
         <div class="player-info">
-            <div class="player-title">Blinding Lights</div>
-            <div class="player-artist">The Weeknd • After Hours</div>
+            <div class="player-title">Выберите трек</div>
+            <div class="player-artist">Нажмите на трек или альбом</div>
         </div>
         <div class="player-controls">
-            <button class="control-btn heart"></button>
-            <button class="play-btn playing" id="playerPlayBtn"></button>
+            <button class="control-btn heart" id="playerHeartBtn"></button>
+            <button class="play-btn" id="playerPlayBtn"></button>
             <button class="control-btn next"></button>
         </div>
     </div>
@@ -1135,51 +2273,446 @@
             <div class="nav-icon"></div>
             <div class="nav-label">Музыка</div>
         </button>
-        <button class="nav-item" onclick="switchPage('library')">
+        <button class="nav-item" onclick="switchPage('collection')">
             <div class="nav-icon"></div>
             <div class="nav-label">Коллекция</div>
-        </button>
-        <button class="nav-item" onclick="switchPage('radio')">
-            <div class="nav-icon"></div>
-            <div class="nav-label">Радио</div>
-        </button>
-        <button class="nav-item" onclick="switchPage('podcasts')">
-            <div class="nav-icon"></div>
-            <div class="nav-label">Подкасты</div>
         </button>
     </div>
 
     <script>
         // Состояние приложения
-        const appState = {
-            currentPage: 'music',
-            currentTrack: {
-                title: 'Blinding Lights',
-                artist: 'The Weeknd',
-                album: 'After Hours',
-                cover: 'https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/400x400',
-                isPlaying: false,
-                color: 'red'
+        let currentPage = 'music';
+        let currentTab = 'for-you';
+        let currentAlbum = null;
+        let currentTrack = null;
+        let isPlaying = false;
+        let soundConfigured = false;
+        let userPreferences = [];
+        let likedTracks = new Set();
+        let currentLanguage = 'ru';
+
+        // Тестовые изображения
+        const testImages = [
+            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1519281682544-5b00a8dc84ea?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1529255484355-cb73c33c04bb?w=600&h=600&fit=crop'
+        ];
+
+        // Треки для раздела "Для вас"
+        const forYouTracks = [
+            {
+                id: 'fy-1',
+                title: 'Рассвет',
+                artist: 'Miyagi & Andy Panda',
+                album: 'Yamakasi',
+                duration: '3:45',
+                year: 2024,
+                plays: '2.5M',
+                mood: 'Спокойное',
+                genre: 'Хип-хоп',
+                image: testImages[0],
+                description: 'Медленный и атмосферный трек для утра'
             },
-            soundConfigured: false,
-            particles: [],
-            waves: []
+            {
+                id: 'fy-2',
+                title: 'Энергия',
+                artist: 'The Weeknd',
+                album: 'Dawn FM',
+                duration: '4:20',
+                year: 2023,
+                plays: '5.1M',
+                mood: 'Энергичное',
+                genre: 'Поп',
+                image: testImages[1],
+                description: 'Бодрящий трек для начала дня'
+            },
+            {
+                id: 'fy-3',
+                title: 'Дорога',
+                artist: 'Кис-кис',
+                album: 'Между нами',
+                duration: '3:15',
+                year: 2024,
+                plays: '1.8M',
+                mood: 'Путешествие',
+                genre: 'Рок',
+                image: testImages[2],
+                description: 'Идеальный трек для дороги'
+            },
+            {
+                id: 'fy-4',
+                title: 'Тишина',
+                artist: 'Billie Eilish',
+                album: 'Happier Than Ever',
+                duration: '4:05',
+                year: 2023,
+                plays: '3.2M',
+                mood: 'Спокойное',
+                genre: 'Поп',
+                image: testImages[3],
+                description: 'Нежная и меланхоличная композиция'
+            },
+            {
+                id: 'fy-5',
+                title: 'Фокус',
+                artist: 'Hans Zimmer',
+                album: 'Interstellar OST',
+                duration: '5:30',
+                year: 2024,
+                plays: '1.2M',
+                mood: 'Концентрация',
+                genre: 'Саундтрек',
+                image: testImages[4],
+                description: 'Музыка для работы и концентрации'
+            },
+            {
+                id: 'fy-6',
+                title: 'Воспоминания',
+                artist: 'Макс Корж',
+                album: 'Малый повзрослел',
+                duration: '3:50',
+                year: 2024,
+                plays: '4.3M',
+                mood: 'Ностальгия',
+                genre: 'Поп',
+                image: testImages[5],
+                description: 'Трек о прошлом и воспоминаниях'
+            },
+            {
+                id: 'fy-7',
+                title: 'Лето',
+                artist: 'Монеточка',
+                album: 'Раскраски для взрослых',
+                duration: '2:55',
+                year: 2024,
+                plays: '2.1M',
+                mood: 'Веселое',
+                genre: 'Поп',
+                image: testImages[6],
+                description: 'Легкий летний трек'
+            },
+            {
+                id: 'fy-8',
+                title: 'Ночь',
+                artist: 'LSP',
+                album: 'Tragic City',
+                duration: '4:10',
+                year: 2024,
+                plays: '3.8M',
+                mood: 'Вечернее',
+                genre: 'Хип-хоп',
+                image: testImages[7],
+                description: 'Атмосферный трек для вечера'
+            }
+        ];
+
+        // Альбомы для разделов "Тренды" и "Новинки"
+        const albumsDatabase = {
+            trends: [
+                {
+                    id: 'trend-1',
+                    title: 'Громкие новинки месяца',
+                    artist: 'Их ждали!',
+                    plays: '8.2M',
+                    tracks: 3,
+                    year: 2024,
+                    type: 'Сборник',
+                    duration: '12:45',
+                    badge: 'trending',
+                    image: testImages[0],
+                    tracksList: [
+                        {
+                            id: 't1-1',
+                            title: 'Аста ла виста',
+                            artist: 'Окрытонит, FEDUK',
+                            album: 'Громкие новинки месяца',
+                            duration: '3:15',
+                            year: 2024,
+                            plays: '4.2M',
+                            image: testImages[0],
+                            mood: 'Энергичное',
+                            genre: 'Хип-хоп',
+                            description: 'Популярный хит от дуэта Окрытонит и FEDUK'
+                        },
+                        {
+                            id: 't1-2',
+                            title: 'Романтик и Вандал',
+                            artist: 'BIUSHDO ZHO',
+                            album: 'Громкие новинки месяца',
+                            duration: '4:30',
+                            year: 2024,
+                            plays: '3.1M',
+                            image: testImages[1],
+                            mood: 'Эмоциональное',
+                            genre: 'Хип-хоп',
+                            description: 'Глубокий трек от BIUSHDO ZHO'
+                        },
+                        {
+                            id: 't1-3',
+                            title: 'БЕСИТСЯ',
+                            artist: 'ToxiS, Big Baby Tape',
+                            album: 'Громкие новинки месяца',
+                            duration: '5:00',
+                            year: 2024,
+                            plays: '2.8M',
+                            image: testImages[2],
+                            mood: 'Агрессивное',
+                            genre: 'Хип-хоп',
+                            description: 'Энергичная коллаборация ToxiS и Big Baby Tape'
+                        }
+                    ]
+                },
+                {
+                    id: 'trend-2',
+                    title: 'TikTok хиты',
+                    artist: 'Вирусные треки',
+                    plays: '12.4M',
+                    tracks: 5,
+                    year: 2024,
+                    type: 'Плейлист',
+                    duration: '18:30',
+                    badge: 'trending',
+                    image: testImages[1],
+                    tracksList: []
+                },
+                {
+                    id: 'trend-3',
+                    title: '2024 Чарты',
+                    artist: 'Популярное',
+                    plays: '6.9M',
+                    tracks: 4,
+                    year: 2024,
+                    type: 'Сборник',
+                    duration: '15:45',
+                    badge: 'trending',
+                    image: testImages[2],
+                    tracksList: []
+                }
+            ],
+            new: [
+                {
+                    id: 'new-1',
+                    title: 'Свежие релизы',
+                    artist: 'Новинки недели',
+                    plays: '2.1M',
+                    tracks: 3,
+                    year: 2024,
+                    type: 'Сборник',
+                    duration: '10:30',
+                    badge: 'new',
+                    image: testImages[3],
+                    tracksList: []
+                },
+                {
+                    id: 'new-2',
+                    title: 'Только вышло',
+                    artist: 'Новый месяц',
+                    plays: '1.8M',
+                    tracks: 2,
+                    year: 2024,
+                    type: 'Плейлист',
+                    duration: '7:50',
+                    badge: 'new',
+                    image: testImages[4],
+                    tracksList: []
+                },
+                {
+                    id: 'new-3',
+                    title: 'Эксклюзив',
+                    artist: 'SoundWave',
+                    plays: '3.2M',
+                    tracks: 2,
+                    year: 2024,
+                    type: 'Эксклюзив',
+                    duration: '8:15',
+                    badge: 'new',
+                    image: testImages[5],
+                    tracksList: []
+                }
+            ]
         };
+
+        // Только русский и английский языки
+        const languages = [
+            { code: 'ru', name: 'Русский', native: 'Русский', flag: 'https://flagcdn.com/w320/ru.png' },
+            { code: 'en', name: 'Английский', native: 'English', flag: 'https://flagcdn.com/w320/gb.png' }
+        ];
+
+        // Переводы для интерфейса (только русский и английский)
+        const translations = {
+            ru: {
+                searchPlaceholder: 'Найти треки, исполнителей, альбомы',
+                soundHeroTitle: 'МОЙ ЗВУК',
+                soundHeroSubtitle: 'Персональные рекомендации на основе ваших предпочтений',
+                configureSound: 'Настроить звук',
+                listen: 'Слушать',
+                musicCollections: 'Подборки музыки',
+                genres: 'Жанры',
+                genresDesc: 'Рок, поп, хип-хоп, джаз, электроника',
+                activities: 'Занятия',
+                activitiesDesc: 'Для работы, тренировки, отдыха, учебы',
+                moods: 'Настроения',
+                moodsDesc: 'Веселое, грустное, энергичное, спокойное',
+                forYou: 'Для вас',
+                trends: 'Тренды',
+                new: 'Новинки',
+                basedOnPreferences: 'На основе ваших предпочтений',
+                tracksYouWillLike: 'Треки, которые вам понравятся',
+                recommend: 'РЕКОМЕНДУЕМ',
+                trackCount: 'треков',
+                plays: 'прослушиваний',
+                trending: 'ТРЕНД',
+                newBadge: 'НОВОЕ',
+                back: '← Назад',
+                language: 'Язык',
+                support: 'Техподдержка',
+                onlineChat: 'Онлайн-чат',
+                onlineChatDesc: 'Быстрые ответы на ваши вопросы 24/7',
+                emailSupport: 'Email поддержка',
+                emailSupportDesc: 'Подробные ответы на complex@support.soundwave.com',
+                faqHelp: 'FAQ и помощь',
+                faqHelpDesc: 'Ответы на часто задаваемые вопросы',
+                subscriptionTitle: 'ПОДПИСКА',
+                year: 'ГОД',
+                halfYear: 'ПОЛГОДА',
+                month: 'МЕСЯЦ',
+                buySubscription: 'КУПИТЬ ПОДПИСКУ',
+                bestPrice: 'ЛУЧШАЯ ЦЕНА',
+                economy: 'Экономия',
+                collectionTitle: 'МОЯ КОЛЛЕКЦИЯ',
+                collectionSubtitle: 'Все ваши сохраненные треки, плейлисты и альбомы в одном месте',
+                emptyCollection: 'Коллекция пуста',
+                emptyCollectionDesc: 'Чтобы добавить трек в коллекцию, нажмите на сердечко ❤️ рядом с ним',
+                selectTrack: 'Выберите трек',
+                clickTrack: 'Нажмите на трек или альбом',
+                music: 'Музыка',
+                collection: 'Коллекция'
+            },
+            en: {
+                searchPlaceholder: 'Search tracks, artists, albums',
+                soundHeroTitle: 'MY SOUND',
+                soundHeroSubtitle: 'Personal recommendations based on your preferences',
+                configureSound: 'Configure Sound',
+                listen: 'Listen',
+                musicCollections: 'Music Collections',
+                genres: 'Genres',
+                genresDesc: 'Rock, pop, hip-hop, jazz, electronic',
+                activities: 'Activities',
+                activitiesDesc: 'For work, workout, rest, study',
+                moods: 'Moods',
+                moodsDesc: 'Happy, sad, energetic, calm',
+                forYou: 'For You',
+                trends: 'Trends',
+                new: 'New',
+                basedOnPreferences: 'Based on your preferences',
+                tracksYouWillLike: 'Tracks you will like',
+                recommend: 'RECOMMENDED',
+                trackCount: 'tracks',
+                plays: 'plays',
+                trending: 'TRENDING',
+                newBadge: 'NEW',
+                back: '← Back',
+                language: 'Language',
+                support: 'Support',
+                onlineChat: 'Online Chat',
+                onlineChatDesc: 'Quick answers to your questions 24/7',
+                emailSupport: 'Email Support',
+                emailSupportDesc: 'Detailed answers to complex@support.soundwave.com',
+                faqHelp: 'FAQ & Help',
+                faqHelpDesc: 'Answers to frequently asked questions',
+                subscriptionTitle: 'SUBSCRIPTION',
+                year: 'YEAR',
+                halfYear: 'HALF YEAR',
+                month: 'MONTH',
+                buySubscription: 'BUY SUBSCRIPTION',
+                bestPrice: 'BEST PRICE',
+                economy: 'Save',
+                collectionTitle: 'MY COLLECTION',
+                collectionSubtitle: 'All your saved tracks, playlists and albums in one place',
+                emptyCollection: 'Collection is empty',
+                emptyCollectionDesc: 'To add a track to collection, click the heart ❤️ next to it',
+                selectTrack: 'Select track',
+                clickTrack: 'Click on track or album',
+                music: 'Music',
+                collection: 'Collection'
+            }
+        };
+
+        // УПРОЩЕННЫЕ ПОДПИСКИ В TON (без цен в рублях/долларах)
+        const subscriptionPlans = [
+            {
+                id: 'yearly',
+                period: 'ГОД',
+                price: '4.99',
+                savings: 'Экономия 50%',
+                features: [
+                    'Высокое качество звука',
+                    'Скачивание треков',
+                    'Прослушивание без рекламы',
+                    'Персональные рекомендации',
+                    'Эксклюзивный контент',
+                    'Приоритетная поддержка'
+                ],
+                popular: true
+            },
+            {
+                id: 'half-year',
+                period: 'ПОЛГОДА',
+                price: '2.99',
+                savings: 'Экономия 40%',
+                features: [
+                    'Высокое качество звука',
+                    'Ограниченное скачивание',
+                    'Прослушивание без рекламы',
+                    'Персональные рекомендации',
+                    'Приоритетная поддержка'
+                ],
+                popular: false
+            },
+            {
+                id: 'monthly',
+                period: 'МЕСЯЦ',
+                price: '0.99',
+                savings: '',
+                features: [
+                    'Стандартное качество',
+                    'Без скачивания',
+                    'Прослушивание без рекламы',
+                    'Базовые рекомендации'
+                ],
+                popular: false
+            }
+        ];
+
+        // УВЕЛИЧЕННАЯ ИКОНКА TON
+        function createTonIcon(size = '36px') {
+            return `
+                <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="50" fill="#0098EA"/>
+                    <path d="M72 36C72 31.5 68.5 28 64 28H36C31.5 28 28 31.5 28 36V38C28 39.5 28.5 41 29.5 42L47.5 69C48.5 70.5 51.5 70.5 52.5 69L70.5 42C71.5 41 72 39.5 72 38V36Z" stroke="white" stroke-width="6" stroke-linejoin="round"/>
+                    <path d="M50 28V68" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                </svg>
+            `;
+        }
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
-            updatePlayer();
             setupEventListeners();
             createVisualizerBars();
-            createParticles();
-            createSoundWaves();
-
-            // Запускаем анимацию частиц
-            animateParticles();
-            animateWaves();
+            loadForYouTracks();
+            loadTabContent('trends');
+            loadTabContent('new');
+            loadLanguages();
+            loadSubscriptionPlans();
+            updateInterfaceLanguage();
         });
 
-        // Создание визуализатора звука
+        // Создание визуализатора полос
         function createVisualizerBars() {
             const visualizer = document.getElementById('soundVisualizer');
             if (!visualizer) return;
@@ -1194,203 +2727,684 @@
             }
         }
 
-        // Создание частиц для фона
-        function createParticles() {
-            const particlesBg = document.getElementById('particlesBg');
-            if (!particlesBg) return;
+        // Загрузка треков для "Для вас"
+        function loadForYouTracks() {
+            const scrollContainer = document.getElementById('forYouScroll');
+            if (!scrollContainer) return;
 
-            particlesBg.innerHTML = '';
-            appState.particles = [];
+            scrollContainer.innerHTML = '';
 
-            const colors = ['#FF2E2E', '#9C27B0', '#2196F3', '#00C853'];
+            forYouTracks.forEach(track => {
+                const card = document.createElement('div');
+                card.className = 'track-card-for-you';
+                card.onclick = () => openTrack(track, 'for-you');
 
-            // Создаем 50 частиц
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
+                card.innerHTML = `
+                    <img src="${track.image}" class="track-image-for-you" alt="${track.title}">
+                    <div class="track-info-for-you">
+                        <div class="track-title-for-you">${track.title}</div>
+                        <div class="track-artist-for-you">${track.artist}</div>
+                        <div class="track-meta-for-you">
+                            <span>${track.duration}</span>
+                            <span>•</span>
+                            <span>${track.plays}</span>
+                        </div>
+                        <div class="track-badge-for-you">${translations[currentLanguage].recommend}</div>
+                    </div>
+                `;
 
-                // Случайные параметры
-                const size = 50 + Math.random() * 150;
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                const delay = Math.random() * 5;
+                scrollContainer.appendChild(card);
+            });
+        }
 
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${x}%`;
-                particle.style.top = `${y}%`;
-                particle.style.background = color;
-                particle.style.opacity = '0';
-                particle.style.animationDelay = `${delay}s`;
+        // Загрузка контента для таба
+        function loadTabContent(tabId) {
+            const grid = document.getElementById(`grid-${tabId}`);
+            if (!grid) return;
 
-                particlesBg.appendChild(particle);
+            const albums = albumsDatabase[tabId];
+            if (!albums) return;
 
-                // Сохраняем состояние частицы
-                appState.particles.push({
-                    element: particle,
-                    x,
-                    y,
-                    size,
-                    color,
-                    speedX: (Math.random() - 0.5) * 0.5,
-                    speedY: (Math.random() - 0.5) * 0.5,
-                    opacity: 0,
-                    targetOpacity: 0.1 + Math.random() * 0.2
+            grid.innerHTML = '';
+
+            albums.forEach(album => {
+                const card = document.createElement('div');
+                card.className = 'collection-card';
+                card.onclick = () => openAlbum(album, tabId);
+
+                const badgeText = album.badge === 'trending' ? translations[currentLanguage].trending : 
+                                 album.badge === 'new' ? translations[currentLanguage].newBadge : '';
+
+                const badgeClass = album.badge === 'trending' ? 'trending' : 
+                                  album.badge === 'new' ? 'new' : '';
+
+                const badge = badgeText ? `<div class="collection-badge ${badgeClass}">${badgeText}</div>` : '';
+
+                card.innerHTML = `
+                    <img src="${album.image}" class="collection-image" alt="${album.title}">
+                    <div class="collection-info">
+                        <div class="collection-title">${album.title}</div>
+                        <div class="collection-artist">${album.artist}</div>
+                        <div class="collection-stats">
+                            <span>
+                                <div class="collection-icon icon-tracks"></div>
+                                ${album.tracks} ${translations[currentLanguage].trackCount}
+                            </span>
+                            <span>
+                                <div class="collection-icon icon-plays"></div>
+                                ${album.plays} ${translations[currentLanguage].plays}
+                            </span>
+                        </div>
+                        ${badge}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Загрузка языков (только русский и английский)
+        function loadLanguages() {
+            const languagesGrid = document.getElementById('languagesGrid');
+            if (!languagesGrid) return;
+
+            languagesGrid.innerHTML = '';
+
+            languages.forEach(lang => {
+                const option = document.createElement('div');
+                option.className = `language-option ${lang.code === currentLanguage ? 'active' : ''}`;
+                option.onclick = () => changeLanguage(lang.code);
+
+                option.innerHTML = `
+                    <img src="${lang.flag}" class="language-flag" alt="${lang.name}">
+                    <div class="language-info">
+                        <div class="language-name">${lang.name}</div>
+                        <div class="language-natives">${lang.native}</div>
+                    </div>
+                `;
+
+                languagesGrid.appendChild(option);
+            });
+        }
+
+        // Загрузка подписок (без цен в рублях/долларах)
+        function loadSubscriptionPlans() {
+            const plansContainer = document.getElementById('subscriptionPlans');
+            if (!plansContainer) return;
+
+            plansContainer.innerHTML = '';
+
+            subscriptionPlans.forEach(plan => {
+                const planCard = document.createElement('div');
+                planCard.className = `plan-card ${plan.id} ${plan.popular ? 'popular' : ''}`;
+
+                const featuresHtml = plan.features.map(feature => 
+                    `<div class="plan-feature">${feature}</div>`
+                ).join('');
+
+                const savingsHtml = plan.savings ? 
+                    `<div class="plan-savings">${plan.savings}</div>` : '';
+
+                const periodText = plan.period === 'ГОД' ? translations[currentLanguage].year :
+                                 plan.period === 'ПОЛГОДА' ? translations[currentLanguage].halfYear :
+                                 translations[currentLanguage].month;
+
+                planCard.innerHTML = `
+                    <div class="plan-header">
+                        <div class="plan-period">${periodText}</div>
+                        <div class="plan-price-container">
+                            <div class="plan-price">${plan.price}</div>
+                            <div class="plan-currency">
+                                <div class="ton-icon-large">${createTonIcon('36px')}</div>
+                            </div>
+                        </div>
+                        ${savingsHtml}
+                    </div>
+                    <div class="plan-features">
+                        ${featuresHtml}
+                    </div>
+                    <button class="plan-button" onclick="subscribeToPlan('${plan.id}', '${plan.price}')">
+                        ${translations[currentLanguage].buySubscription}
+                    </button>
+                `;
+
+                plansContainer.appendChild(planCard);
+            });
+        }
+
+        // Скролл для "Для вас"
+        function scrollForYou(direction) {
+            const scrollContainer = document.getElementById('forYouScroll');
+            if (!scrollContainer) return;
+
+            const scrollAmount = 300;
+            if (direction === 'prev') {
+                scrollContainer.scrollLeft -= scrollAmount;
+            } else {
+                scrollContainer.scrollLeft += scrollAmount;
+            }
+        }
+
+        // Переключение табов
+        function switchTab(tabId) {
+            // Обновляем активные классы
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Активируем выбранный таб
+            const activeTab = document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`);
+            const activeContent = document.getElementById(`tab-${tabId}`);
+
+            if (activeTab) activeTab.classList.add('active');
+            if (activeContent) activeContent.classList.add('active');
+
+            currentTab = tabId;
+        }
+
+        // Переключение страниц
+        function switchPage(pageId) {
+            // Обновляем активные классы навигации
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const activeNav = document.querySelector(`.nav-item[onclick="switchPage('${pageId}')"]`);
+            if (activeNav) activeNav.classList.add('active');
+
+            // Скрываем все страницы
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('settingsPage').style.display = 'none';
+            document.getElementById('collectionPage').style.display = 'none';
+            document.getElementById('albumPage').style.display = 'none';
+
+            // Показываем выбранную страницу
+            switch(pageId) {
+                case 'music':
+                    document.getElementById('mainPage').style.display = 'block';
+                    break;
+                case 'settings':
+                    document.getElementById('settingsPage').style.display = 'block';
+                    break;
+                case 'collection':
+                    document.getElementById('collectionPage').style.display = 'block';
+                    updateCollectionPage();
+                    break;
+            }
+
+            currentPage = pageId;
+        }
+
+        // Обновление страницы коллекции
+        function updateCollectionPage() {
+            const emptyCollection = document.getElementById('emptyCollection');
+            const collectionGrid = document.getElementById('collectionGrid');
+
+            // Получаем все понравившиеся треки
+            const likedTracksArray = Array.from(likedTracks).map(trackId => 
+                forYouTracks.find(t => t.id === trackId) ||
+                albumsDatabase.trends.flatMap(a => a.tracksList).find(t => t?.id === trackId) ||
+                albumsDatabase.new.flatMap(a => a.tracksList).find(t => t?.id === trackId)
+            ).filter(Boolean);
+
+            if (likedTracksArray.length === 0) {
+                emptyCollection.style.display = 'block';
+                collectionGrid.style.display = 'none';
+            } else {
+                emptyCollection.style.display = 'none';
+                collectionGrid.style.display = 'grid';
+
+                // Очищаем и заполняем сетку
+                collectionGrid.innerHTML = '';
+
+                likedTracksArray.forEach(track => {
+                    const item = document.createElement('div');
+                    item.className = 'collection-track-item';
+                    item.onclick = () => playTrackFromCollection(track);
+
+                    item.innerHTML = `
+                        <img src="${track.image}" class="collection-track-image" alt="${track.title}">
+                        <div class="collection-track-info">
+                            <div class="collection-track-title">${track.title}</div>
+                            <div class="collection-track-artist">${track.artist}</div>
+                            <div class="collection-track-meta">
+                                <span>${track.duration}</span>
+                                <span>•</span>
+                                <span>${track.year}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    collectionGrid.appendChild(item);
                 });
             }
         }
 
-        // Создание волн звука
-        function createSoundWaves() {
-            const wavesBg = document.getElementById('soundWavesBg');
-            if (!wavesBg) return;
+        // Открытие настроек
+        function openSettings() {
+            switchPage('settings');
+        }
 
-            wavesBg.innerHTML = '';
-            appState.waves = [];
+        // Открытие трека из раздела "Для вас"
+        function openTrack(track, source) {
+            currentTrack = track;
 
-            const colors = ['#FF2E2E', '#9C27B0', '#2196F3', '#00C853'];
+            // Обновляем плеер
+            updatePlayer({
+                title: track.title,
+                artist: track.artist,
+                album: track.album,
+                image: track.image,
+                isPlaying: true
+            });
 
-            // Создаем 4 волны
-            for (let i = 0; i < 4; i++) {
-                const wave = document.createElement('div');
-                wave.className = 'sound-wave';
+            // Обновляем состояние сердечка
+            const heartBtn = document.getElementById('playerHeartBtn');
+            if (heartBtn) {
+                heartBtn.classList.toggle('liked', likedTracks.has(track.id));
+            }
 
-                const color = colors[i % colors.length];
-                const delay = i * 1;
+            // Добавляем в предпочтения
+            addToPreferences(track);
 
-                wave.style.borderColor = color;
-                wave.style.animationDelay = `${delay}s`;
+            showNotification(`${translations[currentLanguage].selectTrack}: ${track.title} - ${track.artist}`);
+        }
 
-                wavesBg.appendChild(wave);
-                appState.waves.push(wave);
+        // Открытие альбома из разделов "Тренды" или "Новинки"
+        function openAlbum(album, source) {
+            currentAlbum = album;
+
+            // Скрываем все остальное
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('settingsPage').style.display = 'none';
+            document.getElementById('collectionPage').style.display = 'none';
+
+            // Показываем страницу альбома
+            const albumPage = document.getElementById('albumPage');
+            albumPage.classList.add('active');
+            albumPage.style.display = 'block';
+
+            const header = document.getElementById('albumHeader');
+            header.innerHTML = `
+                <img src="${album.image}" class="album-cover-large" alt="${album.title}">
+                <div class="album-info">
+                    <div class="album-type">${album.type}</div>
+                    <h1 class="album-name-large">${album.title}</h1>
+                    <div class="album-artist-large">${album.artist}</div>
+                    <div class="album-meta-large">
+                        <span>${album.year}</span>
+                        <span>•</span>
+                        <span>${album.tracks} ${translations[currentLanguage].trackCount}</span>
+                        <span>•</span>
+                        <span>${album.duration}</span>
+                    </div>
+                    <div class="album-actions">
+                        <button class="play-album-btn" onclick="playAlbum()">
+                            ▶ ${translations[currentLanguage].listen}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Заполняем список треков
+            const tracksList = document.getElementById('tracksList');
+            tracksList.innerHTML = '';
+
+            const tracks = album.tracksList && album.tracksList.length > 0 
+                ? album.tracksList 
+                : generateTracks(album.tracks, album.artist, album.title);
+
+            tracks.forEach((track, index) => {
+                const trackItem = document.createElement('div');
+                trackItem.className = 'track-item-album';
+                trackItem.onclick = () => playTrackFromAlbum(track);
+
+                trackItem.innerHTML = `
+                    <div class="track-number-album">${index + 1}</div>
+                    <img src="${track.image || album.image}" class="track-image-album" alt="${track.title}">
+                    <div class="track-info-album">
+                        <div class="track-title-album">${track.title}</div>
+                        <div class="track-artist-album">${track.artist}</div>
+                    </div>
+                    <div class="track-duration-album">${track.duration}</div>
+                `;
+
+                tracksList.appendChild(trackItem);
+            });
+        }
+
+        // Генерация треков для альбома
+        function generateTracks(count, artist, albumTitle) {
+            const tracks = [];
+            const trackTitles = [
+                'Интро', 'Рассвет', 'День', 'Закат', 'Ночь',
+                'Город', 'Дорога', 'Мечты', 'Реальность', 'Воспоминания'
+            ];
+
+            for (let i = 0; i < count; i++) {
+                const title = trackTitles[i] || `Трек ${i + 1}`;
+                const duration = `${Math.floor(Math.random() * 3) + 2}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`;
+
+                tracks.push({ 
+                    id: `gen-${i}-${Date.now()}`,
+                    title, 
+                    artist,
+                    album: albumTitle,
+                    duration,
+                    image: testImages[i % testImages.length]
+                });
+            }
+
+            return tracks;
+        }
+
+        // Воспроизведение альбома
+        function playAlbum() {
+            if (!currentAlbum) return;
+
+            const tracksList = document.getElementById('tracksList');
+            const firstTrackItem = tracksList.querySelector('.track-item-album');
+
+            if (firstTrackItem) {
+                // Находим первый трек
+                const trackIndex = parseInt(firstTrackItem.querySelector('.track-number-album').textContent) - 1;
+                const tracks = currentAlbum.tracksList && currentAlbum.tracksList.length > 0 
+                    ? currentAlbum.tracksList 
+                    : generateTracks(currentAlbum.tracks, currentAlbum.artist, currentAlbum.title);
+
+                if (tracks[trackIndex]) {
+                    playTrackFromAlbum(tracks[trackIndex]);
+                }
+            }
+
+            showNotification(`${translations[currentLanguage].listen}: ${currentAlbum.title}`);
+        }
+
+        // Воспроизведение трека из альбома
+        function playTrackFromAlbum(track) {
+            currentTrack = track;
+
+            updatePlayer({
+                title: track.title,
+                artist: track.artist,
+                album: track.album || currentAlbum.title,
+                image: track.image || currentAlbum.image,
+                isPlaying: true
+            });
+
+            // Обновляем состояние сердечка
+            const heartBtn = document.getElementById('playerHeartBtn');
+            if (heartBtn) {
+                heartBtn.classList.toggle('liked', likedTracks.has(track.id));
+            }
+
+            // Добавляем в предпочтения
+            addToPreferences(track);
+
+            showNotification(`${translations[currentLanguage].listen}: ${track.title} - ${track.artist}`);
+        }
+
+        // Воспроизведение трека из коллекции
+        function playTrackFromCollection(track) {
+            currentTrack = track;
+
+            updatePlayer({
+                title: track.title,
+                artist: track.artist,
+                album: track.album,
+                image: track.image,
+                isPlaying: true
+            });
+
+            // Обновляем состояние сердечка
+            const heartBtn = document.getElementById('playerHeartBtn');
+            if (heartBtn) {
+                heartBtn.classList.toggle('liked', likedTracks.has(track.id));
+            }
+
+            showNotification(`${translations[currentLanguage].listen}: ${track.title} - ${track.artist}`);
+        }
+
+        // Смена языка
+        function changeLanguage(langCode) {
+            currentLanguage = langCode;
+            loadLanguages();
+            updateInterfaceLanguage();
+            loadSubscriptionPlans();
+
+            showNotification(`Язык изменен на: ${languages.find(l => l.code === langCode).name}`);
+        }
+
+        // Обновление интерфейса при смене языка
+        function updateInterfaceLanguage() {
+            const t = translations[currentLanguage];
+
+            // Обновляем поиск
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+            // Обновляем главную страницу
+            const soundHeroTitle = document.querySelector('.sound-hero-title');
+            const soundHeroSubtitle = document.querySelector('.sound-hero-subtitle');
+            const configureBtn = document.querySelector('.hero-action-btn.primary');
+            const listenBtn = document.querySelector('.hero-action-btn.secondary');
+
+            if (soundHeroTitle) soundHeroTitle.textContent = t.soundHeroTitle;
+            if (soundHeroSubtitle) soundHeroSubtitle.textContent = t.soundHeroSubtitle;
+            if (configureBtn) configureBtn.textContent = t.configureSound;
+            if (listenBtn) listenBtn.textContent = t.listen;
+
+            // Обновляем подборки музыки
+            const sectionTitle = document.querySelector('.section-title');
+            const moodCards = document.querySelectorAll('.mood-title');
+            const moodSubtitles = document.querySelectorAll('.mood-subtitle');
+
+            if (sectionTitle) sectionTitle.textContent = t.musicCollections;
+            if (moodCards[0]) moodCards[0].innerHTML = `<div class="mood-icon"></div>${t.genres}`;
+            if (moodCards[1]) moodCards[1].innerHTML = `<div class="mood-icon"></div>${t.activities}`;
+            if (moodCards[2]) moodCards[2].innerHTML = `<div class="mood-icon"></div>${t.moods}`;
+
+            if (moodSubtitles[0]) moodSubtitles[0].textContent = t.genresDesc;
+            if (moodSubtitles[1]) moodSubtitles[1].textContent = t.activitiesDesc;
+            if (moodSubtitles[2]) moodSubtitles[2].textContent = t.moodsDesc;
+
+            // Обновляем табы
+            const forYouTab = document.querySelector('.tab[onclick="switchTab(\'for-you\')"]');
+            const trendsTab = document.querySelector('.tab[onclick="switchTab(\'trends\')"]');
+            const newTab = document.querySelector('.tab[onclick="switchTab(\'new\')"]');
+
+            if (forYouTab) forYouTab.textContent = t.forYou;
+            if (trendsTab) trendsTab.textContent = t.trends;
+            if (newTab) newTab.textContent = t.new;
+
+            // Обновляем "Для вас" заголовок
+            const forYouTitle = document.querySelector('.for-you-title');
+            const forYouSubtitle = document.querySelector('.for-you-subtitle');
+
+            if (forYouTitle) forYouTitle.textContent = t.basedOnPreferences;
+            if (forYouSubtitle) forYouSubtitle.textContent = t.tracksYouWillLike;
+
+            // Обновляем кнопку "Назад"
+            const backButtons = document.querySelectorAll('.back-btn');
+            backButtons.forEach(btn => {
+                btn.textContent = t.back;
+            });
+
+            // Обновляем заголовки настроек
+            const settingsTitles = document.querySelectorAll('.settings-title');
+            settingsTitles.forEach(title => {
+                if (title.classList.contains('language')) title.textContent = t.language;
+                if (title.classList.contains('support')) title.textContent = t.support;
+            });
+
+            // Обновляем техподдержку
+            const supportTitles = document.querySelectorAll('.support-title');
+            const supportDescriptions = document.querySelectorAll('.support-description');
+
+            if (supportTitles[0]) supportTitles[0].textContent = t.onlineChat;
+            if (supportDescriptions[0]) supportDescriptions[0].textContent = t.onlineChatDesc;
+            if (supportTitles[1]) supportTitles[1].textContent = t.emailSupport;
+            if (supportDescriptions[1]) supportDescriptions[1].textContent = t.emailSupportDesc;
+            if (supportTitles[2]) supportTitles[2].textContent = t.faqHelp;
+            if (supportDescriptions[2]) supportDescriptions[2].textContent = t.faqHelpDesc;
+
+            // Обновляем подписки
+            const subscriptionHeroTitle = document.querySelector('.subscription-title');
+            if (subscriptionHeroTitle) subscriptionHeroTitle.textContent = t.subscriptionTitle;
+
+            // Обновляем коллекцию
+            const emptyTitle = document.querySelector('.empty-title');
+            const emptySubtitle = document.querySelector('.empty-subtitle');
+
+            if (emptyTitle) emptyTitle.textContent = t.emptyCollection;
+            if (emptySubtitle) emptySubtitle.textContent = t.emptyCollectionDesc;
+
+            // Обновляем плеер
+            const playerTitle = document.querySelector('.player-title');
+            const playerArtist = document.querySelector('.player-artist');
+
+            if (playerTitle && playerTitle.textContent === 'Выберите трек') playerTitle.textContent = t.selectTrack;
+            if (playerArtist && playerArtist.textContent === 'Нажмите на трек или альбом') playerArtist.textContent = t.clickTrack;
+
+            // Обновляем навигацию
+            const navLabels = document.querySelectorAll('.nav-label');
+            if (navLabels[0]) navLabels[0].textContent = t.music;
+            if (navLabels[1]) navLabels[1].textContent = t.collection;
+        }
+
+        // Подписка на план
+        function subscribeToPlan(planId, price) {
+            const plan = subscriptionPlans.find(p => p.id === planId);
+            if (plan) {
+                const periodText = plan.period === 'ГОД' ? translations[currentLanguage].year :
+                                 plan.period === 'ПОЛГОДА' ? translations[currentLanguage].halfYear :
+                                 translations[currentLanguage].month;
+
+                showNotification(`Вы выбрали подписку: ${periodText} за ${price} TON`);
+                // Здесь будет интеграция с TON
             }
         }
 
-        // Анимация частиц
-        function animateParticles() {
-            function update() {
-                const isPlaying = appState.currentTrack.isPlaying;
-
-                appState.particles.forEach(particle => {
-                    // Двигаем частицу
-                    particle.x += particle.speedX;
-                    particle.y += particle.speedY;
-
-                    // Отскок от границ
-                    if (particle.x < 0 || particle.x > 100) particle.speedX *= -1;
-                    if (particle.y < 0 || particle.y > 100) particle.speedY *= -1;
-
-                    // Плавное изменение прозрачности
-                    const targetOpacity = isPlaying ? particle.targetOpacity : 0;
-                    particle.opacity += (targetOpacity - particle.opacity) * 0.05;
-
-                    // Применяем изменения
-                    particle.element.style.left = `${particle.x}%`;
-                    particle.element.style.top = `${particle.y}%`;
-                    particle.element.style.opacity = particle.opacity;
-
-                    // Легкое пульсирование при воспроизведении
-                    if (isPlaying) {
-                        const pulse = 1 + Math.sin(Date.now() * 0.001 + particle.x) * 0.1;
-                        particle.element.style.transform = `scale(${pulse})`;
-                    }
-                });
-
-                requestAnimationFrame(update);
-            }
-
-            update();
+        // Подключение TON кошелька
+        function connectTonWallet() {
+            showNotification('Подключение TON кошелька... В разработке');
+            // Здесь будет интеграция с TON Connect
         }
 
-        // Анимация волн
-        function animateWaves() {
-            function update() {
-                const isPlaying = appState.currentTrack.isPlaying;
+        // Применение промокода
+        function applyPromocode() {
+            const promocodeInput = document.getElementById('promocodeInput');
+            const promocode = promocodeInput.value.trim();
+            
+            if (!promocode) {
+                showNotification('Введите промокод');
+                return;
+            }
+            
+            // Простая проверка тестового промокода
+            if (promocode.toUpperCase() === 'SOUNDWAVE2024' || promocode.toUpperCase() === 'TEST') {
+                showNotification('Промокод успешно применен! Скидка 10% активирована.');
+                promocodeInput.value = '';
+            } else {
+                showNotification('Недействительный промокод');
+            }
+        }
 
-                appState.waves.forEach((wave, index) => {
-                    if (isPlaying) {
-                        wave.style.animationDuration = `${3 + Math.sin(Date.now() * 0.001 + index) * 1}s`;
-                        wave.style.opacity = '0.08';
-                    } else {
-                        wave.style.opacity = '0.03';
-                    }
+        // Техподдержка
+        function contactSupport(type) {
+            if (type === 'chat') {
+                showNotification('Открывается онлайн-чат с поддержкой...');
+            } else if (type === 'email') {
+                showNotification('Открывается почтовый клиент...');
+            }
+        }
+
+        function openFAQ() {
+            showNotification('Открывается раздел FAQ...');
+        }
+
+        // Добавление в предпочтения
+        function addToPreferences(track) {
+            if (!userPreferences.some(pref => pref.id === track.id)) {
+                userPreferences.push({
+                    id: track.id,
+                    title: track.title,
+                    artist: track.artist,
+                    genre: track.genre,
+                    mood: track.mood,
+                    timestamp: new Date().getTime()
                 });
 
-                requestAnimationFrame(update);
+                if (userPreferences.length > 10) {
+                    userPreferences.shift();
+                }
+            }
+        }
+
+        // Назад к основному контенту
+        function goBack() {
+            if (document.getElementById('albumPage').style.display === 'block') {
+                document.getElementById('albumPage').style.display = 'none';
+                document.getElementById('mainPage').style.display = 'block';
+                currentAlbum = null;
+            } else {
+                switchPage('music');
+            }
+        }
+
+        // Обновление плеера
+        function updatePlayer(trackData) {
+            const playerTitle = document.querySelector('.player-title');
+            const playerArtist = document.querySelector('.player-artist');
+            const playerCover = document.querySelector('.player-cover');
+            const playBtn = document.getElementById('playerPlayBtn');
+            const heartBtn = document.getElementById('playerHeartBtn');
+
+            if (playerTitle) playerTitle.textContent = trackData.title;
+            if (playerArtist) playerArtist.textContent = `${trackData.artist} • ${trackData.album}`;
+
+            if (playerCover && trackData.image) {
+                playerCover.style.backgroundImage = `url('${trackData.image}')`;
+                playerCover.style.backgroundSize = 'cover';
             }
 
-            update();
+            if (trackData.isPlaying && playBtn) {
+                playBtn.classList.add('playing');
+                isPlaying = true;
+            } else if (playBtn) {
+                playBtn.classList.remove('playing');
+                isPlaying = false;
+            }
+
+            if (heartBtn && currentTrack) {
+                heartBtn.classList.toggle('liked', likedTracks.has(currentTrack.id));
+            }
         }
 
         // Настройка звука
         function configureSound() {
-            appState.soundConfigured = true;
+            soundConfigured = true;
+            userPreferences = [
+                { id: 'fy-1', title: 'Рассвет', artist: 'Miyagi & Andy Panda', genre: 'Хип-хоп', mood: 'Спокойное', timestamp: Date.now() },
+                { id: 'fy-3', title: 'Дорога', artist: 'Кис-кис', genre: 'Рок', mood: 'Путешествие', timestamp: Date.now() }
+            ];
 
-            // Показать анимацию настройки
-            const title = document.querySelector('.sound-hero-title');
-
-            if (title) {
-                title.style.animation = 'gradientShift 1s ease-in-out';
-            }
-
-            showNotification('Настройка "Моего звука" завершена!');
-
-            // Запустить интенсивную анимацию частиц
-            appState.particles.forEach(particle => {
-                particle.targetOpacity = 0.3 + Math.random() * 0.3;
-                particle.speedX *= 2;
-                particle.speedY *= 2;
-            });
-
-            setTimeout(() => {
-                appState.particles.forEach(particle => {
-                    particle.targetOpacity = 0.1 + Math.random() * 0.2;
-                    particle.speedX /= 2;
-                    particle.speedY /= 2;
-                });
-            }, 1000);
+            showNotification('Настройка "Моего звука" завершена! Система изучила ваши предпочтения.');
         }
 
         // Воспроизведение звука
         function playSound() {
-            if (!appState.soundConfigured) {
+            if (!soundConfigured) {
                 alert('Сначала настройте "Мой звук" для персонализированных рекомендаций!');
                 return;
             }
 
-            // Запускаем случайный плейлист
-            const collections = ['guf-melis', 'asta-la-vista', 'romantik-vandal', 'besitsya', 'trends', 'new-month'];
-            const randomCollection = collections[Math.floor(Math.random() * collections.length)];
+            const randomTrack = forYouTracks[Math.floor(Math.random() * forYouTracks.length)];
+            openTrack(randomTrack, 'for-you');
 
-            playCollection(randomCollection);
-
-            // Усиливаем анимацию визуализатора
-            const visualizer = document.getElementById('soundVisualizer');
-            if (visualizer) {
-                visualizer.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    visualizer.style.transform = 'scale(1)';
-                }, 500);
-            }
-
-            showNotification('Запущен "Мой звук" - персонализированная подборка');
-
-            // Интенсивная анимация частиц
-            appState.particles.forEach(particle => {
-                particle.targetOpacity = 0.4 + Math.random() * 0.3;
-            });
-        }
-
-        // Обновление плеера
-        function updatePlayer() {
-            const playerCover = document.querySelector('.player-cover');
-            const playerTitle = document.querySelector('.player-title');
-            const playerArtist = document.querySelector('.player-artist');
-
-            if (playerCover) playerCover.src = appState.currentTrack.cover;
-            if (playerTitle) playerTitle.textContent = appState.currentTrack.title;
-            if (playerArtist) playerArtist.textContent = `${appState.currentTrack.artist} • ${appState.currentTrack.album}`;
+            showNotification('Запущен "Мой звук" - персонализированная подборка на основе ваших предпочтений');
         }
 
         // Настройка обработчиков событий
@@ -1399,116 +3413,56 @@
             const playBtn = document.getElementById('playerPlayBtn');
             if (playBtn) {
                 playBtn.addEventListener('click', function() {
-                    appState.currentTrack.isPlaying = !appState.currentTrack.isPlaying;
+                    isPlaying = !isPlaying;
                     this.classList.toggle('playing');
 
-                    if (appState.currentTrack.isPlaying) {
-                        showNotification('Воспроизведение начато');
-                        // Увеличиваем активность частиц
-                        appState.particles.forEach(particle => {
-                            particle.targetOpacity = 0.3 + Math.random() * 0.3;
-                        });
+                    if (currentTrack) {
+                        if (isPlaying) {
+                            showNotification(`${translations[currentLanguage].listen}: ${currentTrack.title}`);
+                        } else {
+                            showNotification('Воспроизведение остановлено');
+                        }
                     } else {
-                        showNotification('Воспроизведение остановлено');
-                        // Уменьшаем активность частиц
-                        appState.particles.forEach(particle => {
-                            particle.targetOpacity = 0.05 + Math.random() * 0.1;
-                        });
+                        if (isPlaying) {
+                            showNotification('Воспроизведение начато');
+                        } else {
+                            showNotification('Воспроизведение остановлено');
+                        }
                     }
                 });
             }
 
-            // Карточки музыки
-            document.querySelectorAll('.collection-card, .mood-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    this.style.transform = 'scale(0.98)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 150);
+            // Кнопка сердечка
+            const heartBtn = document.getElementById('playerHeartBtn');
+            if (heartBtn) {
+                heartBtn.addEventListener('click', function() {
+                    if (!currentTrack) return;
+
+                    if (likedTracks.has(currentTrack.id)) {
+                        likedTracks.delete(currentTrack.id);
+                        this.classList.remove('liked');
+                        showNotification(`Трек "${currentTrack.title}" удален из коллекции`);
+                    } else {
+                        likedTracks.add(currentTrack.id);
+                        this.classList.add('liked');
+                        showNotification(`Трек "${currentTrack.title}" добавлен в коллекцию`);
+                    }
+
+                    if (currentPage === 'collection') {
+                        updateCollectionPage();
+                    }
                 });
-            });
-        }
-
-        // Воспроизведение подборки
-        function playCollection(collectionId) {
-            const collections = {
-                'guf-melis': {
-                    title: 'GUF, Melis Treat',
-                    artist: 'Русский хип-хоп',
-                    cover: 'https://avatars.yandex.net/get-music-content/3801605/24a71768.a.16937297-1/600x600',
-                    color: 'red'
-                },
-                'asta-la-vista': {
-                    title: 'Аста ла виста',
-                    artist: 'Скриптонит, FEDUK',
-                    cover: 'https://avatars.yandex.net/get-music-content/3801605/e4c7b1f3.a.16937297-1/600x600',
-                    color: 'purple'
-                },
-                'romantik-vandal': {
-                    title: 'Романтик и Вандал',
-                    artist: 'BUSHIDO ZHO',
-                    cover: 'https://avatars.yandex.net/get-music-content/3801605/96813002.a.16937297-1/600x600',
-                    color: 'blue'
-                },
-                'besitsya': {
-                    title: 'БЕСИТСЯ',
-                    artist: 'Toxi®, Big Baby Tape',
-                    cover: 'https://avatars.yandex.net/get-music-content/3801605/8f38f2f3.a.16937297-1/600x600',
-                    color: 'green'
-                },
-                'trends': {
-                    title: 'СКРИПТОНИТ',
-                    artist: 'Тренды',
-                    cover: 'https://avatars.yandex.net/get-music-content/3801605/9b6b7765.a.16937297-1/600x600',
-                    color: 'purple'
-                },
-                'new-month': {
-                    title: 'Громкие новинки',
-                    artist: 'Новые релизы',
-                    cover: 'https://avatars.yandex.net/get-music-content/118603/32a52ce5.a.1657590-1/600x600',
-                    color: 'blue'
-                }
-            };
-
-            const collection = collections[collectionId];
-            if (collection) {
-                appState.currentTrack = {
-                    title: collection.title,
-                    artist: collection.artist,
-                    album: 'Плейлист',
-                    cover: collection.cover,
-                    isPlaying: true,
-                    color: collection.color
-                };
-
-                updatePlayer();
-
-                const playerBtn = document.getElementById('playerPlayBtn');
-                if (playerBtn) playerBtn.classList.add('playing');
-
-                // Меняем цвет частиц
-                const colors = {
-                    'red': ['#FF2E2E', '#FF6B6B'],
-                    'purple': ['#9C27B0', '#673AB7'],
-                    'blue': ['#2196F3', '#03A9F4'],
-                    'green': ['#00C853', '#00D4AA']
-                };
-
-                const colorSet = colors[collection.color] || colors.red;
-                appState.particles.forEach(particle => {
-                    particle.color = colorSet[Math.floor(Math.random() * colorSet.length)];
-                    particle.element.style.background = particle.color;
-                    particle.targetOpacity = 0.4 + Math.random() * 0.3;
-                });
-
-                showNotification(`Запущен плейлист: ${collection.title}`);
             }
-        }
 
-        // Показать меню пользователя
-        function showUserMenu() {
-            console.log('Открыто меню пользователя');
-            alert('Меню пользователя: Профиль, Настройки, Выйти');
+            // Промокод ввод по Enter
+            const promocodeInput = document.getElementById('promocodeInput');
+            if (promocodeInput) {
+                promocodeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        applyPromocode();
+                    }
+                });
+            }
         }
 
         // Вспомогательные функции
@@ -1516,17 +3470,27 @@
             console.log('Открыта категория:', categoryId);
         }
 
-        function switchTab(tabId) {
-            console.log('Переключение на таб:', tabId);
-        }
-
-        function switchPage(pageId) {
-            appState.currentPage = pageId;
-            console.log('Переключение на страницу:', pageId);
+        function showUserMenu() {
+            console.log('Открыто меню пользователя');
+            alert('Меню пользователя: Профиль, Настройки, Выйти');
         }
 
         function showNotification(message) {
-            console.log('Notification:', message);
+            const oldNotification = document.querySelector('.notification');
+            if (oldNotification) {
+                oldNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
         }
     </script>
 </body>
