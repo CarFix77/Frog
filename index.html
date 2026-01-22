@@ -364,22 +364,17 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* НОВЫЙ КОНТЕЙНЕР ДЛЯ СЛАЙДЕРА - ЗАМЕНИЛ РЕКЛАМУ */
+        /* СТАЙЛЫ ДЛЯ НОВОГО СЛАЙДЕРА */
         .slider-wrapper {
             position: relative;
             width: 100%;
-            max-width: 1200px;
             height: 110px;
-            border-radius: 35px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            background: #4a00b4;
             margin: 15px 0 20px;
-            
-            /* ГЛАВНОЕ: Блокировка вертикального сдвига */
-            touch-action: pan-x;
-            -webkit-user-select: none;
-            user-select: none;
+            background: #000;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
         }
 
         .slides-container {
@@ -390,9 +385,8 @@
             scroll-behavior: smooth;
             height: 100%;
             scrollbar-width: none;
-            overscroll-behavior-x: contain;
         }
-        
+
         .slides-container::-webkit-scrollbar {
             display: none;
         }
@@ -404,18 +398,18 @@
             scroll-snap-align: center;
             position: relative;
             display: flex;
-            padding: 12px 25px;
+            padding: 15px 20px;
             box-sizing: border-box;
             overflow: hidden;
         }
 
         .close-btn {
             position: absolute;
-            top: 12px;
-            right: 15px;
+            top: 8px;
+            right: 8px;
             width: 24px;
             height: 24px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -425,9 +419,10 @@
             z-index: 100;
             cursor: pointer;
             border: none;
+            backdrop-filter: blur(10px);
         }
 
-        .slide-content {
+        .slider-content {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -435,27 +430,27 @@
             z-index: 10;
             max-width: 55%;
         }
-        
-        .slide-title {
+
+        .slider-title {
             color: #fff;
-            font-size: 13px;
+            font-size: 16px;
             font-weight: 800;
             line-height: 1.2;
             margin: 0;
         }
-        
-        .slide-link {
+
+        .slider-link {
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
         }
 
-        /* --- СЛАЙД 1: МУЗЫКА + НОТЫ + WIFI --- */
+        /* Слайд 1: Музыка + WiFi */
         .slide-music {
             background: linear-gradient(135deg, #4a00b4 0%, #6200ee 50%, #7e3ff2 100%);
         }
-        
+
         .stage-music {
             position: absolute;
             right: 20px;
@@ -471,11 +466,10 @@
             align-items: flex-end;
             gap: 2px;
         }
-        
+
         .bar {
             width: 5px;
             background: #fff;
-            border: 2px solid #000;
             border-radius: 2px;
         }
 
@@ -497,9 +491,8 @@
             opacity: 0;
             transform: scale(0);
             animation: crossP 4s infinite;
-            filter: drop-shadow(0 4px 0 rgba(0,0,0,0.3));
         }
-        
+
         @keyframes crossP {
             0%, 35% { opacity: 0; transform: scale(0.4); }
             45%, 85% { opacity: 1; transform: scale(1.1); }
@@ -512,7 +505,7 @@
             height: 60px;
             animation: vibe 0.5s infinite alternate ease-in-out;
         }
-        
+
         @keyframes vibe {
             from { transform: rotate(-3deg); }
             to { transform: rotate(3deg); }
@@ -524,18 +517,18 @@
             opacity: 0;
             animation: noteFloat 2s infinite linear;
         }
-        
+
         @keyframes noteFloat {
             0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
             20% { opacity: 1; }
             100% { transform: translate(15px, -35px) rotate(20deg); opacity: 0; }
         }
 
-        /* --- СЛАЙД 2: КРИСТАЛЛ + ЧАСТИЦЫ --- */
+        /* Слайд 2: Кристалл */
         .slide-gem {
             background: linear-gradient(135deg, #082d27 0%, #041916 100%);
         }
-        
+
         .gem-stage {
             position: absolute;
             right: 40px;
@@ -545,14 +538,14 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .diamond {
             font-size: 44px;
             z-index: 10;
             filter: drop-shadow(0 0 15px #00ffa3);
             animation: floatG 3s infinite ease-in-out;
         }
-        
+
         .orbit {
             position: absolute;
             border: 2px solid #00ffa3;
@@ -561,7 +554,7 @@
             animation: rotO 3s linear infinite;
             transform: rotateX(75deg);
         }
-        
+
         .sparkle {
             position: absolute;
             width: 3px;
@@ -576,30 +569,30 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
         }
-        
+
         @keyframes rotO {
             0% { transform: rotateX(75deg) rotateZ(0deg); }
             100% { transform: rotateX(75deg) rotateZ(360deg); }
         }
-        
+
         @keyframes particleFly {
             0% { transform: translate(0,0); opacity: 0; }
             50% { opacity: 1; }
             100% { transform: translate(25px, -25px); opacity: 0; }
         }
 
-        /* --- СЛАЙД 3: КРИПТО + TON --- */
+        /* Слайд 3: Криптовалюта */
         .slide-crypto {
             background: linear-gradient(135deg, #4a00b4 0%, #6200ee 50%, #7e3ff2 100%);
         }
-        
+
         .crypto-stage {
             position: absolute;
             right: 10px;
             width: 180px;
             height: 100%;
         }
-        
+
         .coin-3d {
             position: absolute;
             width: 34px;
@@ -613,40 +606,11 @@
             animation: coinFloat 3.5s infinite ease-in-out;
             overflow: hidden;
         }
-        
-        .c-btc {
-            background: #f7931a;
-            top: 10px;
-            right: 20px;
-            color: #fff;
-            font-weight: 900;
-            font-size: 18px;
-        }
-        
-        .c-ton {
-            background: #0098EA;
-            top: 58px;
-            right: 55px;
-            padding: 0;
-        }
-        
-        .c-usdt {
-            background: #26a17b;
-            top: 8px;
-            right: 95px;
-            color: #fff;
-            font-weight: 900;
-            font-size: 16px;
-        }
-        
-        .c-eth {
-            background: #627eea;
-            top: 50px;
-            right: 120px;
-            color: #fff;
-            font-weight: 900;
-            font-size: 18px;
-        }
+
+        .c-btc { background: #f7931a; top: 10px; right: 20px; color: #fff; font-weight: 900; font-size: 18px; }
+        .c-ton { background: #0098EA; top: 58px; right: 55px; padding: 0; }
+        .c-usdt { background: #26a17b; top: 8px; right: 95px; color: #fff; font-weight: 900; font-size: 16px; }
+        .c-eth { background: #627eea; top: 50px; right: 120px; color: #fff; font-weight: 900; font-size: 18px; }
 
         @keyframes coinFloat {
             0%, 100% { transform: translateY(0); }
@@ -661,15 +625,15 @@
             opacity: 0.4;
             animation: conf 3s infinite linear;
         }
-        
+
         @keyframes conf {
             0% { transform: translate(0,0); opacity: 0; }
             50% { opacity: 0.4; }
             100% { transform: translate(-30px, -30px); opacity: 0; }
         }
 
-        /* ПАГИНАЦИЯ */
-        .dots {
+        /* Пагинация слайдера */
+        .slider-dots {
             position: absolute;
             bottom: 10px;
             left: 50%;
@@ -678,7 +642,7 @@
             gap: 6px;
             z-index: 50;
         }
-        
+
         .dot {
             width: 6px;
             height: 6px;
@@ -686,17 +650,11 @@
             border-radius: 50%;
             transition: 0.3s;
         }
-        
+
         .dot.active {
             width: 18px;
             background: #fff;
             border-radius: 10px;
-        }
-
-        svg {
-            width: 100%;
-            height: 100%;
-            display: block;
         }
 
         /* Подборки музыки */
@@ -2362,26 +2320,28 @@
                         </button>
                     </div>
 
-                    <!-- НОВЫЙ КОНТЕЙНЕР СО СЛАЙДЕРОМ - ЗАМЕНИЛ РЕКЛАМУ -->
-                    <div class="slider-wrapper" id="promoSlider">
-                        <button class="close-btn" onclick="closePromoSlider()">×</button>
+                    <!-- СЛАЙДЕР ЗАМЕНЯЕТ РЕКЛАМУ -->
+                    <div class="slider-wrapper">
+                        <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
 
                         <div class="slides-container" id="slider">
                             <!-- Slide 1 -->
                             <div class="slide slide-music">
-                                <div class="slide-content">
-                                    <div class="slide-title">Слушай музыку когда<br>отключат интернет</div>
-                                    <div class="slide-link">Узнать подробнее ›</div>
+                                <div class="slider-content">
+                                    <div class="slider-title">Слушай музыку когда<br>отключат интернет</div>
+                                    <a href="#" class="slider-link">Узнать подробнее ›</a>
                                 </div>
                                 <div class="stage-music">
                                     <div style="position:relative; width:45px; height:45px; display:flex; justify-content:center; align-items:center;">
                                         <div class="wifi">
-                                            <div class="bar b1"></div><div class="bar b2"></div><div class="bar b3"></div><div class="bar b4"></div>
+                                            <div class="bar b1"></div>
+                                            <div class="bar b2"></div>
+                                            <div class="bar b3"></div>
+                                            <div class="bar b4"></div>
                                         </div>
                                         <div class="cross-sticker">
                                             <svg viewBox="0 0 100 100">
                                                 <path d="M25,25 L75,75 M75,25 L25,75" stroke="#ff3b30" stroke-width="15" stroke-linecap="round" />
-                                                <path d="M25,25 L75,75 M75,25 L25,75" stroke="black" stroke-width="22" stroke-linecap="round" style="z-index:-1; opacity:0.3; transform:translate(3px, 3px);" />
                                             </svg>
                                         </div>
                                     </div>
@@ -2390,11 +2350,11 @@
                                         <div class="note" style="left: 20px; top: -10px; animation-delay: 0.7s; color: #00e5ff;">♫</div>
                                         <div class="note" style="right: -5px; top: 0; animation-delay: 1.4s; color: #ff4081;">♬</div>
                                         <svg viewBox="0 0 100 100">
-                                            <circle cx="50" cy="55" r="30" fill="#ffdbac" stroke="black" stroke-width="8" />
-                                            <path d="M20,55 Q20,20 50,20 Q80,20 80,55" fill="none" stroke="black" stroke-width="10" />
-                                            <rect x="10" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="black" stroke-width="5" />
-                                            <rect x="76" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="black" stroke-width="5" />
-                                            <path d="M45,75 Q50,80 55,75" fill="none" stroke="black" stroke-width="4" />
+                                            <circle cx="50" cy="55" r="30" fill="#ffdbac" />
+                                            <path d="M20,55 Q20,20 50,20 Q80,20 80,55" fill="none" stroke="#000" stroke-width="10" />
+                                            <rect x="10" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="#000" stroke-width="5" />
+                                            <rect x="76" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="#000" stroke-width="5" />
+                                            <path d="M45,75 Q50,80 55,75" fill="none" stroke="#000" stroke-width="4" />
                                         </svg>
                                     </div>
                                 </div>
@@ -2402,9 +2362,9 @@
 
                             <!-- Slide 2 -->
                             <div class="slide slide-gem">
-                                <div class="slide-content">
-                                    <div class="slide-title">Оформи подписку и получи дополнительные возможности</div>
-                                    <div class="slide-link">Узнать подробнее ›</div>
+                                <div class="slider-content">
+                                    <div class="slider-title">Оформи подписку и получи дополнительные возможности</div>
+                                    <a href="#" class="slider-link">Узнать подробнее ›</a>
                                 </div>
                                 <div class="gem-stage">
                                     <div class="sparkle" style="top:20%; left:10%;"></div>
@@ -2418,16 +2378,16 @@
 
                             <!-- Slide 3 -->
                             <div class="slide slide-crypto">
-                                <div class="slide-content">
-                                    <div class="slide-title">Оплачивай любой криптовалютой и получи скидку</div>
-                                    <div class="slide-link">Узнать подробнее ›</div>
+                                <div class="slider-content">
+                                    <div class="slider-title">Оплачивай любой криптовалютой и получи скидку</div>
+                                    <a href="#" class="slider-link">Узнать подробнее ›</a>
                                 </div>
                                 <div class="crypto-stage">
                                     <div class="confetti" style="background:#ffeb3b; top:20px; right:150px;"></div>
                                     <div class="confetti" style="background:#00e5ff; bottom:20px; right:100px; animation-delay:1s;"></div>
 
                                     <div class="coin-3d c-btc">₿</div>
-                                    <!-- ТОТ САМЫЙ TON -->
+                                    <!-- TON монета -->
                                     <div class="coin-3d c-ton">
                                         <svg viewBox="0 0 100 100" fill="none">
                                             <circle cx="50" cy="50" r="50" fill="#0098EA"/>
@@ -2441,10 +2401,15 @@
                             </div>
                         </div>
 
-                        <div class="dots">
-                            <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+                        <div class="slider-dots">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
                         </div>
                     </div>
+                    <!-- КОНЕЦ СЛАЙДЕРА -->
+
+                </div>
 
                 <!-- Подборки музыки -->
                 <div class="moods-section">
@@ -3010,9 +2975,6 @@
                 clickTrack: 'Нажмите на трек или альбом',
                 music: 'Музыка',
                 collection: 'Коллекция',
-                adTitle: 'Новый релиз недели!',
-                adSubtitle: 'Эксклюзивный трек от вашего любимого исполнителя',
-                adButton: 'Слушать сейчас',
                 promocodeDesc: 'Введите промокод для получения скидки на подписку',
                 // Особенности подписок на русском
                 feature1: 'Высокое качество звука',
@@ -3075,9 +3037,6 @@
                 clickTrack: 'Click on track or album',
                 music: 'Music',
                 collection: 'Collection',
-                adTitle: 'New Release of the Week!',
-                adSubtitle: 'Exclusive track from your favorite artist',
-                adButton: 'Listen Now',
                 promocodeDesc: 'Enter promo code to get discount on subscription',
                 // Особенности подписок на английском
                 feature1: 'High quality sound',
@@ -3208,42 +3167,42 @@
             loadLanguages();
             loadSubscriptionPlans();
             updateInterfaceLanguage();
-            setupTouchScrolling(); // Добавил правильный вызов
-            setupPromoSlider(); // Инициализация промо-слайдера
+            setupSlider();
+            setupTouchScrolling();
         });
 
-        // НОВАЯ ФУНКЦИЯ: Инициализация промо-слайдера
-        function setupPromoSlider() {
+        // Настройка слайдера
+        function setupSlider() {
             const slider = document.getElementById('slider');
-            const dots = document.querySelectorAll('.dot');
+            const dots = document.querySelectorAll('.slider-dots .dot');
             
-            if (!slider || !dots) return;
-            
+            if (!slider) return;
+
             slider.addEventListener('scroll', () => {
-                const slideIndex = Math.round(slider.scrollLeft / slider.offsetWidth);
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === slideIndex);
+                const index = Math.round(slider.scrollLeft / slider.offsetWidth);
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
                 });
             });
-            
-            // Фикс для полной блокировки вертикального свайпа на мобилках
+
+            // Автопрокрутка слайдера
+            let currentSlide = 0;
+            setInterval(() => {
+                if (!document.querySelector('.slider-wrapper').style.display) {
+                    currentSlide = (currentSlide + 1) % 3;
+                    slider.scrollTo({
+                        left: currentSlide * slider.offsetWidth,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 5000);
+
+            // Блокировка вертикального скролла на мобильных
             slider.addEventListener('touchmove', function(e) {
                 if (e.touches.length > 0) {
-                    let touch = e.touches[0];
-                    // Если движение больше по вертикали, чем по горизонтали - отменяем
-                    if (Math.abs(e.movementY) > Math.abs(e.movementX)) {
-                        e.preventDefault();
-                    }
+                    e.preventDefault();
                 }
-            }, {passive: false});
-        }
-
-        // НОВАЯ ФУНКЦИЯ: Закрытие промо-слайдера
-        function closePromoSlider() {
-            const slider = document.getElementById('promoSlider');
-            if (slider) {
-                slider.style.display = 'none';
-            }
+            }, { passive: false });
         }
 
         // Создание визуализатора полос
