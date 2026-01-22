@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoundWave</title>
+    <title>MyRhythm</title>
     <style>
         * {
             margin: 0;
@@ -222,6 +222,7 @@
             height: 100vh;
             overflow-y: auto;
             position: relative;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* КОНТЕЙНЕР С ГРАНИЦАМИ */
@@ -232,21 +233,21 @@
             padding: 0 20px;
         }
 
-        /* Главная секция - Мой звук */
+        /* Главная секция - Мой ритм */
         .sound-hero-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 40vh;
-            padding: 40px 20px 20px;
+            padding: 20px 20px 10px;
             position: relative;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .sound-hero-title {
-            font-size: 48px;
+            font-size: 36px;
             font-weight: 900;
             background: linear-gradient(45deg, 
                 var(--primary) 0%,
@@ -256,7 +257,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 1px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             position: relative;
         }
 
@@ -266,18 +267,18 @@
             bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 120px;
+            width: 100px;
             height: 3px;
             background: var(--gradient-primary);
             border-radius: 2px;
         }
 
         .sound-hero-subtitle {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 30px;
-            max-width: 500px;
-            line-height: 1.5;
+            margin-bottom: 20px;
+            max-width: 400px;
+            line-height: 1.4;
         }
 
         /* АНИМАЦИЯ ПОЛОС */
@@ -286,15 +287,15 @@
             align-items: flex-end;
             justify-content: center;
             gap: 6px;
-            height: 80px;
-            margin-top: 20px;
+            height: 60px;
+            margin-top: 10px;
             position: relative;
         }
 
         .visualizer-bar {
-            width: 10px;
+            width: 8px;
             background: var(--gradient-primary);
-            border-radius: 5px 5px 0 0;
+            border-radius: 4px 4px 0 0;
             animation: visualizerMove 1.5s ease-in-out infinite;
         }
 
@@ -315,31 +316,31 @@
 
         @keyframes visualizerMove {
             0%, 100% {
-                height: 15px;
+                height: 12px;
             }
             50% {
-                height: 60px;
+                height: 50px;
             }
         }
 
         .sound-hero-actions {
             display: flex;
-            gap: 20px;
-            margin-top: 30px;
+            gap: 15px;
+            margin-top: 20px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .hero-action-btn {
             position: relative;
-            padding: 15px 35px;
+            padding: 12px 30px;
             font-size: 14px;
             font-weight: 600;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 180px;
+            min-width: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -363,15 +364,350 @@
             box-shadow: var(--shadow-lg);
         }
 
+        /* НОВЫЙ КОНТЕЙНЕР ДЛЯ СЛАЙДЕРА - ЗАМЕНИЛ РЕКЛАМУ */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 110px;
+            border-radius: 35px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: #4a00b4;
+            margin: 15px 0 20px;
+            
+            /* ГЛАВНОЕ: Блокировка вертикального сдвига */
+            touch-action: pan-x;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .slides-container {
+            display: flex;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            height: 100%;
+            scrollbar-width: none;
+            overscroll-behavior-x: contain;
+        }
+        
+        .slides-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 110px;
+            scroll-snap-align: center;
+            position: relative;
+            display: flex;
+            padding: 12px 25px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 14px;
+            z-index: 100;
+            cursor: pointer;
+            border: none;
+        }
+
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            z-index: 10;
+            max-width: 55%;
+        }
+        
+        .slide-title {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0;
+        }
+        
+        .slide-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* --- СЛАЙД 1: МУЗЫКА + НОТЫ + WIFI --- */
+        .slide-music {
+            background: linear-gradient(135deg, #4a00b4 0%, #6200ee 50%, #7e3ff2 100%);
+        }
+        
+        .stage-music {
+            position: absolute;
+            right: 20px;
+            height: 100%;
+            top: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .wifi {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        
+        .bar {
+            width: 5px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 2px;
+        }
+
+        .b4 { height: 34px; animation: wifiSeq 4s infinite 0.0s; }
+        .b3 { height: 26px; animation: wifiSeq 4s infinite 0.2s; }
+        .b2 { height: 18px; animation: wifiSeq 4s infinite 0.4s; }
+        .b1 { height: 10px; animation: wifiSeq 4s infinite 0.6s; }
+
+        @keyframes wifiSeq {
+            0%, 15% { opacity: 1; }
+            45%, 55% { opacity: 0.15; }
+            85%, 100% { opacity: 1; }
+        }
+
+        .cross-sticker {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            opacity: 0;
+            transform: scale(0);
+            animation: crossP 4s infinite;
+            filter: drop-shadow(0 4px 0 rgba(0,0,0,0.3));
+        }
+        
+        @keyframes crossP {
+            0%, 35% { opacity: 0; transform: scale(0.4); }
+            45%, 85% { opacity: 1; transform: scale(1.1); }
+            95%, 100% { opacity: 0; transform: scale(0.4); }
+        }
+
+        .human-box {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            animation: vibe 0.5s infinite alternate ease-in-out;
+        }
+        
+        @keyframes vibe {
+            from { transform: rotate(-3deg); }
+            to { transform: rotate(3deg); }
+        }
+
+        .note {
+            position: absolute;
+            font-size: 16px;
+            opacity: 0;
+            animation: noteFloat 2s infinite linear;
+        }
+        
+        @keyframes noteFloat {
+            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(15px, -35px) rotate(20deg); opacity: 0; }
+        }
+
+        /* --- СЛАЙД 2: КРИСТАЛЛ + ЧАСТИЦЫ --- */
+        .slide-gem {
+            background: linear-gradient(135deg, #082d27 0%, #041916 100%);
+        }
+        
+        .gem-stage {
+            position: absolute;
+            right: 40px;
+            width: 100px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .diamond {
+            font-size: 44px;
+            z-index: 10;
+            filter: drop-shadow(0 0 15px #00ffa3);
+            animation: floatG 3s infinite ease-in-out;
+        }
+        
+        .orbit {
+            position: absolute;
+            border: 2px solid #00ffa3;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: rotO 3s linear infinite;
+            transform: rotateX(75deg);
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: particleFly 2s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes floatG {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes rotO {
+            0% { transform: rotateX(75deg) rotateZ(0deg); }
+            100% { transform: rotateX(75deg) rotateZ(360deg); }
+        }
+        
+        @keyframes particleFly {
+            0% { transform: translate(0,0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(25px, -25px); opacity: 0; }
+        }
+
+        /* --- СЛАЙД 3: КРИПТО + TON --- */
+        .slide-crypto {
+            background: linear-gradient(135deg, #4a00b4 0%, #6200ee 50%, #7e3ff2 100%);
+        }
+        
+        .crypto-stage {
+            position: absolute;
+            right: 10px;
+            width: 180px;
+            height: 100%;
+        }
+        
+        .coin-3d {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 2.2px solid #000;
+            box-shadow: 0 4.5px 0 #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: coinFloat 3.5s infinite ease-in-out;
+            overflow: hidden;
+        }
+        
+        .c-btc {
+            background: #f7931a;
+            top: 10px;
+            right: 20px;
+            color: #fff;
+            font-weight: 900;
+            font-size: 18px;
+        }
+        
+        .c-ton {
+            background: #0098EA;
+            top: 58px;
+            right: 55px;
+            padding: 0;
+        }
+        
+        .c-usdt {
+            background: #26a17b;
+            top: 8px;
+            right: 95px;
+            color: #fff;
+            font-weight: 900;
+            font-size: 16px;
+        }
+        
+        .c-eth {
+            background: #627eea;
+            top: 50px;
+            right: 120px;
+            color: #fff;
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        @keyframes coinFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 6px;
+            height: 3px;
+            border-radius: 2px;
+            opacity: 0.4;
+            animation: conf 3s infinite linear;
+        }
+        
+        @keyframes conf {
+            0% { transform: translate(0,0); opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { transform: translate(-30px, -30px); opacity: 0; }
+        }
+
+        /* ПАГИНАЦИЯ */
+        .dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 50;
+        }
+        
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        
+        .dot.active {
+            width: 18px;
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         /* Подборки музыки */
         .moods-section {
-            margin: 30px 0;
+            margin: 20px 0;
         }
 
         .section-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: var(--text-primary);
             position: relative;
             display: inline-block;
@@ -380,27 +716,27 @@
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -8px;
+            bottom: -6px;
             left: 0;
-            width: 60px;
-            height: 3px;
+            width: 50px;
+            height: 2px;
             background: var(--gradient-primary);
             border-radius: 2px;
         }
 
         .moods-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
         }
 
         .mood-card {
             background: var(--bg-card);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid var(--border);
@@ -414,7 +750,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 3px;
             background: var(--gradient-primary);
         }
 
@@ -426,18 +762,18 @@
         }
 
         .mood-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .mood-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: var(--primary);
-            border-radius: 6px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -445,25 +781,25 @@
         }
 
         .mood-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         /* Табы контента */
         .content-tabs {
             display: flex;
-            gap: 10px;
-            margin: 30px 0;
-            padding-bottom: 20px;
+            gap: 8px;
+            margin: 20px 0;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--border);
         }
 
         .tab {
             background: none;
             border: none;
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 15px;
             color: var(--text-secondary);
             cursor: pointer;
             position: relative;
@@ -486,10 +822,10 @@
         .tab.active::after {
             content: '';
             position: absolute;
-            bottom: -20px;
+            bottom: -15px;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 2px;
             background: var(--gradient-primary);
             border-radius: 2px;
         }
@@ -530,26 +866,26 @@
             background: var(--bg-card);
             border-radius: 16px;
             border: 1px solid var(--border);
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .settings-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .settings-title::before {
             content: '';
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: var(--primary);
-            border-radius: 6px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -557,34 +893,34 @@
         }
 
         .settings-title.language::before {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z'/%3E%3C/svg%3E") center/16px no-repeat var(--primary);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z'/%3E%3C/svg%3E") center/14px no-repeat var(--primary);
         }
 
         .settings-title.support::before {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z'/%3E%3C/svg%3E") center/16px no-repeat var(--primary);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z'/%3E%3C/svg%3E") center/14px no-repeat var(--primary);
         }
 
         .settings-title.subscription::before {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E") center/16px no-repeat var(--primary);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E") center/14px no-repeat var(--primary);
         }
 
         /* Языки */
         .languages-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
         }
 
         .language-option {
             background: var(--bg-surface);
             border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .language-option:hover {
@@ -599,9 +935,9 @@
         }
 
         .language-flag {
-            width: 40px;
-            height: 30px;
-            border-radius: 4px;
+            width: 35px;
+            height: 25px;
+            border-radius: 3px;
             object-fit: cover;
             border: 1px solid var(--border);
         }
@@ -613,7 +949,7 @@
         }
 
         .language-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 4px;
@@ -623,7 +959,7 @@
         }
 
         .language-natives {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
@@ -634,19 +970,19 @@
         .support-options {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .support-option {
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 10px;
+            padding: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 16px;
         }
 
         .support-option:hover {
@@ -656,9 +992,9 @@
         }
 
         .support-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
+            width: 45px;
+            height: 45px;
+            border-radius: 22px;
             background: var(--gradient-primary);
             display: flex;
             align-items: center;
@@ -668,8 +1004,8 @@
 
         .support-icon::before {
             content: '';
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: white;
             mask-position: center;
             mask-repeat: no-repeat;
@@ -694,7 +1030,7 @@
         }
 
         .support-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 5px;
@@ -704,7 +1040,7 @@
         }
 
         .support-description {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-secondary);
             line-height: 1.4;
             white-space: nowrap;
@@ -715,29 +1051,19 @@
         /* КРАСИВЫЙ ЗАГОЛОВОК ПОДПИСКИ */
         .subscription-header {
             text-align: center;
-            margin-bottom: 30px; /* Уменьшили отступ */
-            padding: 25px 20px; /* Уменьшили padding */
+            margin-bottom: 25px;
+            padding: 20px;
             background: linear-gradient(135deg, 
                 rgba(255, 46, 46, 0.1),
                 rgba(156, 39, 176, 0.1));
-            border-radius: 20px;
+            border-radius: 16px;
             border: 2px solid var(--border);
             position: relative;
             overflow: hidden;
         }
 
-        .subscription-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
         .subscription-title {
-            font-size: 42px; /* Уменьшили размер */
+            font-size: 32px;
             font-weight: 900;
             background: linear-gradient(45deg, 
                 var(--primary) 20%,
@@ -746,86 +1072,34 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 20px; /* Увеличили отступ для кнопки */
+            margin-bottom: 15px;
             position: relative;
             display: inline-block;
-        }
-
-        .subscription-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 25%;
-            right: 25%;
-            height: 3px;
-            background: var(--gradient-primary);
-            border-radius: 2px;
+            word-wrap: break-word;
+            max-width: 100%;
         }
 
         .subscription-subtitle {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--text-secondary);
-            max-width: 500px;
-            margin: 15px auto 0; /* Уменьшили отступ */
-            line-height: 1.5;
+            max-width: 400px;
+            margin: 10px auto 0;
+            line-height: 1.4;
         }
 
-        /* Кнопка подключения TON кошелька - ЦЕНТРИРОВАННАЯ */
-        .ton-connect-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: var(--gradient-blue);
-            color: white;
-            padding: 14px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            min-width: 280px;
-            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
-        }
-
-        .ton-connect-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(33, 150, 243, 0.6);
-        }
-
-        .ton-connect-btn:active {
-            transform: translateY(-1px);
-        }
-
-        .ton-connect-icon {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .ton-connect-icon svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
-        }
-
-        /* ОБНОВЛЕННЫЕ ПОДПИСКИ */
+        /* ОБНОВЛЕННЫЕ ПОДПИСКИ - УБРАЛ ВСЕ ОРАНЖЕВЫЕ ПОЛОСКИ */
         .subscription-plans {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
         }
 
         .plan-card {
             background: linear-gradient(145deg, var(--bg-card), var(--bg-dark));
-            border-radius: 20px;
+            border-radius: 16px;
             border: 2px solid var(--border);
-            padding: 30px 25px;
+            padding: 25px 20px;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -835,11 +1109,11 @@
         }
 
         .plan-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-8px);
             border-color: var(--primary);
             box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.5),
-                0 0 100px rgba(255, 46, 46, 0.1);
+                0 15px 30px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(255, 46, 46, 0.1);
         }
 
         .plan-card.popular {
@@ -851,41 +1125,33 @@
             position: relative;
         }
 
-        /* ИСПРАВЛЕННАЯ надпись ПОПУЛЯРНЫЙ ВЫБОР - КОРОЧЕ и правильно */
+        /* УБРАЛ ВСЕ ОРАНЖЕВЫЕ ПОЛОСКИ И НАДПИСИ ПОПУЛЯРНЫЙ ВЫБОР */
         .plan-card.popular::after {
-            content: 'ПОПУЛЯРНЫЙ';
-            position: absolute;
-            top: 20px; /* Подняли еще выше */
-            right: -35px; /* Подвинули левее */
-            background: linear-gradient(45deg, var(--primary), var(--orange));
-            color: white;
-            padding: 8px 40px; /* Уменьшили ширину */
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            transform: rotate(45deg);
-            box-shadow: var(--shadow-lg);
-            z-index: 10; /* Увеличили z-index */
-            width: 160px; /* Уменьшили ширину */
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            display: none; /* Убрал надпись "Популярный выбор" */
         }
+
+        /* УБРАЛ ВСЕ ОРАНЖЕВЫЕ ПОЛОСКИ */
+        .plan-card.popular::before {
+            display: none;
+        }
+
+        /* УДАЛИЛ ВСЕ ДОПОЛНИТЕЛЬНЫЕ ОРАНЖЕВЫЕ ПОЛОСКИ */
 
         .plan-header {
             text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--border);
             position: relative;
-            z-index: 5; /* Увеличили z-index */
+            z-index: 5;
         }
 
         .plan-period {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
             font-weight: 600;
         }
 
@@ -893,14 +1159,14 @@
             display: flex;
             align-items: baseline;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 5px;
             position: relative;
-            z-index: 5; /* Увеличили z-index */
+            z-index: 5;
         }
 
         .plan-price {
-            font-size: 60px;
+            font-size: 48px;
             font-weight: 900;
             line-height: 1;
             background: linear-gradient(45deg, var(--text-primary), var(--text-secondary));
@@ -912,71 +1178,68 @@
         }
 
         .plan-card.popular .plan-price {
-            background: linear-gradient(45deg, var(--primary), #ff9500);
+            background: linear-gradient(45deg, var(--primary), var(--purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .plan-currency {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-secondary);
-            margin-left: 5px;
+            margin-left: 4px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             position: relative;
-            z-index: 5; /* Увеличили z-index */
+            z-index: 5;
         }
 
-        /* УВЕЛИЧЕННАЯ ИКОНКА TON */
-        .ton-icon-large {
-            width: 36px;
-            height: 36px;
-            margin-left: 5px;
+        /* ИКОНКА TON */
+        .ton-icon {
+            width: 20px;
+            height: 20px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            z-index: 5; /* Увеличили z-index */
         }
 
-        .ton-icon-large svg {
+        .ton-icon svg {
             width: 100%;
             height: 100%;
             filter: drop-shadow(0 0 4px rgba(0, 152, 234, 0.5));
         }
 
         .plan-savings {
-            background: linear-gradient(45deg, var(--primary), var(--orange));
+            background: linear-gradient(45deg, var(--primary), var(--purple));
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
             font-weight: 700;
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 8px;
             box-shadow: var(--shadow-sm);
             letter-spacing: 0.5px;
             position: relative;
-            z-index: 5; /* Увеличили z-index */
+            z-index: 5;
         }
 
         /* ИСПРАВЛЕННЫЕ КРУЖКИ С ГАЛОЧКАМИ */
         .plan-features {
             flex: 1;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             position: relative;
-            z-index: 5; /* Увеличили z-index */
+            z-index: 5;
         }
 
         .plan-feature {
             display: flex;
             align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 15px;
-            font-size: 14px;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
             position: relative;
             padding-left: 0;
@@ -984,8 +1247,8 @@
 
         .plan-feature::before {
             content: '';
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             background: linear-gradient(45deg, var(--accent), var(--cyan));
             border-radius: 50%;
             display: flex;
@@ -993,39 +1256,39 @@
             justify-content: center;
             flex-shrink: 0;
             position: relative;
-            box-shadow: 0 4px 8px rgba(0, 200, 83, 0.3);
-            margin-top: 2px;
+            box-shadow: 0 3px 6px rgba(0, 200, 83, 0.3);
+            margin-top: 1px;
         }
 
         .plan-feature::after {
             content: '✓';
             position: absolute;
-            left: 5px;
+            left: 4px;
             color: white;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
-            top: 6px;
+            top: 5px;
         }
 
         .plan-card.popular .plan-feature::before {
-            background: linear-gradient(45deg, var(--primary), var(--orange));
-            box-shadow: 0 4px 8px rgba(255, 46, 46, 0.3);
+            background: linear-gradient(45deg, var(--primary), var(--purple));
+            box-shadow: 0 3px 6px rgba(255, 46, 46, 0.3);
         }
 
         .plan-button {
-            padding: 18px;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: 800;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             width: 100%;
             position: relative;
             overflow: hidden;
-            z-index: 5; /* Увеличили z-index */
+            z-index: 5;
         }
 
         .plan-button::before {
@@ -1050,64 +1313,64 @@
             background: linear-gradient(135deg, var(--primary), var(--purple));
             color: white;
             box-shadow: 
-                0 8px 25px rgba(255, 46, 46, 0.4);
+                0 6px 20px rgba(255, 46, 46, 0.3);
         }
 
         .plan-card.popular .plan-button {
-            background: linear-gradient(135deg, var(--primary), #ff6b00);
+            background: linear-gradient(135deg, var(--primary), var(--purple));
             color: white;
             box-shadow: 
-                0 10px 30px rgba(255, 46, 46, 0.5);
+                0 8px 25px rgba(255, 46, 46, 0.4);
         }
 
         .plan-button:hover {
             transform: translateY(-3px);
             box-shadow: 
-                0 15px 35px rgba(255, 46, 46, 0.6);
+                0 12px 30px rgba(255, 46, 46, 0.5);
         }
 
-        /* Контейнер для промокода - ИСПРАВЛЕННЫЙ */
+        /* Контейнер для промокода */
         .promocode-container {
-            margin-top: 40px;
-            padding: 25px;
+            margin-top: 30px;
+            padding: 20px;
             background: var(--bg-card);
-            border-radius: 16px;
+            border-radius: 14px;
             border: 1px solid var(--border);
         }
 
         .promocode-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .promocode-title::before {
             content: '';
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF9800'%3E%3Cpath d='M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z'/%3E%3C/svg%3E") center/contain no-repeat;
         }
 
         .promocode-input-container {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .promocode-input {
             flex: 1;
-            padding: 14px 20px;
+            padding: 12px 16px;
             background: var(--bg-surface);
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             color: var(--text-primary);
-            font-size: 16px;
+            font-size: 14px;
             transition: all 0.3s ease;
-            min-width: 0; /* Важно для flex */
+            min-width: 0;
         }
 
         .promocode-input:focus {
@@ -1118,17 +1381,17 @@
         }
 
         .promocode-btn {
-            padding: 14px 24px; /* Уменьшили padding */
+            padding: 12px 20px;
             background: var(--gradient-accent);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
-            flex-shrink: 0; /* Не сжимается */
+            flex-shrink: 0;
         }
 
         .promocode-btn:hover {
@@ -1137,9 +1400,9 @@
         }
 
         .promocode-description {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         /* СТРАНИЦА КОЛЛЕКЦИИ */
@@ -1155,64 +1418,64 @@
 
         .empty-collection {
             text-align: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
             background: var(--bg-card);
-            border-radius: 16px;
+            border-radius: 14px;
             border: 2px dashed var(--border);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .empty-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
+            font-size: 48px;
+            margin-bottom: 15px;
             opacity: 0.5;
         }
 
         .empty-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .empty-subtitle {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--text-secondary);
-            max-width: 400px;
-            margin: 0 auto 20px;
-            line-height: 1.5;
+            max-width: 350px;
+            margin: 0 auto 15px;
+            line-height: 1.4;
         }
 
         .collection-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
         }
 
         .collection-track-item {
             background: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid var(--border);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            padding: 15px;
-            gap: 15px;
+            padding: 12px;
+            gap: 12px;
             cursor: pointer;
         }
 
         .collection-track-item:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: var(--primary);
             box-shadow: var(--shadow-lg);
             background: var(--bg-hover);
         }
 
         .collection-track-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
             object-fit: cover;
             flex-shrink: 0;
             background: linear-gradient(135deg, var(--bg-surface), var(--border));
@@ -1224,7 +1487,7 @@
         }
 
         .collection-track-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 4px;
@@ -1234,7 +1497,7 @@
         }
 
         .collection-track-artist {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-secondary);
             margin-bottom: 6px;
             white-space: nowrap;
@@ -1244,14 +1507,15 @@
 
         .collection-track-meta {
             display: flex;
-            gap: 15px;
-            font-size: 12px;
+            gap: 12px;
+            font-size: 11px;
             color: var(--text-tertiary);
         }
 
-        /* НОВЫЙ СТИЛЬ ДЛЯ "ДЛЯ ВАС" - ТРЕКИ ВМЕСТО АЛЬБОМОВ */
+        /* РАЗДЕЛ "ДЛЯ ВАС" - УЛУЧШЕННАЯ ПРОКРУТКА */
         .for-you-section {
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+            position: relative;
         }
 
         .for-you-header {
@@ -1262,25 +1526,25 @@
         }
 
         .for-you-title {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .for-you-subtitle {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-secondary);
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .scroll-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .scroll-btn {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: var(--bg-surface);
             border: 1px solid var(--border);
             border-radius: 50%;
@@ -1299,8 +1563,8 @@
 
         .scroll-btn::before {
             content: '';
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             background: var(--text-primary);
             mask-position: center;
             mask-repeat: no-repeat;
@@ -1315,58 +1579,101 @@
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'/%3E%3C/svg%3E");
         }
 
-        .for-you-scroll {
+        /* УЛУЧШЕННЫЙ КОНТЕЙНЕР ДЛЯ КОЛОНОК С ПЛАВНОЙ ПРОКРУТКОЙ */
+        .tracks-columns-container {
             display: flex;
-            overflow-x: auto;
             gap: 20px;
-            padding: 10px 0 20px;
+            width: 100%;
+            overflow-x: auto;
+            padding: 10px 0 30px;
             scroll-behavior: smooth;
             scrollbar-width: none;
-            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            cursor: grab;
+            user-select: none; /* Запрещаем выделение текста при перетаскивании */
         }
 
-        .for-you-scroll::-webkit-scrollbar {
+        .tracks-columns-container::-webkit-scrollbar {
             display: none;
         }
 
-        /* СТИЛЬ КАРТОЧЕК ТРЕКОВ ДЛЯ "ДЛЯ ВАС" */
+        .tracks-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 350px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+        }
+
+        /* ИНДИКАТОРЫ ПРОКРУТКИ - ТОЧКИ */
+        .scroll-indicators {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            height: 20px;
+        }
+
+        .scroll-indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .scroll-indicator-dot.active {
+            width: 24px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--gradient-primary);
+        }
+
+        .scroll-indicator-dot:hover {
+            background: var(--primary-light);
+            transform: scale(1.2);
+        }
+
         .track-card-for-you {
-            min-width: 220px;
             background: var(--bg-card);
             border-radius: 12px;
-            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid var(--border);
             position: relative;
-            flex-shrink: 0;
+            height: 90px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            gap: 15px;
         }
 
         .track-card-for-you:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: var(--primary);
-            box-shadow: var(--shadow-xl), var(--glow-primary);
+            box-shadow: var(--shadow-lg), var(--glow-primary);
         }
 
         .track-image-for-you {
-            width: 100%;
-            height: 180px;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            flex-shrink: 0;
             background: linear-gradient(135deg, var(--bg-surface), var(--border));
         }
 
-        .track-card-for-you:hover .track-image-for-you {
-            transform: scale(1.05);
-        }
-
         .track-info-for-you {
-            padding: 16px;
             flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            height: 100%;
         }
 
         .track-title-for-you {
@@ -1380,7 +1687,7 @@
         }
 
         .track-artist-for-you {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
             margin-bottom: 8px;
             white-space: nowrap;
@@ -1391,35 +1698,22 @@
         .track-meta-for-you {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 12px;
-            color: var(--text-tertiary);
-            margin-top: auto;
-        }
-
-        .track-badge-for-you {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 10px;
+            gap: 10px;
             font-size: 11px;
-            font-weight: 700;
-            margin-top: 8px;
-            background: var(--gradient-accent);
-            color: white;
-            align-self: flex-start;
+            color: var(--text-tertiary);
         }
 
         /* Коллекции (для Тренды и Новинки) - остаются альбомами */
         .collections-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0 60px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 15px 0 40px;
         }
 
         .collection-card {
             background: var(--bg-card);
-            border-radius: 16px;
+            border-radius: 14px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1428,14 +1722,14 @@
         }
 
         .collection-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-5px);
             border-color: var(--primary);
             box-shadow: var(--shadow-xl), var(--glow-primary);
         }
 
         .collection-image {
             width: 100%;
-            height: 200px;
+            height: 160px;
             object-fit: cover;
             transition: transform 0.6s ease;
             background: linear-gradient(135deg, var(--bg-surface), var(--border));
@@ -1446,13 +1740,13 @@
         }
 
         .collection-info {
-            padding: 16px;
+            padding: 12px;
         }
 
         .collection-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
@@ -1460,9 +1754,9 @@
         }
 
         .collection-artist {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1471,16 +1765,16 @@
         .collection-stats {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 12px;
+            gap: 12px;
+            font-size: 10px;
             color: var(--text-tertiary);
         }
 
         .collection-badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 10px;
             font-weight: 700;
             margin-top: 5px;
         }
@@ -1510,19 +1804,19 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            padding: 30px;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 25px;
             background: var(--bg-card);
-            border-radius: 16px;
+            border-radius: 14px;
             border: 1px solid var(--border);
             position: relative;
         }
 
         .album-cover-large {
-            width: 250px;
-            height: 250px;
-            border-radius: 12px;
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
             object-fit: cover;
             box-shadow: var(--shadow-xl);
             flex-shrink: 0;
@@ -1539,18 +1833,18 @@
         }
 
         .album-type {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
             opacity: 0.8;
         }
 
         .album-name-large {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--text-primary);
             line-height: 1.2;
             word-wrap: break-word;
@@ -1560,12 +1854,12 @@
         }
 
         .album-artist-large {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-secondary);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1575,10 +1869,10 @@
         .album-meta-large {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 14px;
+            gap: 12px;
+            font-size: 13px;
             color: var(--text-tertiary);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -1591,23 +1885,23 @@
             display: flex;
             justify-content: center;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .play-album-btn {
             background: var(--gradient-primary);
             color: white;
             border: none;
-            padding: 12px 40px;
-            border-radius: 25px;
-            font-size: 16px;
+            padding: 10px 30px;
+            border-radius: 20px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.3s ease;
-            min-width: 200px;
+            min-width: 180px;
             justify-content: center;
             white-space: nowrap;
         }
@@ -1619,28 +1913,28 @@
 
         /* Список треков в альбоме */
         .tracks-list-section {
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         .tracks-list-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: var(--text-primary);
         }
 
         .tracks-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .track-item-album {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid var(--border);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1653,8 +1947,8 @@
         }
 
         .track-number-album {
-            width: 40px;
-            font-size: 14px;
+            width: 35px;
+            font-size: 13px;
             color: var(--text-tertiary);
             font-weight: 600;
             flex-shrink: 0;
@@ -1662,11 +1956,11 @@
         }
 
         .track-image-album {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
             object-fit: cover;
-            margin-right: 15px;
+            margin-right: 12px;
             flex-shrink: 0;
             background: linear-gradient(135deg, var(--bg-surface), var(--border));
         }
@@ -1678,7 +1972,7 @@
         }
 
         .track-title-album {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             margin-bottom: 4px;
             color: var(--text-primary);
@@ -1688,7 +1982,7 @@
         }
 
         .track-artist-album {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
@@ -1696,10 +1990,10 @@
         }
 
         .track-duration-album {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-tertiary);
             flex-shrink: 0;
-            margin-left: 15px;
+            margin-left: 12px;
             white-space: nowrap;
         }
 
@@ -1707,13 +2001,13 @@
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-            padding: 10px 0;
+            gap: 6px;
+            margin-bottom: 15px;
+            padding: 8px 0;
             transition: all 0.2s ease;
             white-space: nowrap;
         }
@@ -1730,22 +2024,22 @@
             transform: translateX(-50%);
             width: calc(100% - 40px);
             max-width: 1200px;
-            height: 70px;
+            height: 60px;
             background: var(--bg-card);
-            border-radius: 15px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            padding: 0 20px;
-            gap: 15px;
+            padding: 0 15px;
+            gap: 12px;
             z-index: 999;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-xl);
         }
 
         .player-cover {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
             object-fit: cover;
             box-shadow: var(--shadow-md);
             flex-shrink: 0;
@@ -1758,7 +2052,7 @@
         }
 
         .player-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 3px;
             white-space: nowrap;
@@ -1767,7 +2061,7 @@
         }
 
         .player-artist {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
@@ -1777,13 +2071,13 @@
         .player-controls {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             flex-shrink: 0;
         }
 
         .control-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background: var(--bg-surface);
             border: 1px solid var(--border);
             border-radius: 50%;
@@ -1811,8 +2105,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background: var(--text-primary);
             mask-position: center;
             mask-repeat: no-repeat;
@@ -1832,8 +2126,8 @@
         }
 
         .play-btn {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             background: var(--gradient-primary);
             border-radius: 50%;
             border: none;
@@ -1855,8 +2149,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             background: white;
             mask-position: center;
             mask-repeat: no-repeat;
@@ -1878,7 +2172,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 80px;
+            height: 70px;
             background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(20px);
             border-top: 1px solid var(--border);
@@ -1897,10 +2191,10 @@
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: 12px 0;
+            padding: 10px 0;
             transition: all 0.2s ease;
             position: relative;
-            min-height: 80px;
+            min-height: 70px;
         }
 
         .nav-item:hover {
@@ -1917,15 +2211,15 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 2px;
             background: var(--gradient-primary);
-            border-radius: 0 0 3px 3px;
+            border-radius: 0 0 2px 2px;
         }
 
         .nav-icon {
-            width: 22px;
-            height: 22px;
-            margin-bottom: 6px;
+            width: 20px;
+            height: 20px;
+            margin-bottom: 5px;
             background: currentColor;
             mask-position: center;
             mask-repeat: no-repeat;
@@ -1941,14 +2235,14 @@
         }
 
         .nav-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             letter-spacing: 0.3px;
         }
 
         /* Scrollbar */
         .main-content::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
 
         .main-content::-webkit-scrollbar-track {
@@ -1966,12 +2260,12 @@
 
         /* ИКОНКИ ДЛЯ КОЛЛЕКЦИЙ */
         .collection-icon {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-right: 4px;
+            margin-right: 3px;
             vertical-align: middle;
         }
 
@@ -1983,20 +2277,21 @@
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666666'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/contain no-repeat;
         }
 
-        /* Уведомления - СИНИЕ вместо красных */
+        /* Уведомления */
         .notification {
             position: fixed;
-            top: 80px;
-            right: 20px;
-            background: var(--blue); /* СИНИЙ вместо красного */
+            top: 70px;
+            right: 15px;
+            background: var(--blue);
             color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
             box-shadow: var(--shadow-lg);
             z-index: 9999;
             animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
-            max-width: 300px;
+            max-width: 280px;
             word-wrap: break-word;
+            font-size: 13px;
         }
 
         @keyframes slideIn {
@@ -2048,9 +2343,9 @@
         <div class="content-wrapper">
             <!-- Главная страница -->
             <div class="main-page" id="mainPage">
-                <!-- Главная секция - Мой звук -->
+                <!-- Главная секция - Мой ритм -->
                 <div class="sound-hero-section">
-                    <h1 class="sound-hero-title">МОЙ ЗВУК</h1>
+                    <h1 class="sound-hero-title">МОЙ РИТМ</h1>
                     <div class="sound-hero-subtitle">
                         Персональные рекомендации на основе ваших предпочтений
                     </div>
@@ -2066,7 +2361,90 @@
                             Слушать
                         </button>
                     </div>
-                </div>
+
+                    <!-- НОВЫЙ КОНТЕЙНЕР СО СЛАЙДЕРОМ - ЗАМЕНИЛ РЕКЛАМУ -->
+                    <div class="slider-wrapper" id="promoSlider">
+                        <button class="close-btn" onclick="closePromoSlider()">×</button>
+
+                        <div class="slides-container" id="slider">
+                            <!-- Slide 1 -->
+                            <div class="slide slide-music">
+                                <div class="slide-content">
+                                    <div class="slide-title">Слушай музыку когда<br>отключат интернет</div>
+                                    <div class="slide-link">Узнать подробнее ›</div>
+                                </div>
+                                <div class="stage-music">
+                                    <div style="position:relative; width:45px; height:45px; display:flex; justify-content:center; align-items:center;">
+                                        <div class="wifi">
+                                            <div class="bar b1"></div><div class="bar b2"></div><div class="bar b3"></div><div class="bar b4"></div>
+                                        </div>
+                                        <div class="cross-sticker">
+                                            <svg viewBox="0 0 100 100">
+                                                <path d="M25,25 L75,75 M75,25 L25,75" stroke="#ff3b30" stroke-width="15" stroke-linecap="round" />
+                                                <path d="M25,25 L75,75 M75,25 L25,75" stroke="black" stroke-width="22" stroke-linecap="round" style="z-index:-1; opacity:0.3; transform:translate(3px, 3px);" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="human-box">
+                                        <div class="note" style="left: -5px; top: 0; animation-delay: 0s; color: #ffeb3b;">♪</div>
+                                        <div class="note" style="left: 20px; top: -10px; animation-delay: 0.7s; color: #00e5ff;">♫</div>
+                                        <div class="note" style="right: -5px; top: 0; animation-delay: 1.4s; color: #ff4081;">♬</div>
+                                        <svg viewBox="0 0 100 100">
+                                            <circle cx="50" cy="55" r="30" fill="#ffdbac" stroke="black" stroke-width="8" />
+                                            <path d="M20,55 Q20,20 50,20 Q80,20 80,55" fill="none" stroke="black" stroke-width="10" />
+                                            <rect x="10" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="black" stroke-width="5" />
+                                            <rect x="76" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="black" stroke-width="5" />
+                                            <path d="M45,75 Q50,80 55,75" fill="none" stroke="black" stroke-width="4" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 2 -->
+                            <div class="slide slide-gem">
+                                <div class="slide-content">
+                                    <div class="slide-title">Оформи подписку и получи дополнительные возможности</div>
+                                    <div class="slide-link">Узнать подробнее ›</div>
+                                </div>
+                                <div class="gem-stage">
+                                    <div class="sparkle" style="top:20%; left:10%;"></div>
+                                    <div class="sparkle" style="bottom:10%; right:20%; animation-delay:0.5s;"></div>
+                                    <div class="sparkle" style="top:50%; left:85%; animation-delay:1s;"></div>
+                                    <div class="orbit" style="width:75px; height:25px;"></div>
+                                    <div class="orbit" style="width:55px; height:35px; border-color:#fff; animation-duration:2s;"></div>
+                                    <div class="diamond">💎</div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 3 -->
+                            <div class="slide slide-crypto">
+                                <div class="slide-content">
+                                    <div class="slide-title">Оплачивай любой криптовалютой и получи скидку</div>
+                                    <div class="slide-link">Узнать подробнее ›</div>
+                                </div>
+                                <div class="crypto-stage">
+                                    <div class="confetti" style="background:#ffeb3b; top:20px; right:150px;"></div>
+                                    <div class="confetti" style="background:#00e5ff; bottom:20px; right:100px; animation-delay:1s;"></div>
+
+                                    <div class="coin-3d c-btc">₿</div>
+                                    <!-- ТОТ САМЫЙ TON -->
+                                    <div class="coin-3d c-ton">
+                                        <svg viewBox="0 0 100 100" fill="none">
+                                            <circle cx="50" cy="50" r="50" fill="#0098EA"/>
+                                            <path d="M72 36C72 31.5 68.5 28 64 28H36C31.5 28 28 31.5 28 36V38C28 39.5 28.5 41 29.5 42L47.5 69C48.5 70.5 51.5 70.5 52.5 69L70.5 42C71.5 41 72 39.5 72 38V36Z" stroke="white" stroke-width="6" stroke-linejoin="round"/>
+                                            <path d="M50 28V68" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="coin-3d c-usdt">₮</div>
+                                    <div class="coin-3d c-eth">Ξ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dots">
+                            <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+                        </div>
+                    </div>
 
                 <!-- Подборки музыки -->
                 <div class="moods-section">
@@ -2103,7 +2481,7 @@
                     <button class="tab" onclick="switchTab('new')">Новинки</button>
                 </div>
 
-                <!-- Контент для таба "Для вас" - ТОЛЬКО ТРЕКИ -->
+                <!-- Контент для таба "Для вас" - НОВАЯ СТРУКТУРА С КОЛОНКАМИ -->
                 <div class="tab-content active" id="tab-for-you">
                     <div class="for-you-section">
                         <div class="for-you-header">
@@ -2112,12 +2490,19 @@
                                 <div class="for-you-subtitle">Треки, которые вам понравятся</div>
                             </div>
                             <div class="scroll-buttons">
-                                <button class="scroll-btn prev" onclick="scrollForYou('prev')"></button>
-                                <button class="scroll-btn next" onclick="scrollForYou('next')"></button>
+                                <button class="scroll-btn prev" onclick="scrollTracksColumns('prev')"></button>
+                                <button class="scroll-btn next" onclick="scrollTracksColumns('next')"></button>
                             </div>
                         </div>
-                        <div class="for-you-scroll" id="forYouScroll">
-                            <!-- Треки заполняются динамически -->
+
+                        <!-- УЛУЧШЕННЫЙ КОНТЕЙНЕР ДЛЯ КОЛОНОК -->
+                        <div class="tracks-columns-container" id="tracksColumnsContainer">
+                            <!-- Колонки заполняются динамически -->
+                        </div>
+
+                        <!-- ИНДИКАТОРЫ ПРОКРУТКИ - ТОЧКИ -->
+                        <div class="scroll-indicators" id="scrollIndicators">
+                            <!-- Точки заполняются динамически -->
                         </div>
                     </div>
                 </div>
@@ -2166,7 +2551,7 @@
                             <div class="support-icon"></div>
                             <div class="support-info">
                                 <div class="support-title">Email поддержка</div>
-                                <div class="support-description">Подробные ответы на complex@support.soundwave.com</div>
+                                <div class="support-description">Подробные ответы на complex@support.myrhythm.com</div>
                             </div>
                         </div>
                         <div class="support-option" onclick="openFAQ()">
@@ -2182,18 +2567,10 @@
                 <!-- Управление подпиской -->
                 <div class="settings-section">
                     <div class="subscription-header">
-                        <h1 class="subscription-title">ПОДПИСКА</h1>
-                        <!-- Кнопка подключения TON кошелька - ЦЕНТРИРОВАННАЯ -->
-                        <button class="ton-connect-btn" onclick="connectTonWallet()">
-                            <div class="ton-connect-icon">
-                                <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="50" cy="50" r="50" fill="white"/>
-                                    <path d="M72 36C72 31.5 68.5 28 64 28H36C31.5 28 28 31.5 28 36V38C28 39.5 28.5 41 29.5 42L47.5 69C48.5 70.5 51.5 70.5 52.5 69L70.5 42C71.5 41 72 39.5 72 38V36Z" stroke="#0098EA" stroke-width="6" stroke-linejoin="round"/>
-                                    <path d="M50 28V68" stroke="#0098EA" stroke-width="6" stroke-linecap="round"/>
-                                </svg>
-                            </div>
-                            Подключить TON кошелек
-                        </button>
+                        <h1 class="subscription-title" id="subscriptionTitleText">ПОДПИСКА</h1>
+                        <div class="subscription-subtitle" id="subscriptionSubtitleText">
+                            Выберите подходящий план подписки
+                        </div>
                     </div>
 
                     <div class="subscription-plans" id="subscriptionPlans">
@@ -2207,7 +2584,7 @@
                             <input type="text" class="promocode-input" placeholder="Введите промокод" id="promocodeInput">
                             <button class="promocode-btn" onclick="applyPromocode()">Применить</button>
                         </div>
-                        <div class="promocode-description">
+                        <div class="promocode-description" id="promocodeDescriptionText">
                             Введите промокод для получения скидки на подписку
                         </div>
                     </div>
@@ -2290,20 +2667,21 @@
         let userPreferences = [];
         let likedTracks = new Set();
         let currentLanguage = 'ru';
+        let currentColumnIndex = 0;
 
         // Тестовые изображения
         const testImages = [
-            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1519281682544-5b00a8dc84ea?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1529255484355-cb73c33c04bb?w=600&h=600&fit=crop'
+            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1519281682544-5b00a8dc84ea?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1529255484355-cb73c33c04bb?w=400&h=400&fit=crop'
         ];
 
-        // Треки для раздела "Для вас"
+        // Треки для раздела "Для вас" - теперь 12 треков
         const forYouTracks = [
             {
                 id: 'fy-1',
@@ -2315,8 +2693,7 @@
                 plays: '2.5M',
                 mood: 'Спокойное',
                 genre: 'Хип-хоп',
-                image: testImages[0],
-                description: 'Медленный и атмосферный трек для утра'
+                image: testImages[0]
             },
             {
                 id: 'fy-2',
@@ -2328,8 +2705,7 @@
                 plays: '5.1M',
                 mood: 'Энергичное',
                 genre: 'Поп',
-                image: testImages[1],
-                description: 'Бодрящий трек для начала дня'
+                image: testImages[1]
             },
             {
                 id: 'fy-3',
@@ -2341,8 +2717,7 @@
                 plays: '1.8M',
                 mood: 'Путешествие',
                 genre: 'Рок',
-                image: testImages[2],
-                description: 'Идеальный трек для дороги'
+                image: testImages[2]
             },
             {
                 id: 'fy-4',
@@ -2354,8 +2729,7 @@
                 plays: '3.2M',
                 mood: 'Спокойное',
                 genre: 'Поп',
-                image: testImages[3],
-                description: 'Нежная и меланхоличная композиция'
+                image: testImages[3]
             },
             {
                 id: 'fy-5',
@@ -2367,8 +2741,7 @@
                 plays: '1.2M',
                 mood: 'Концентрация',
                 genre: 'Саундтрек',
-                image: testImages[4],
-                description: 'Музыка для работы и концентрации'
+                image: testImages[4]
             },
             {
                 id: 'fy-6',
@@ -2380,8 +2753,7 @@
                 plays: '4.3M',
                 mood: 'Ностальгия',
                 genre: 'Поп',
-                image: testImages[5],
-                description: 'Трек о прошлом и воспоминаниях'
+                image: testImages[5]
             },
             {
                 id: 'fy-7',
@@ -2393,8 +2765,7 @@
                 plays: '2.1M',
                 mood: 'Веселое',
                 genre: 'Поп',
-                image: testImages[6],
-                description: 'Легкий летний трек'
+                image: testImages[6]
             },
             {
                 id: 'fy-8',
@@ -2406,8 +2777,55 @@
                 plays: '3.8M',
                 mood: 'Вечернее',
                 genre: 'Хип-хоп',
-                image: testImages[7],
-                description: 'Атмосферный трек для вечера'
+                image: testImages[7]
+            },
+            {
+                id: 'fy-9',
+                title: 'Город',
+                artist: 'Noize MC',
+                album: 'Царь горы',
+                duration: '3:25',
+                year: 2024,
+                plays: '2.7M',
+                mood: 'Городское',
+                genre: 'Хип-хоп',
+                image: testImages[0]
+            },
+            {
+                id: 'fy-10',
+                title: 'Океан',
+                artist: 'Imagine Dragons',
+                album: 'Mercury',
+                duration: '4:15',
+                year: 2023,
+                plays: '3.5M',
+                mood: 'Эпическое',
+                genre: 'Рок',
+                image: testImages[1]
+            },
+            {
+                id: 'fy-11',
+                title: 'Мечта',
+                artist: 'BTS',
+                album: 'Love Yourself',
+                duration: '3:45',
+                year: 2024,
+                plays: '4.8M',
+                mood: 'Вдохновляющее',
+                genre: 'K-pop',
+                image: testImages[2]
+            },
+            {
+                id: 'fy-12',
+                title: 'Полет',
+                artist: 'M83',
+                album: 'Hurry Up',
+                duration: '5:10',
+                year: 2024,
+                plays: '1.9M',
+                mood: 'Космическое',
+                genre: 'Электроника',
+                image: testImages[3]
             }
         ];
 
@@ -2524,7 +2942,7 @@
                 {
                     id: 'new-3',
                     title: 'Эксклюзив',
-                    artist: 'SoundWave',
+                    artist: 'MyRhythm',
                     plays: '3.2M',
                     tracks: 2,
                     year: 2024,
@@ -2547,7 +2965,7 @@
         const translations = {
             ru: {
                 searchPlaceholder: 'Найти треки, исполнителей, альбомы',
-                soundHeroTitle: 'МОЙ ЗВУК',
+                soundHeroTitle: 'МОЙ РИТМ',
                 soundHeroSubtitle: 'Персональные рекомендации на основе ваших предпочтений',
                 configureSound: 'Настроить звук',
                 listen: 'Слушать',
@@ -2563,7 +2981,6 @@
                 new: 'Новинки',
                 basedOnPreferences: 'На основе ваших предпочтений',
                 tracksYouWillLike: 'Треки, которые вам понравятся',
-                recommend: 'РЕКОМЕНДУЕМ',
                 trackCount: 'треков',
                 plays: 'прослушиваний',
                 trending: 'ТРЕНД',
@@ -2574,10 +2991,11 @@
                 onlineChat: 'Онлайн-чат',
                 onlineChatDesc: 'Быстрые ответы на ваши вопросы 24/7',
                 emailSupport: 'Email поддержка',
-                emailSupportDesc: 'Подробные ответы на complex@support.soundwave.com',
+                emailSupportDesc: 'Подробные ответы на complex@support.myrhythm.com',
                 faqHelp: 'FAQ и помощь',
                 faqHelpDesc: 'Ответы на часто задаваемые вопросы',
                 subscriptionTitle: 'ПОДПИСКА',
+                subscriptionSubtitle: 'Выберите подходящий план подписки',
                 year: 'ГОД',
                 halfYear: 'ПОЛГОДА',
                 month: 'МЕСЯЦ',
@@ -2591,11 +3009,28 @@
                 selectTrack: 'Выберите трек',
                 clickTrack: 'Нажмите на трек или альбом',
                 music: 'Музыка',
-                collection: 'Коллекция'
+                collection: 'Коллекция',
+                adTitle: 'Новый релиз недели!',
+                adSubtitle: 'Эксклюзивный трек от вашего любимого исполнителя',
+                adButton: 'Слушать сейчас',
+                promocodeDesc: 'Введите промокод для получения скидки на подписку',
+                // Особенности подписок на русском
+                feature1: 'Высокое качество звука',
+                feature2: 'Скачивание треков',
+                feature3: 'Прослушивание без рекламы',
+                feature4: 'Персональные рекомендации',
+                feature5: 'Эксклюзивный контент',
+                feature6: 'Приоритетная поддержка',
+                feature7: 'Ограниченное скачивание',
+                feature8: 'Базовые рекомендации',
+                feature9: 'Стандартное качество',
+                feature10: 'Без скачивания',
+                // Убрали надпись для популярного выбора
+                popularChoice: ''
             },
             en: {
                 searchPlaceholder: 'Search tracks, artists, albums',
-                soundHeroTitle: 'MY SOUND',
+                soundHeroTitle: 'MY RHYTHM',
                 soundHeroSubtitle: 'Personal recommendations based on your preferences',
                 configureSound: 'Configure Sound',
                 listen: 'Listen',
@@ -2611,7 +3046,6 @@
                 new: 'New',
                 basedOnPreferences: 'Based on your preferences',
                 tracksYouWillLike: 'Tracks you will like',
-                recommend: 'RECOMMENDED',
                 trackCount: 'tracks',
                 plays: 'plays',
                 trending: 'TRENDING',
@@ -2622,10 +3056,11 @@
                 onlineChat: 'Online Chat',
                 onlineChatDesc: 'Quick answers to your questions 24/7',
                 emailSupport: 'Email Support',
-                emailSupportDesc: 'Detailed answers to complex@support.soundwave.com',
+                emailSupportDesc: 'Detailed answers to complex@support.myrhythm.com',
                 faqHelp: 'FAQ & Help',
                 faqHelpDesc: 'Answers to frequently asked questions',
                 subscriptionTitle: 'SUBSCRIPTION',
+                subscriptionSubtitle: 'Choose the right subscription plan',
                 year: 'YEAR',
                 halfYear: 'HALF YEAR',
                 month: 'MONTH',
@@ -2639,58 +3074,121 @@
                 selectTrack: 'Select track',
                 clickTrack: 'Click on track or album',
                 music: 'Music',
-                collection: 'Collection'
+                collection: 'Collection',
+                adTitle: 'New Release of the Week!',
+                adSubtitle: 'Exclusive track from your favorite artist',
+                adButton: 'Listen Now',
+                promocodeDesc: 'Enter promo code to get discount on subscription',
+                // Особенности подписок на английском
+                feature1: 'High quality sound',
+                feature2: 'Download tracks',
+                feature3: 'Listening without ads',
+                feature4: 'Personal recommendations',
+                feature5: 'Exclusive content',
+                feature6: 'Priority support',
+                feature7: 'Limited downloads',
+                feature8: 'Basic recommendations',
+                feature9: 'Standard quality',
+                feature10: 'No downloads',
+                // Убрали надпись для популярного выбора
+                popularChoice: ''
             }
         };
 
-        // УПРОЩЕННЫЕ ПОДПИСКИ В TON (без цен в рублях/долларах)
-        const subscriptionPlans = [
-            {
-                id: 'yearly',
-                period: 'ГОД',
-                price: '4.99',
-                savings: 'Экономия 50%',
-                features: [
-                    'Высокое качество звука',
-                    'Скачивание треков',
-                    'Прослушивание без рекламы',
-                    'Персональные рекомендации',
-                    'Эксклюзивный контент',
-                    'Приоритетная поддержка'
-                ],
-                popular: true
-            },
-            {
-                id: 'half-year',
-                period: 'ПОЛГОДА',
-                price: '2.99',
-                savings: 'Экономия 40%',
-                features: [
-                    'Высокое качество звука',
-                    'Ограниченное скачивание',
-                    'Прослушивание без рекламы',
-                    'Персональные рекомендации',
-                    'Приоритетная поддержка'
-                ],
-                popular: false
-            },
-            {
-                id: 'monthly',
-                period: 'МЕСЯЦ',
-                price: '0.99',
-                savings: '',
-                features: [
-                    'Стандартное качество',
-                    'Без скачивания',
-                    'Прослушивание без рекламы',
-                    'Базовые рекомендации'
-                ],
-                popular: false
-            }
-        ];
+        // ПОДПИСКИ С ПЕРЕВОДАМИ - БЕЗ ОРАНЖЕВЫХ ПОЛОСОК
+        const subscriptionPlans = {
+            ru: [
+                {
+                    id: 'yearly',
+                    period: 'ГОД',
+                    price: '4.99',
+                    savings: 'Экономия 50%',
+                    features: [
+                        translations.ru.feature1,
+                        translations.ru.feature2,
+                        translations.ru.feature3,
+                        translations.ru.feature4,
+                        translations.ru.feature5,
+                        translations.ru.feature6
+                    ],
+                    popular: true
+                },
+                {
+                    id: 'half-year',
+                    period: 'ПОЛГОДА',
+                    price: '2.99',
+                    savings: 'Экономия 40%',
+                    features: [
+                        translations.ru.feature1,
+                        translations.ru.feature7,
+                        translations.ru.feature3,
+                        translations.ru.feature4,
+                        translations.ru.feature6
+                    ],
+                    popular: false
+                },
+                {
+                    id: 'monthly',
+                    period: 'МЕСЯЦ',
+                    price: '0.99',
+                    savings: '',
+                    features: [
+                        translations.ru.feature9,
+                        translations.ru.feature10,
+                        translations.ru.feature3,
+                        translations.ru.feature8
+                    ],
+                    popular: false
+                }
+            ],
+            en: [
+                {
+                    id: 'yearly',
+                    period: 'YEAR',
+                    price: '4.99',
+                    savings: 'Save 50%',
+                    features: [
+                        translations.en.feature1,
+                        translations.en.feature2,
+                        translations.en.feature3,
+                        translations.en.feature4,
+                        translations.en.feature5,
+                        translations.en.feature6
+                    ],
+                    popular: true
+                },
+                {
+                    id: 'half-year',
+                    period: 'HALF YEAR',
+                    price: '2.99',
+                    savings: 'Save 40%',
+                    features: [
+                        translations.en.feature1,
+                        translations.en.feature7,
+                        translations.en.feature3,
+                        translations.en.feature4,
+                        translations.en.feature6
+                    ],
+                    popular: false
+                },
+                {
+                    id: 'monthly',
+                    period: 'MONTH',
+                    price: '0.99',
+                    savings: '',
+                    features: [
+                        translations.en.feature9,
+                        translations.en.feature10,
+                        translations.en.feature3,
+                        translations.en.feature8
+                    ],
+                    popular: false
+                }
+            ]
+        };
 
-        // УВЕЛИЧЕННАЯ ИКОНКА TON
-        function createTonIcon(size = '36px') {
+        // ИКОНКА TON
+        function createTonIcon(size = '20px') {
             return `
                 <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="50" fill="#0098EA"/>
@@ -2704,13 +3202,49 @@
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
             createVisualizerBars();
-            loadForYouTracks();
+            loadTracksColumns();
             loadTabContent('trends');
             loadTabContent('new');
             loadLanguages();
             loadSubscriptionPlans();
             updateInterfaceLanguage();
+            setupTouchScrolling(); // Добавил правильный вызов
+            setupPromoSlider(); // Инициализация промо-слайдера
         });
+
+        // НОВАЯ ФУНКЦИЯ: Инициализация промо-слайдера
+        function setupPromoSlider() {
+            const slider = document.getElementById('slider');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (!slider || !dots) return;
+            
+            slider.addEventListener('scroll', () => {
+                const slideIndex = Math.round(slider.scrollLeft / slider.offsetWidth);
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === slideIndex);
+                });
+            });
+            
+            // Фикс для полной блокировки вертикального свайпа на мобилках
+            slider.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 0) {
+                    let touch = e.touches[0];
+                    // Если движение больше по вертикали, чем по горизонтали - отменяем
+                    if (Math.abs(e.movementY) > Math.abs(e.movementX)) {
+                        e.preventDefault();
+                    }
+                }
+            }, {passive: false});
+        }
+
+        // НОВАЯ ФУНКЦИЯ: Закрытие промо-слайдера
+        function closePromoSlider() {
+            const slider = document.getElementById('promoSlider');
+            if (slider) {
+                slider.style.display = 'none';
+            }
+        }
 
         // Создание визуализатора полос
         function createVisualizerBars() {
@@ -2718,43 +3252,325 @@
             if (!visualizer) return;
 
             visualizer.innerHTML = '';
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 12; i++) {
                 const bar = document.createElement('div');
                 bar.className = 'visualizer-bar';
-                bar.style.height = `${15 + Math.random() * 45}px`;
+                bar.style.height = `${12 + Math.random() * 38}px`;
                 bar.style.animationDelay = `${i * 0.1}s`;
                 visualizer.appendChild(bar);
             }
         }
 
-        // Загрузка треков для "Для вас"
-        function loadForYouTracks() {
-            const scrollContainer = document.getElementById('forYouScroll');
-            if (!scrollContainer) return;
+        // НОВАЯ ФУНКЦИЯ: Загрузка треков в колонки
+        function loadTracksColumns() {
+            const container = document.getElementById('tracksColumnsContainer');
+            const indicators = document.getElementById('scrollIndicators');
+            if (!container || !indicators) return;
 
-            scrollContainer.innerHTML = '';
+            container.innerHTML = '';
+            indicators.innerHTML = '';
 
-            forYouTracks.forEach(track => {
-                const card = document.createElement('div');
-                card.className = 'track-card-for-you';
-                card.onclick = () => openTrack(track, 'for-you');
+            // Разделяем треки на колонки по 3 трека в каждой
+            const tracksPerColumn = 3;
+            const columnCount = Math.ceil(forYouTracks.length / tracksPerColumn);
 
-                card.innerHTML = `
-                    <img src="${track.image}" class="track-image-for-you" alt="${track.title}">
-                    <div class="track-info-for-you">
-                        <div class="track-title-for-you">${track.title}</div>
-                        <div class="track-artist-for-you">${track.artist}</div>
+            // Создаем индикаторы
+            for (let i = 0; i < columnCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = `scroll-indicator-dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => scrollToColumn(i);
+                indicators.appendChild(dot);
+            }
+
+            for (let colIndex = 0; colIndex < columnCount; colIndex++) {
+                const column = document.createElement('div');
+                column.className = 'tracks-column';
+
+                const startIndex = colIndex * tracksPerColumn;
+                const endIndex = Math.min(startIndex + tracksPerColumn, forYouTracks.length);
+                const columnTracks = forYouTracks.slice(startIndex, endIndex);
+
+                columnTracks.forEach(track => {
+                    const card = document.createElement('div');
+                    card.className = 'track-card-for-you';
+                    card.onclick = () => openTrack(track, 'for-you');
+
+                    const img = document.createElement('img');
+                    img.className = 'track-image-for-you';
+                    img.src = track.image;
+                    img.alt = track.title;
+
+                    card.appendChild(img);
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'track-info-for-you';
+
+                    infoDiv.innerHTML = `
+                        <div>
+                            <div class="track-title-for-you">${track.title}</div>
+                            <div class="track-artist-for-you">${track.artist}</div>
+                        </div>
                         <div class="track-meta-for-you">
                             <span>${track.duration}</span>
                             <span>•</span>
                             <span>${track.plays}</span>
                         </div>
-                        <div class="track-badge-for-you">${translations[currentLanguage].recommend}</div>
-                    </div>
-                `;
+                    `;
 
-                scrollContainer.appendChild(card);
+                    card.appendChild(infoDiv);
+                    column.appendChild(card);
+                });
+
+                container.appendChild(column);
+            }
+        }
+
+        // Скролл к конкретной колонке
+        function scrollToColumn(index) {
+            const container = document.getElementById('tracksColumnsContainer');
+            if (!container) return;
+
+            const columnWidth = 350 + 20; // ширина колонки + отступ
+            container.scrollTo({
+                left: index * columnWidth,
+                behavior: 'smooth'
             });
+
+            updateIndicators(index);
+        }
+
+        // Обновление индикаторов
+        function updateIndicators(index) {
+            const indicators = document.getElementById('scrollIndicators');
+            if (!indicators) return;
+
+            const dots = indicators.querySelectorAll('.scroll-indicator-dot');
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            currentColumnIndex = index;
+        }
+
+        // УЛУЧШЕННАЯ НАСТРОЙКА ПРОКРУТКИ ПАЛЬЦЕМ
+        function setupTouchScrolling() {
+            const container = document.getElementById('tracksColumnsContainer');
+            if (!container) return;
+
+            let isDragging = false;
+            let startX = 0;
+            let scrollLeft = 0;
+            let velocity = 0;
+            let lastX = 0;
+            let lastTime = 0;
+            let animationId = null;
+            let isScrolling = false;
+
+            // Мышь события для десктопа
+            container.addEventListener('mousedown', (e) => {
+                // Проверяем, был ли клик по треку
+                if (e.target.closest('.track-card-for-you')) {
+                    return; // Не начинаем перетаскивание, если кликнули по треку
+                }
+
+                isDragging = true;
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+                container.style.cursor = 'grabbing';
+                container.style.scrollBehavior = 'auto';
+
+                // Сброс анимации
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+
+                velocity = 0;
+                lastX = e.pageX;
+                lastTime = Date.now();
+
+                // Отменяем выделение текста
+                e.preventDefault();
+            });
+
+            container.addEventListener('mouseleave', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    container.style.cursor = 'grab';
+                    container.style.scrollBehavior = 'smooth';
+
+                    // Запускаем инерцию при отпускании
+                    applyInertia();
+                }
+            });
+
+            container.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    container.style.cursor = 'grab';
+                    container.style.scrollBehavior = 'smooth';
+
+                    // Запускаем инерцию при отпускании
+                    applyInertia();
+                }
+            });
+
+            container.addEventListener('mousemove', (e) => {
+                if (!isDragging || isScrolling) return;
+                e.preventDefault();
+
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                container.scrollLeft = scrollLeft - walk;
+
+                // Собираем данные для инерции
+                const currentTime = Date.now();
+                if (currentTime !== lastTime) {
+                    velocity = (x - lastX) / (currentTime - lastTime);
+                }
+                lastX = x;
+                lastTime = currentTime;
+            });
+
+            // Touch события для мобильных устройств
+            container.addEventListener('touchstart', (e) => {
+                // Проверяем, было ли касание по треку
+                if (e.target.closest('.track-card-for-you')) {
+                    return; // Не начинаем перетаскивание, если коснулись трека
+                }
+
+                isDragging = true;
+                startX = e.touches[0].pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+                container.style.scrollBehavior = 'auto';
+
+                // Сброс анимации
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+
+                velocity = 0;
+                lastX = e.touches[0].pageX;
+                lastTime = Date.now();
+            }, { passive: true });
+
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging || isScrolling) return;
+                e.preventDefault();
+
+                const x = e.touches[0].pageX - container.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                container.scrollLeft = scrollLeft - walk;
+
+                // Собираем данные для инерции
+                const currentX = e.touches[0].pageX;
+                const currentTime = Date.now();
+                if (currentTime !== lastTime) {
+                    velocity = (currentX - lastX) / (currentTime - lastTime);
+                }
+                lastX = currentX;
+                lastTime = currentTime;
+            }, { passive: false });
+
+            container.addEventListener('touchend', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    container.style.scrollBehavior = 'smooth';
+
+                    // Запускаем инерцию
+                    applyInertia();
+                }
+            });
+
+            container.addEventListener('touchcancel', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    container.style.scrollBehavior = 'smooth';
+
+                    // Запускаем инерцию
+                    applyInertia();
+                }
+            });
+
+            // Функция инерции
+            function applyInertia() {
+                if (Math.abs(velocity) > 0.1) {
+                    const inertia = () => {
+                        container.scrollLeft -= velocity * 20;
+                        velocity *= 0.92;
+
+                        if (Math.abs(velocity) > 0.1) {
+                            animationId = requestAnimationFrame(inertia);
+                        } else {
+                            animationId = null;
+                            snapToNearestColumn();
+                        }
+                    };
+                    animationId = requestAnimationFrame(inertia);
+                } else {
+                    snapToNearestColumn();
+                }
+            }
+
+            // Автоматическое выравнивание к ближайшей колонке
+            function snapToNearestColumn() {
+                isScrolling = true;
+                const columnWidth = 350 + 20;
+                const scrollPosition = container.scrollLeft;
+                const columnIndex = Math.round(scrollPosition / columnWidth);
+
+                container.scrollTo({
+                    left: columnIndex * columnWidth,
+                    behavior: 'smooth'
+                });
+
+                // Обновляем индикаторы
+                updateIndicators(columnIndex);
+
+                // Сбрасываем флаг после завершения анимации
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 300);
+            }
+
+            // Обновление индикаторов при ручной прокрутке
+            container.addEventListener('scroll', () => {
+                if (!isDragging && !isScrolling) {
+                    const columnWidth = 350 + 20;
+                    const scrollPosition = container.scrollLeft;
+                    const columnIndex = Math.round(scrollPosition / columnWidth);
+                    updateIndicators(columnIndex);
+                }
+            });
+        }
+
+        // Скролл для колонок
+        function scrollTracksColumns(direction) {
+            const container = document.getElementById('tracksColumnsContainer');
+            if (!container) return;
+
+            const columnWidth = 350 + 20;
+            const currentScroll = container.scrollLeft;
+
+            let targetIndex = currentColumnIndex;
+            if (direction === 'prev') {
+                targetIndex = Math.max(0, currentColumnIndex - 1);
+            } else {
+                const maxIndex = Math.ceil(forYouTracks.length / 3) - 1;
+                targetIndex = Math.min(maxIndex, currentColumnIndex + 1);
+            }
+
+            container.scrollTo({
+                left: targetIndex * columnWidth,
+                behavior: 'smooth'
+            });
+
+            updateIndicators(targetIndex);
         }
 
         // Загрузка контента для таба
@@ -2827,14 +3643,16 @@
             });
         }
 
-        // Загрузка подписок (без цен в рублях/долларах)
+        // Загрузка подписок - БЕЗ ОРАНЖЕВЫХ ПОЛОСОК
         function loadSubscriptionPlans() {
             const plansContainer = document.getElementById('subscriptionPlans');
             if (!plansContainer) return;
 
             plansContainer.innerHTML = '';
 
-            subscriptionPlans.forEach(plan => {
+            const plans = subscriptionPlans[currentLanguage];
+
+            plans.forEach(plan => {
                 const planCard = document.createElement('div');
                 planCard.className = `plan-card ${plan.id} ${plan.popular ? 'popular' : ''}`;
 
@@ -2845,9 +3663,8 @@
                 const savingsHtml = plan.savings ? 
                     `<div class="plan-savings">${plan.savings}</div>` : '';
 
-                const periodText = plan.period === 'ГОД' ? translations[currentLanguage].year :
-                                 plan.period === 'ПОЛГОДА' ? translations[currentLanguage].halfYear :
-                                 translations[currentLanguage].month;
+                const periodText = plan.period;
+                const buttonText = translations[currentLanguage].buySubscription;
 
                 planCard.innerHTML = `
                     <div class="plan-header">
@@ -2855,7 +3672,8 @@
                         <div class="plan-price-container">
                             <div class="plan-price">${plan.price}</div>
                             <div class="plan-currency">
-                                <div class="ton-icon-large">${createTonIcon('36px')}</div>
+                                <div class="ton-icon">${createTonIcon('20px')}</div>
+                                TON
                             </div>
                         </div>
                         ${savingsHtml}
@@ -2864,25 +3682,14 @@
                         ${featuresHtml}
                     </div>
                     <button class="plan-button" onclick="subscribeToPlan('${plan.id}', '${plan.price}')">
-                        ${translations[currentLanguage].buySubscription}
+                        ${buttonText}
                     </button>
                 `;
 
+                // УБРАЛ ДОБАВЛЕНИЕ НАДПИСИ "ПОПУЛЯРНЫЙ ВЫБОР"
+
                 plansContainer.appendChild(planCard);
             });
-        }
-
-        // Скролл для "Для вас"
-        function scrollForYou(direction) {
-            const scrollContainer = document.getElementById('forYouScroll');
-            if (!scrollContainer) return;
-
-            const scrollAmount = 300;
-            if (direction === 'prev') {
-                scrollContainer.scrollLeft -= scrollAmount;
-            } else {
-                scrollContainer.scrollLeft += scrollAmount;
-            }
         }
 
         // Переключение табов
@@ -2987,7 +3794,7 @@
             switchPage('settings');
         }
 
-        // Открытие трека из раздела "Для вас"
+        // Открытие трека
         function openTrack(track, source) {
             currentTrack = track;
 
@@ -3012,7 +3819,7 @@
             showNotification(`${translations[currentLanguage].selectTrack}: ${track.title} - ${track.artist}`);
         }
 
-        // Открытие альбома из разделов "Тренды" или "Новинки"
+        // Открытие альбома
         function openAlbum(album, source) {
             currentAlbum = album;
 
@@ -3250,9 +4057,14 @@
             if (supportTitles[2]) supportTitles[2].textContent = t.faqHelp;
             if (supportDescriptions[2]) supportDescriptions[2].textContent = t.faqHelpDesc;
 
-            // Обновляем подписки
-            const subscriptionHeroTitle = document.querySelector('.subscription-title');
-            if (subscriptionHeroTitle) subscriptionHeroTitle.textContent = t.subscriptionTitle;
+            // Обновляем подписки заголовок
+            const subscriptionTitle = document.getElementById('subscriptionTitleText');
+            const subscriptionSubtitle = document.getElementById('subscriptionSubtitleText');
+            const promocodeDescription = document.getElementById('promocodeDescriptionText');
+
+            if (subscriptionTitle) subscriptionTitle.textContent = t.subscriptionTitle;
+            if (subscriptionSubtitle) subscriptionSubtitle.textContent = t.subscriptionSubtitle;
+            if (promocodeDescription) promocodeDescription.textContent = t.promocodeDesc;
 
             // Обновляем коллекцию
             const emptyTitle = document.querySelector('.empty-title');
@@ -3272,39 +4084,47 @@
             const navLabels = document.querySelectorAll('.nav-label');
             if (navLabels[0]) navLabels[0].textContent = t.music;
             if (navLabels[1]) navLabels[1].textContent = t.collection;
+
+            // Обновляем треки в "Для вас"
+            loadTracksColumns();
+
+            // Обновляем статистику в коллекциях
+            const trackCounts = document.querySelectorAll('.collection-stats span:nth-child(1)');
+            const playsCounts = document.querySelectorAll('.collection-stats span:nth-child(2)');
+
+            trackCounts.forEach(el => {
+                const text = el.innerHTML;
+                el.innerHTML = text.replace(/треков|tracks/, t.trackCount);
+            });
+
+            playsCounts.forEach(el => {
+                const text = el.innerHTML;
+                el.innerHTML = text.replace(/прослушиваний|plays/, t.plays);
+            });
         }
 
         // Подписка на план
         function subscribeToPlan(planId, price) {
-            const plan = subscriptionPlans.find(p => p.id === planId);
+            const plans = subscriptionPlans[currentLanguage];
+            const plan = plans.find(p => p.id === planId);
             if (plan) {
-                const periodText = plan.period === 'ГОД' ? translations[currentLanguage].year :
-                                 plan.period === 'ПОЛГОДА' ? translations[currentLanguage].halfYear :
-                                 translations[currentLanguage].month;
-
+                const periodText = plan.period;
                 showNotification(`Вы выбрали подписку: ${periodText} за ${price} TON`);
-                // Здесь будет интеграция с TON
             }
-        }
-
-        // Подключение TON кошелька
-        function connectTonWallet() {
-            showNotification('Подключение TON кошелька... В разработке');
-            // Здесь будет интеграция с TON Connect
         }
 
         // Применение промокода
         function applyPromocode() {
             const promocodeInput = document.getElementById('promocodeInput');
             const promocode = promocodeInput.value.trim();
-            
+
             if (!promocode) {
                 showNotification('Введите промокод');
                 return;
             }
-            
+
             // Простая проверка тестового промокода
-            if (promocode.toUpperCase() === 'SOUNDWAVE2024' || promocode.toUpperCase() === 'TEST') {
+            if (promocode.toUpperCase() === 'MYRHYTHM2024' || promocode.toUpperCase() === 'TEST') {
                 showNotification('Промокод успешно применен! Скидка 10% активирована.');
                 promocodeInput.value = '';
             } else {
@@ -3391,20 +4211,20 @@
                 { id: 'fy-3', title: 'Дорога', artist: 'Кис-кис', genre: 'Рок', mood: 'Путешествие', timestamp: Date.now() }
             ];
 
-            showNotification('Настройка "Моего звука" завершена! Система изучила ваши предпочтения.');
+            showNotification('Настройка "Моего ритма" завершена! Система изучила ваши предпочтения.');
         }
 
         // Воспроизведение звука
         function playSound() {
             if (!soundConfigured) {
-                alert('Сначала настройте "Мой звук" для персонализированных рекомендаций!');
+                alert('Сначала настройте "Мой ритм" для персонализированных рекомендаций!');
                 return;
             }
 
             const randomTrack = forYouTracks[Math.floor(Math.random() * forYouTracks.length)];
             openTrack(randomTrack, 'for-you');
 
-            showNotification('Запущен "Мой звук" - персонализированная подборка на основе ваших предпочтений');
+            showNotification('Запущен "Мой ритм" - персонализированная подборка на основе ваших предпочтений');
         }
 
         // Настройка обработчиков событий
