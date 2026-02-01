@@ -58,53 +58,142 @@
         }
 
         body {
-            background: var(--bg-dark);
+            background: #0f0c29;
             color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
             position: relative;
         }
 
-        /* Фон с частицами */
-        .particles-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-dark);
-            z-index: -2;
-            overflow: hidden;
+        /* ЧЕРНЫЙ ФОН ДЛЯ НАСТРОЕК */
+        body.settings-mode {
+            background: #000000 !important;
         }
 
-        .gradient-layer {
+        body.settings-mode .aurora-rhythm-bg {
+            opacity: 0;
+        }
+
+        /* Aurora Rhythm Background - растянутый на весь экран */
+        .aurora-rhythm-bg {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             z-index: -1;
-            opacity: 0.05;
+            overflow: hidden;
             background: 
-                radial-gradient(circle at 20% 80%, var(--primary) 0%, transparent 40%),
-                radial-gradient(circle at 80% 20%, var(--purple) 0%, transparent 40%);
+                radial-gradient(circle at 20% 20%, #0098EA 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, #9333ea 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, #00C853 0%, transparent 50%),
+                linear-gradient(135deg, #0f0c29 0%, #0a081f 100%);
+            opacity: 0.8;
+            transition: opacity 0.5s ease;
         }
 
-        /* Header */
+        /* Анимированные пятна Aurora */
+        .aurora-spot {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: auroraFloat 20s infinite alternate ease-in-out;
+        }
+
+        .aurora-spot-1 {
+            width: 400px;
+            height: 400px;
+            background: #0098EA;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .aurora-spot-2 {
+            width: 350px;
+            height: 350px;
+            background: #9333ea;
+            bottom: -80px;
+            right: -80px;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+
+        .aurora-spot-3 {
+            width: 300px;
+            height: 300px;
+            background: #00C853;
+            top: 50%;
+            left: 70%;
+            animation-delay: -10s;
+            animation-duration: 30s;
+        }
+
+        .aurora-spot-4 {
+            width: 250px;
+            height: 250px;
+            background: #FF2E2E;
+            bottom: 30%;
+            left: 10%;
+            animation-delay: -15s;
+            animation-duration: 22s;
+        }
+
+        @keyframes auroraFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, 30px) scale(1.1) rotate(10deg);
+            }
+            50% {
+                transform: translate(-30px, 50px) scale(0.9) rotate(-15deg);
+            }
+            75% {
+                transform: translate(-50px, -30px) scale(1.05) rotate(20deg);
+            }
+        }
+
+        /* Парящие частицы */
+        .floating-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: floatParticle 15s infinite linear;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header - ИСПРАВЛЕННЫЙ БЕЗ ЧЕРНОГО ФОНА */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             height: 60px;
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
             z-index: 1000;
+            border-bottom: none;
         }
 
         .header-left {
@@ -116,8 +205,8 @@
         .settings-btn {
             width: 40px;
             height: 40px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -125,12 +214,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .settings-btn:hover {
-            background: var(--bg-hover);
-            border-color: var(--border-light);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.35);
             transform: rotate(30deg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .settings-btn::before {
@@ -151,19 +243,21 @@
         .search-input {
             width: 100%;
             padding: 12px 20px 12px 48px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 25px;
             color: var(--text-primary);
             font-size: 16px;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .search-input:focus {
             outline: none;
             border-color: var(--primary);
-            background: var(--bg-card);
-            box-shadow: 0 0 0 3px rgba(255, 46, 46, 0.1);
+            background: rgba(255, 46, 46, 0.15);
+            box-shadow: 0 0 0 3px rgba(255, 46, 46, 0.2), 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .search-icon {
@@ -194,13 +288,16 @@
             justify-content: center;
             overflow: hidden;
             cursor: pointer;
-            border: 2px solid var(--primary);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             transition: all 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
         }
 
         .user-avatar:hover {
             transform: scale(1.05);
             border-color: var(--primary-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .user-avatar-placeholder {
@@ -223,31 +320,33 @@
             overflow-y: auto;
             position: relative;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
 
-        /* КОНТЕЙНЕР С ГРАНИЦАМИ */
-        .content-wrapper {
-            max-width: 1200px;
+        /* БОЛЬШОЙ КОНТЕЙНЕР ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
+        .main-container {
+            width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
-            position: relative;
             padding: 0 20px;
+            position: relative;
         }
 
-        /* Главная секция - Мой ритм */
+        /* ИСПРАВЛЕННАЯ ГЛАВНАЯ СЕКЦИЯ */
         .sound-hero-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 40vh;
-            padding: 20px 20px 10px;
+            padding: 25px 20px 0;
             position: relative;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 0;
+            z-index: 2;
         }
 
         .sound-hero-title {
-            font-size: 36px;
+            font-size: 34px;
             font-weight: 900;
             background: linear-gradient(45deg, 
                 var(--primary) 0%,
@@ -257,28 +356,31 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             position: relative;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .sound-hero-title::after {
             content: '';
             position: absolute;
-            bottom: -8px;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
             width: 100px;
             height: 3px;
             background: var(--gradient-primary);
             border-radius: 2px;
+            box-shadow: 0 0 10px rgba(255, 46, 46, 0.5);
         }
 
         .sound-hero-subtitle {
-            font-size: 14px;
-            color: var(--text-secondary);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 20px;
             max-width: 400px;
             line-height: 1.4;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         /* АНИМАЦИЯ ПОЛОС */
@@ -287,8 +389,8 @@
             align-items: flex-end;
             justify-content: center;
             gap: 6px;
-            height: 60px;
-            margin-top: 10px;
+            height: 50px;
+            margin: 15px 0 25px;
             position: relative;
         }
 
@@ -297,43 +399,48 @@
             background: var(--gradient-primary);
             border-radius: 4px 4px 0 0;
             animation: visualizerMove 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 46, 46, 0.3);
         }
 
         .visualizer-bar:nth-child(2n) {
             background: var(--gradient-purple);
             animation-delay: 0.2s;
+            box-shadow: 0 0 10px rgba(156, 39, 176, 0.3);
         }
 
         .visualizer-bar:nth-child(3n) {
             background: var(--gradient-blue);
             animation-delay: 0.4s;
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
         }
 
         .visualizer-bar:nth-child(5n) {
             background: var(--gradient-accent);
             animation-delay: 0.6s;
+            box-shadow: 0 0 10px rgba(0, 200, 83, 0.3);
         }
 
         @keyframes visualizerMove {
             0%, 100% {
-                height: 12px;
+                height: 10px;
             }
             50% {
-                height: 50px;
+                height: 40px;
             }
         }
 
+        /* КНОПКИ */
         .sound-hero-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin: 0 0 30px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .hero-action-btn {
             position: relative;
-            padding: 12px 30px;
+            padding: 12px 28px;
             font-size: 14px;
             font-weight: 600;
             border: none;
@@ -344,322 +451,123 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+            backdrop-filter: blur(10px);
         }
 
         .hero-action-btn.primary {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, rgba(255, 46, 46, 0.9), rgba(255, 107, 0, 0.9));
             color: white;
             box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .hero-action-btn.secondary {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
-            border: 2px solid var(--primary);
+            border: 2px solid rgba(255, 46, 46, 0.5);
+            backdrop-filter: blur(20px);
         }
 
         .hero-action-btn:hover {
             transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
 
-        /* СТАЙЛЫ ДЛЯ НОВОГО СЛАЙДЕРА */
-        .slider-wrapper {
-            position: relative;
+        .hero-action-btn.primary:hover {
+            background: linear-gradient(135deg, rgba(255, 46, 46, 1), rgba(255, 107, 0, 1));
+            box-shadow: 0 0 20px rgba(255, 46, 46, 0.4);
+        }
+
+        .hero-action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 46, 46, 0.8);
+            box-shadow: 0 0 15px rgba(255, 46, 46, 0.3);
+        }
+
+        /* ИСПРАВЛЕННЫЙ СЛАЙДЕР */
+        .image-container {
             width: 100%;
-            height: 110px;
+            max-width: 1200px;
+            margin: 0 auto 25px;
             border-radius: 20px;
             overflow: hidden;
-            margin: 15px 0 20px;
-            background: #000;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .slides-container {
-            display: flex;
-            overflow-x: scroll;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            height: 100%;
-            scrollbar-width: none;
-        }
-
-        .slides-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .slide {
-            flex: 0 0 100%;
-            width: 100%;
-            height: 110px;
-            scroll-snap-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
             position: relative;
+            height: auto;
+            background: rgba(26, 26, 26, 0.6);
             display: flex;
-            padding: 15px 20px;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 24px;
-            height: 24px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
             align-items: center;
-            color: #fff;
-            font-size: 14px;
-            z-index: 100;
-            cursor: pointer;
-            border: none;
+            justify-content: center;
             backdrop-filter: blur(10px);
-        }
-
-        .slider-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             z-index: 10;
-            max-width: 55%;
         }
 
-        .slider-title {
-            color: #fff;
-            font-size: 16px;
-            font-weight: 800;
-            line-height: 1.2;
-            margin: 0;
+        .main-image {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+            display: block;
         }
 
-        .slider-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
+        .image-container:hover .main-image {
+            transform: scale(1.05);
         }
 
-        /* Слайд 1: Музыка + WiFi */
-        .slide-music {
-            background: linear-gradient(135deg, #4a00b4 0%, #6200ee 50%, #7e3ff2 100%);
-        }
-
-        .stage-music {
+        .image-overlay {
             position: absolute;
-            right: 20px;
-            height: 100%;
-            top: 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .wifi {
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
-        }
-
-        .bar {
-            width: 5px;
-            background: #fff;
-            border-radius: 2px;
-        }
-
-        .b4 { height: 34px; animation: wifiSeq 4s infinite 0.0s; }
-        .b3 { height: 26px; animation: wifiSeq 4s infinite 0.2s; }
-        .b2 { height: 18px; animation: wifiSeq 4s infinite 0.4s; }
-        .b1 { height: 10px; animation: wifiSeq 4s infinite 0.6s; }
-
-        @keyframes wifiSeq {
-            0%, 15% { opacity: 1; }
-            45%, 55% { opacity: 0.15; }
-            85%, 100% { opacity: 1; }
-        }
-
-        .cross-sticker {
-            position: absolute;
-            width: 42px;
-            height: 42px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 15px;
+            color: white;
             opacity: 0;
-            transform: scale(0);
-            animation: crossP 4s infinite;
+            transition: opacity 0.3s ease;
         }
 
-        @keyframes crossP {
-            0%, 35% { opacity: 0; transform: scale(0.4); }
-            45%, 85% { opacity: 1; transform: scale(1.1); }
-            95%, 100% { opacity: 0; transform: scale(0.4); }
+        .image-container:hover .image-overlay {
+            opacity: 1;
         }
 
-        .human-box {
+        .image-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .image-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* ИСПРАВЛЕННЫЙ КОНТЕЙНЕР С КОНТЕНТОМ */
+        .content-container {
+            background: linear-gradient(180deg, 
+                rgba(15, 12, 41, 0.95) 0%,
+                rgba(26, 26, 26, 0.98) 100%);
+            border-radius: 24px 24px 0 0;
+            padding: 30px 20px 30px;
             position: relative;
-            width: 60px;
-            height: 60px;
-            animation: vibe 0.5s infinite alternate ease-in-out;
+            z-index: 1;
+            min-height: calc(100vh - 220px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: none;
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.5);
+            margin: 0 0px;
+            width: calc(100% + 40px);
+            margin-left: -20px;
+            margin-top: -145px;
+            padding-top: 100px;
         }
 
-        @keyframes vibe {
-            from { transform: rotate(-3deg); }
-            to { transform: rotate(3deg); }
-        }
-
-        .note {
-            position: absolute;
-            font-size: 16px;
-            opacity: 0;
-            animation: noteFloat 2s infinite linear;
-        }
-
-        @keyframes noteFloat {
-            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(15px, -35px) rotate(20deg); opacity: 0; }
-        }
-
-        /* Слайд 2: Кристалл */
-        .slide-gem {
-            background: linear-gradient(135deg, #082d27 0%, #041916 100%);
-        }
-
-        .gem-stage {
-            position: absolute;
-            right: 40px;
-            width: 100px;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .diamond {
-            font-size: 44px;
-            z-index: 10;
-            filter: drop-shadow(0 0 15px #00ffa3);
-            animation: floatG 3s infinite ease-in-out;
-        }
-
-        .orbit {
-            position: absolute;
-            border: 2px solid #00ffa3;
-            border-radius: 50%;
-            opacity: 0.4;
-            animation: rotO 3s linear infinite;
-            transform: rotateX(75deg);
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #fff;
-            border-radius: 50%;
-            animation: particleFly 2s infinite linear;
-            opacity: 0;
-        }
-
-        @keyframes floatG {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        @keyframes rotO {
-            0% { transform: rotateX(75deg) rotateZ(0deg); }
-            100% { transform: rotateX(75deg) rotateZ(360deg); }
-        }
-
-        @keyframes particleFly {
-            0% { transform: translate(0,0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translate(25px, -25px); opacity: 0; }
-        }
-
-        /* Слайд 3: Криптовалюта */
-        .slide-crypto {
-            background: linear-gradient(135deg, #4a00b4 0%, #6200ee 50%, #7e3ff2 100%);
-        }
-
-        .crypto-stage {
-            position: absolute;
-            right: 10px;
-            width: 180px;
-            height: 100%;
-        }
-
-        .coin-3d {
-            position: absolute;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            border: 2.2px solid #000;
-            box-shadow: 0 4.5px 0 #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: coinFloat 3.5s infinite ease-in-out;
-            overflow: hidden;
-        }
-
-        .c-btc { background: #f7931a; top: 10px; right: 20px; color: #fff; font-weight: 900; font-size: 18px; }
-        .c-ton { background: #0098EA; top: 58px; right: 55px; padding: 0; }
-        .c-usdt { background: #26a17b; top: 8px; right: 95px; color: #fff; font-weight: 900; font-size: 16px; }
-        .c-eth { background: #627eea; top: 50px; right: 120px; color: #fff; font-weight: 900; font-size: 18px; }
-
-        @keyframes coinFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-7px); }
-        }
-
-        .confetti {
-            position: absolute;
-            width: 6px;
-            height: 3px;
-            border-radius: 2px;
-            opacity: 0.4;
-            animation: conf 3s infinite linear;
-        }
-
-        @keyframes conf {
-            0% { transform: translate(0,0); opacity: 0; }
-            50% { opacity: 0.4; }
-            100% { transform: translate(-30px, -30px); opacity: 0; }
-        }
-
-        /* Пагинация слайдера */
-        .slider-dots {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 6px;
-            z-index: 50;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-
-        .dot.active {
-            width: 18px;
-            background: #fff;
-            border-radius: 10px;
-        }
-
-        /* Подборки музыки */
+        /* СДВИГАЕМ ПОДБОРКИ МУЗЫКИ ВНИЗ ОТДЕЛЬНО */
         .moods-section {
-            margin: 20px 0;
+            margin: 40px 0 20px;
         }
 
         .section-title {
@@ -669,6 +577,7 @@
             color: var(--text-primary);
             position: relative;
             display: inline-block;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         .section-title::after {
@@ -680,6 +589,7 @@
             height: 2px;
             background: var(--gradient-primary);
             border-radius: 2px;
+            box-shadow: 0 0 10px rgba(255, 46, 46, 0.5);
         }
 
         .moods-grid {
@@ -689,7 +599,7 @@
         }
 
         .mood-card {
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 12px;
             padding: 16px;
             display: flex;
@@ -697,9 +607,10 @@
             gap: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .mood-card::before {
@@ -714,9 +625,9 @@
 
         .mood-card:hover {
             transform: translateY(-4px);
-            background: var(--bg-hover);
-            border-color: var(--border-light);
-            box-shadow: var(--shadow-lg);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
         .mood-title {
@@ -740,7 +651,7 @@
 
         .mood-subtitle {
             font-size: 13px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.4;
         }
 
@@ -748,9 +659,9 @@
         .content-tabs {
             display: flex;
             gap: 8px;
-            margin: 20px 0;
+            margin: 30px 0;
             padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .tab {
@@ -758,7 +669,7 @@
             border: none;
             padding: 10px 20px;
             font-size: 15px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             position: relative;
             transition: all 0.2s ease;
@@ -767,14 +678,14 @@
         }
 
         .tab:hover {
-            background: var(--bg-surface);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
         }
 
         .tab.active {
             color: var(--text-primary);
             font-weight: 600;
-            background: var(--bg-surface);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .tab.active::after {
@@ -814,18 +725,340 @@
             display: none;
             animation: fadeIn 0.3s ease;
             padding: 20px 0 100px;
+            background: #000000;
+            border-radius: 24px;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
         }
 
         .settings-page.active {
             display: block;
         }
 
+        /* --- ИСПРАВЛЕННЫЙ РАЗДЕЛ НАСТРОЕК ЗВУКА --- */
+        .sound-settings-page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+            background: #000000;
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            max-width: 100%;
+            margin: 0;
+            padding: 20px 0 100px;
+        }
+
+        .sound-settings-page.active {
+            display: block;
+        }
+
+        .sound-settings-page h1 {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0 16px 35px;
+            text-align: left;
+            letter-spacing: -1px;
+            color: white;
+        }
+
+        /* --- ЗАНЯТИЕ (исправленные границы) --- */
+        .scroll-row { 
+            display: flex; 
+            overflow-x: auto; 
+            gap: 8px; 
+            scrollbar-width: none; 
+            margin: 0 16px 40px;
+            padding: 0 0 10px;
+        }
+        .scroll-row::-webkit-scrollbar { display: none; }
+        .pill { 
+            background: #121212; 
+            border: 1px solid #222; 
+            padding: 12px 22px; 
+            border-radius: 25px; 
+            font-size: 15px; 
+            white-space: nowrap; 
+            transition: 0.2s; 
+            color: #fff; 
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .pill.active { 
+            background: #fff; 
+            color: #000; 
+            font-weight: 600; 
+            border-color: #fff; 
+        }
+
+        /* --- ИСТОЧНИК (убрал отступы) --- */
+        .label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            margin: 0 16px 15px;
+            text-align: left; 
+            display: block;
+            text-transform: lowercase;
+            letter-spacing: 0.8px;
+        }
+
+        .grid-3 { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 12px; 
+            margin: 0 16px 40px;
+            padding: 0;
+        }
+        .source-card { 
+            background: #121212; 
+            border: 1px solid #222; 
+            border-radius: 24px; 
+            aspect-ratio: 1/1.1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; 
+            position: relative; 
+            margin: 0;
+        }
+        .source-card.active { 
+            border-color: #444; 
+            background: #1a1a1a; 
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 25px rgba(255,255,255,0.05); 
+        }
+        .source-card span { 
+            font-size: 11px; 
+            font-weight: 700; 
+            color: #666; 
+        }
+        .source-card.active span { 
+            color: #fff; 
+        }
+
+        .icon-box { 
+            width: 48px; 
+            height: 48px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        /* --- ИСПРАВЛЕННЫЕ КРУЖКИ НАСТРОЕНИЯ --- */
+        .mood-row { 
+            display: flex; 
+            justify-content: space-between; 
+            margin: 0 16px 40px;
+            padding: 0 5px;
+        }
+        .mood-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px; 
+            cursor: pointer; 
+        }
+        .sphere { 
+            width: 58px; 
+            height: 58px; 
+            border-radius: 50%; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            position: relative; 
+            border: 2px solid transparent; 
+            background-size: cover;
+        }
+        .mood-item.active .sphere { 
+            transform: scale(1.15); 
+            box-shadow: 0 0 30px rgba(255,255,255,0.1); 
+            border-color: #fff; 
+        }
+        .mood-item span { 
+            font-size: 12px; 
+            color: #666; 
+            transition: color 0.3s ease;
+        }
+        .mood-item.active span { 
+            color: #fff; 
+        }
+
+        /* Улучшенные градиенты для кружков настроения */
+        .s-red { 
+            background: radial-gradient(circle at 30% 30%, #ff4b2b, #ff416c, #800000);
+            background-size: 200% 200%;
+            animation: gradientPulse 4s ease infinite;
+        }
+
+        .s-green { 
+            background: radial-gradient(circle at 30% 30%, #00ff88, #00d4aa, #004d26);
+            background-size: 200% 200%;
+            animation: gradientPulse 4s ease infinite 0.5s;
+        }
+
+        .s-blue { 
+            background: radial-gradient(circle at 30% 30%, #00d2ff, #0099ff, #003366);
+            background-size: 200% 200%;
+            animation: gradientPulse 4s ease infinite 1s;
+        }
+
+        .s-gold { 
+            background: radial-gradient(circle at 30% 30%, #ffcc00, #ff9500, #665200);
+            background-size: 200% 200%;
+            animation: gradientPulse 4s ease infinite 1.5s;
+        }
+
+        @keyframes gradientPulse {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* --- АВТОРЫ (исправленные границы) --- */
+        .authors-list { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            overflow-x: auto; 
+            scrollbar-width: none; 
+            margin: 0 16px 40px;
+            padding: 0 0 15px;
+        }
+        .authors-list::-webkit-scrollbar { display: none; }
+        .author-circle { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 8px; 
+            flex-shrink: 0; 
+            animation: fadeIn 0.4s ease; 
+        }
+        .author-img { 
+            width: 62px; 
+            height: 62px; 
+            border-radius: 50%; 
+            background: #222; 
+            overflow: hidden; 
+            border: 1px solid #333; 
+        }
+        .author-img img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        .author-circle span { 
+            font-size: 11px; 
+            color: #666; 
+        }
+        .btn-trigger { 
+            width: 58px; 
+            height: 58px; 
+            border-radius: 50%; 
+            border: 1px solid #333; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #111; 
+            flex-shrink: 0; 
+            cursor: pointer; 
+        }
+
+        /* --- ШТОРКА (исправленные границы) --- */
+        .overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 1000; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: 0.3s; 
+            backdrop-filter: blur(10px); 
+        }
+        .drawer { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            height: 95vh; 
+            background: #0a0a0a; 
+            border-radius: 30px 30px 0 0; 
+            z-index: 1001; 
+            transform: translateY(100%); 
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            padding: 25px; 
+            box-sizing: border-box; 
+            max-width: 100%;
+        }
+        .overlay.active { 
+            opacity: 1; 
+            pointer-events: auto; 
+        }
+        .drawer.active { 
+            transform: translateY(0); 
+        }
+        .search-box { 
+            width: 100%; 
+            background: #1a1a1a; 
+            border: 1px solid #333; 
+            border-radius: 15px; 
+            padding: 18px; 
+            color: #fff; 
+            font-size: 17px; 
+            margin-bottom: 25px; 
+            outline: none; 
+            box-sizing: border-box; 
+        }
+        .drawer-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px; 
+            overflow-y: auto; 
+            max-height: 75vh; 
+            padding: 0 0 20px;
+        }
+
+        /* --- ФУТЕР (исправленные границы) --- */
+        .sound-settings-footer { 
+            text-align: center; 
+            padding: 30px 16px; 
+        }
+        .reset-sound-button { 
+            background: none; 
+            border: none; 
+            color: #666; 
+            font-size: 14px; 
+            font-weight: 600; 
+            letter-spacing: 1px; 
+            cursor: pointer; 
+            width: 100%;
+        }
+
+        @keyframes fadeIn { 
+            from { 
+                opacity: 0; 
+                transform: scale(0.9); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: scale(1); 
+            } 
+        }
+
+        /* Остальные стили остаются прежними... */
         .settings-section {
-            background: var(--bg-card);
+            background: rgba(20, 20, 20, 0.95);
             border-radius: 16px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 20px;
             margin-bottom: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .settings-title {
@@ -870,8 +1103,8 @@
         }
 
         .language-option {
-            background: var(--bg-surface);
-            border: 2px solid var(--border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             padding: 12px;
             cursor: pointer;
@@ -879,17 +1112,18 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            backdrop-filter: blur(5px);
         }
 
         .language-option:hover {
-            background: var(--bg-hover);
-            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 46, 46, 0.5);
             transform: translateY(-2px);
         }
 
         .language-option.active {
             border-color: var(--primary);
-            background: rgba(255, 46, 46, 0.1);
+            background: rgba(255, 46, 46, 0.2);
         }
 
         .language-flag {
@@ -897,7 +1131,7 @@
             height: 25px;
             border-radius: 3px;
             object-fit: cover;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .language-info {
@@ -918,7 +1152,7 @@
 
         .language-natives {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -932,8 +1166,8 @@
         }
 
         .support-option {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             padding: 16px;
             cursor: pointer;
@@ -941,11 +1175,12 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            backdrop-filter: blur(5px);
         }
 
         .support-option:hover {
-            background: var(--bg-hover);
-            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 46, 46, 0.5);
             transform: translateX(5px);
         }
 
@@ -975,7 +1210,7 @@
         }
 
         .support-option:nth-child(2) .support-icon::before {
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z'/%3E%3C/svg%3E");
         }
 
         .support-option:nth-child(3) .support-icon::before {
@@ -999,7 +1234,7 @@
 
         .support-description {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             line-height: 1.4;
             white-space: nowrap;
             overflow: hidden;
@@ -1012,12 +1247,13 @@
             margin-bottom: 25px;
             padding: 20px;
             background: linear-gradient(135deg, 
-                rgba(255, 46, 46, 0.1),
-                rgba(156, 39, 176, 0.1));
+                rgba(255, 46, 46, 0.2),
+                rgba(156, 39, 176, 0.2));
             border-radius: 16px;
-            border: 2px solid var(--border);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .subscription-title {
@@ -1035,17 +1271,18 @@
             display: inline-block;
             word-wrap: break-word;
             max-width: 100%;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .subscription-subtitle {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
             max-width: 400px;
             margin: 10px auto 0;
             line-height: 1.4;
         }
 
-        /* ОБНОВЛЕННЫЕ ПОДПИСКИ - УБРАЛ ВСЕ ОРАНЖЕВЫЕ ПОЛОСКИ */
+        /* ОБНОВЛЕННЫЕ ПОДПИСКИ */
         .subscription-plans {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1054,9 +1291,9 @@
         }
 
         .plan-card {
-            background: linear-gradient(145deg, var(--bg-card), var(--bg-dark));
+            background: linear-gradient(145deg, rgba(26, 26, 26, 0.8), rgba(15, 12, 41, 0.6));
             border-radius: 16px;
-            border: 2px solid var(--border);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             padding: 25px 20px;
             position: relative;
             overflow: hidden;
@@ -1064,6 +1301,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            backdrop-filter: blur(10px);
         }
 
         .plan-card:hover {
@@ -1071,42 +1309,29 @@
             border-color: var(--primary);
             box-shadow: 
                 0 15px 30px rgba(0, 0, 0, 0.4),
-                0 0 80px rgba(255, 46, 46, 0.1);
+                0 0 80px rgba(255, 46, 46, 0.2);
         }
 
         .plan-card.popular {
             border-color: var(--primary);
             background: linear-gradient(145deg, 
-                rgba(255, 46, 46, 0.15),
-                rgba(26, 26, 26, 0.95)
+                rgba(255, 46, 46, 0.25),
+                rgba(26, 26, 26, 0.8)
             );
-            position: relative;
         }
-
-        /* УБРАЛ ВСЕ ОРАНЖЕВЫЕ ПОЛОСКИ И НАДПИСИ ПОПУЛЯРНЫЙ ВЫБОР */
-        .plan-card.popular::after {
-            display: none; /* Убрал надпись "Популярный выбор" */
-        }
-
-        /* УБРАЛ ВСЕ ОРАНЖЕВЫЕ ПОЛОСКИ */
-        .plan-card.popular::before {
-            display: none;
-        }
-
-        /* УДАЛИЛ ВСЕ ДОПОЛНИТЕЛЬНЫЕ ОРАНЖЕВЫЕ ПОЛОСКИ */
 
         .plan-header {
             text-align: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             z-index: 5;
         }
 
         .plan-period {
             font-size: 13px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 12px;
@@ -1145,7 +1370,7 @@
         .plan-currency {
             font-size: 16px;
             font-weight: 700;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
             margin-left: 4px;
             display: flex;
             align-items: center;
@@ -1198,7 +1423,7 @@
             gap: 12px;
             margin-bottom: 12px;
             font-size: 13px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
             position: relative;
             padding-left: 0;
         }
@@ -1291,9 +1516,10 @@
         .promocode-container {
             margin-top: 30px;
             padding: 20px;
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 14px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .promocode-title {
@@ -1322,20 +1548,21 @@
         .promocode-input {
             flex: 1;
             padding: 12px 16px;
-            background: var(--bg-surface);
-            border: 2px solid var(--border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             color: var(--text-primary);
             font-size: 14px;
             transition: all 0.3s ease;
             min-width: 0;
+            backdrop-filter: blur(5px);
         }
 
         .promocode-input:focus {
             outline: none;
             border-color: var(--primary);
-            background: var(--bg-card);
-            box-shadow: 0 0 0 3px rgba(255, 46, 46, 0.1);
+            background: rgba(255, 46, 46, 0.1);
+            box-shadow: 0 0 0 3px rgba(255, 46, 46, 0.2);
         }
 
         .promocode-btn {
@@ -1354,12 +1581,12 @@
 
         .promocode-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 6px 15px rgba(0, 200, 83, 0.3);
         }
 
         .promocode-description {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             line-height: 1.4;
         }
 
@@ -1377,10 +1604,11 @@
         .empty-collection {
             text-align: center;
             padding: 50px 20px;
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 14px;
-            border: 2px dashed var(--border);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
             margin-bottom: 25px;
+            backdrop-filter: blur(10px);
         }
 
         .empty-icon {
@@ -1398,7 +1626,7 @@
 
         .empty-subtitle {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             max-width: 350px;
             margin: 0 auto 15px;
             line-height: 1.4;
@@ -1412,22 +1640,23 @@
         }
 
         .collection-track-item {
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 10px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             padding: 12px;
             gap: 12px;
             cursor: pointer;
+            backdrop-filter: blur(5px);
         }
 
         .collection-track-item:hover {
             transform: translateY(-3px);
             border-color: var(--primary);
-            box-shadow: var(--shadow-lg);
-            background: var(--bg-hover);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .collection-track-image {
@@ -1436,7 +1665,7 @@
             border-radius: 6px;
             object-fit: cover;
             flex-shrink: 0;
-            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
         }
 
         .collection-track-info {
@@ -1456,7 +1685,7 @@
 
         .collection-track-artist {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 6px;
             white-space: nowrap;
             overflow: hidden;
@@ -1467,7 +1696,7 @@
             display: flex;
             gap: 12px;
             font-size: 11px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         /* РАЗДЕЛ "ДЛЯ ВАС" - УЛУЧШЕННАЯ ПРОКРУТКА */
@@ -1491,7 +1720,7 @@
 
         .for-you-subtitle {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             margin-top: 4px;
         }
 
@@ -1503,8 +1732,8 @@
         .scroll-btn {
             width: 35px;
             height: 35px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -1515,8 +1744,8 @@
         }
 
         .scroll-btn:hover {
-            background: var(--bg-hover);
-            border-color: var(--border-light);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .scroll-btn::before {
@@ -1549,7 +1778,7 @@
             -webkit-overflow-scrolling: touch;
             scroll-snap-type: x mandatory;
             cursor: grab;
-            user-select: none; /* Запрещаем выделение текста при перетаскивании */
+            user-select: none;
         }
 
         .tracks-columns-container::-webkit-scrollbar {
@@ -1579,7 +1808,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--text-tertiary);
+            background: rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -1597,23 +1826,24 @@
         }
 
         .track-card-for-you {
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             height: 90px;
             display: flex;
             align-items: center;
             padding: 15px;
             gap: 15px;
+            backdrop-filter: blur(5px);
         }
 
         .track-card-for-you:hover {
             transform: translateY(-3px);
             border-color: var(--primary);
-            box-shadow: var(--shadow-lg), var(--glow-primary);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 46, 46, 0.3);
         }
 
         .track-image-for-you {
@@ -1622,7 +1852,7 @@
             border-radius: 8px;
             object-fit: cover;
             flex-shrink: 0;
-            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
         }
 
         .track-info-for-you {
@@ -1646,7 +1876,7 @@
 
         .track-artist-for-you {
             font-size: 13px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 8px;
             white-space: nowrap;
             overflow: hidden;
@@ -1658,7 +1888,7 @@
             align-items: center;
             gap: 10px;
             font-size: 11px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         /* Коллекции (для Тренды и Новинки) - остаются альбомами */
@@ -1670,19 +1900,20 @@
         }
 
         .collection-card {
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 14px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
+            backdrop-filter: blur(5px);
         }
 
         .collection-card:hover {
             transform: translateY(-5px);
             border-color: var(--primary);
-            box-shadow: var(--shadow-xl), var(--glow-primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 46, 46, 0.3);
         }
 
         .collection-image {
@@ -1690,7 +1921,7 @@
             height: 160px;
             object-fit: cover;
             transition: transform 0.6s ease;
-            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
         }
 
         .collection-card:hover .collection-image {
@@ -1713,7 +1944,7 @@
 
         .collection-artist {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 6px;
             white-space: nowrap;
             overflow: hidden;
@@ -1725,7 +1956,7 @@
             align-items: center;
             gap: 12px;
             font-size: 10px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .collection-badge {
@@ -1765,10 +1996,11 @@
             gap: 15px;
             margin-bottom: 25px;
             padding: 25px;
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 14px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
+            backdrop-filter: blur(10px);
         }
 
         .album-cover-large {
@@ -1776,9 +2008,9 @@
             height: 200px;
             border-radius: 10px;
             object-fit: cover;
-            box-shadow: var(--shadow-xl);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             flex-shrink: 0;
-            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
         }
 
         .album-info {
@@ -1792,7 +2024,7 @@
 
         .album-type {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             text-transform: uppercase;
             letter-spacing: 0.8px;
             margin-bottom: 6px;
@@ -1813,7 +2045,7 @@
 
         .album-artist-large {
             font-size: 16px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -1829,7 +2061,7 @@
             align-items: center;
             gap: 12px;
             font-size: 13px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.5);
             margin-bottom: 20px;
             flex-wrap: wrap;
             justify-content: center;
@@ -1866,7 +2098,7 @@
 
         .play-album-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg), var(--glow-primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 46, 46, 0.3);
         }
 
         /* Список треков в альбоме */
@@ -1891,23 +2123,24 @@
             display: flex;
             align-items: center;
             padding: 10px 14px;
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.7);
             border-radius: 10px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .track-item-album:hover {
-            background: var(--bg-hover);
-            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 46, 46, 0.5);
             transform: translateX(5px);
         }
 
         .track-number-album {
             width: 35px;
             font-size: 13px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.5);
             font-weight: 600;
             flex-shrink: 0;
             text-align: center;
@@ -1920,7 +2153,7 @@
             object-fit: cover;
             margin-right: 12px;
             flex-shrink: 0;
-            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
         }
 
         .track-info-album {
@@ -1941,7 +2174,7 @@
 
         .track-artist-album {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1949,7 +2182,7 @@
 
         .track-duration-album {
             font-size: 13px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.5);
             flex-shrink: 0;
             margin-left: 12px;
             white-space: nowrap;
@@ -1958,7 +2191,7 @@
         .back-btn {
             background: none;
             border: none;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 13px;
             cursor: pointer;
             display: flex;
@@ -1983,15 +2216,16 @@
             width: calc(100% - 40px);
             max-width: 1200px;
             height: 60px;
-            background: var(--bg-card);
+            background: rgba(26, 26, 26, 0.8);
             border-radius: 12px;
             display: flex;
             align-items: center;
             padding: 0 15px;
             gap: 12px;
             z-index: 999;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
         }
 
         .player-cover {
@@ -2001,7 +2235,7 @@
             object-fit: cover;
             box-shadow: var(--shadow-md);
             flex-shrink: 0;
-            background: linear-gradient(135deg, var(--bg-surface), var(--border));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
         }
 
         .player-info {
@@ -2020,7 +2254,7 @@
 
         .player-artist {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -2036,8 +2270,8 @@
         .control-btn {
             width: 32px;
             height: 32px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -2046,8 +2280,8 @@
         }
 
         .control-btn:hover {
-            background: var(--bg-hover);
-            border-color: var(--border-light);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
         }
 
@@ -2092,13 +2326,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             flex-shrink: 0;
         }
 
         .play-btn:hover {
             transform: scale(1.05);
-            box-shadow: var(--shadow-xl), var(--glow-primary);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 46, 46, 0.3);
         }
 
         .play-btn::before {
@@ -2131,9 +2365,9 @@
             left: 0;
             right: 0;
             height: 70px;
-            background: rgba(26, 26, 26, 0.95);
+            background: rgba(26, 26, 26, 0.85);
             backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             padding: 0;
             z-index: 1000;
@@ -2147,7 +2381,7 @@
             justify-content: center;
             background: none;
             border: none;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             padding: 10px 0;
             transition: all 0.2s ease;
@@ -2204,7 +2438,7 @@
         }
 
         .main-content::-webkit-scrollbar-track {
-            background: var(--bg-dark);
+            background: transparent;
         }
 
         .main-content::-webkit-scrollbar-thumb {
@@ -2228,11 +2462,13 @@
         }
 
         .icon-tracks {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666666'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E") center/contain no-repeat;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/%3E%3C/svg%3E") center/contain no-repeat;
+            opacity: 0.5;
         }
 
         .icon-plays {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666666'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/contain no-repeat;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/contain no-repeat;
+            opacity: 0.5;
         }
 
         /* Уведомления */
@@ -2240,16 +2476,18 @@
             position: fixed;
             top: 70px;
             right: 15px;
-            background: var(--blue);
+            background: rgba(33, 150, 243, 0.9);
             color: white;
             padding: 10px 16px;
             border-radius: 8px;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             z-index: 9999;
             animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
             max-width: 280px;
             word-wrap: break-word;
             font-size: 13px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         @keyframes slideIn {
@@ -2271,14 +2509,53 @@
                 opacity: 0;
             }
         }
+        
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 400px) {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .source-card {
+                aspect-ratio: 1/1;
+            }
+            
+            .mood-row {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            
+            .mood-item {
+                width: 45%;
+            }
+            
+            .tracks-column {
+                min-width: 300px;
+            }
+            
+            .hero-action-btn {
+                min-width: 140px;
+                padding: 10px 20px;
+            }
+            
+            .sound-hero-title {
+                font-size: 28px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Фон -->
-    <div class="particles-bg"></div>
-    <div class="gradient-layer"></div>
+    <!-- Aurora Rhythm Background - новый растянутый фон -->
+    <div class="aurora-rhythm-bg">
+        <div class="aurora-spot aurora-spot-1"></div>
+        <div class="aurora-spot aurora-spot-2"></div>
+        <div class="aurora-spot aurora-spot-3"></div>
+        <div class="aurora-spot aurora-spot-4"></div>
+    </div>
 
-    <!-- Header -->
+    <!-- Header - ТЕПЕРЬ ПРОЗРАЧНЫЙ -->
     <div class="header">
         <div class="header-left">
             <button class="settings-btn" title="Настройки" onclick="openSettings()"></button>
@@ -2298,10 +2575,11 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="content-wrapper">
+        <!-- БОЛЬШОЙ КОНТЕЙНЕР ДЛЯ ГЛАВНОЙ СТРАНИЦЫ -->
+        <div class="main-container">
             <!-- Главная страница -->
             <div class="main-page" id="mainPage">
-                <!-- Главная секция - Мой ритм -->
+                <!-- Главная секция - Мой ритм - ПОДНЯТА ВВЕРХ -->
                 <div class="sound-hero-section">
                     <h1 class="sound-hero-title">МОЙ РИТМ</h1>
                     <div class="sound-hero-subtitle">
@@ -2312,7 +2590,7 @@
                     <div class="sound-visualizer" id="soundVisualizer"></div>
 
                     <div class="sound-hero-actions">
-                        <button class="hero-action-btn primary" onclick="configureSound()">
+                        <button class="hero-action-btn primary" onclick="openSoundSettings()">
                             Настроить звук
                         </button>
                         <button class="hero-action-btn secondary" onclick="playSound()">
@@ -2320,171 +2598,211 @@
                         </button>
                     </div>
 
-                    <!-- СЛАЙДЕР ЗАМЕНЯЕТ РЕКЛАМУ -->
-                    <div class="slider-wrapper">
-                        <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
-
-                        <div class="slides-container" id="slider">
-                            <!-- Slide 1 -->
-                            <div class="slide slide-music">
-                                <div class="slider-content">
-                                    <div class="slider-title">Слушай музыку когда<br>отключат интернет</div>
-                                    <a href="#" class="slider-link">Узнать подробнее ›</a>
-                                </div>
-                                <div class="stage-music">
-                                    <div style="position:relative; width:45px; height:45px; display:flex; justify-content:center; align-items:center;">
-                                        <div class="wifi">
-                                            <div class="bar b1"></div>
-                                            <div class="bar b2"></div>
-                                            <div class="bar b3"></div>
-                                            <div class="bar b4"></div>
-                                        </div>
-                                        <div class="cross-sticker">
-                                            <svg viewBox="0 0 100 100">
-                                                <path d="M25,25 L75,75 M75,25 L25,75" stroke="#ff3b30" stroke-width="15" stroke-linecap="round" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div class="human-box">
-                                        <div class="note" style="left: -5px; top: 0; animation-delay: 0s; color: #ffeb3b;">♪</div>
-                                        <div class="note" style="left: 20px; top: -10px; animation-delay: 0.7s; color: #00e5ff;">♫</div>
-                                        <div class="note" style="right: -5px; top: 0; animation-delay: 1.4s; color: #ff4081;">♬</div>
-                                        <svg viewBox="0 0 100 100">
-                                            <circle cx="50" cy="55" r="30" fill="#ffdbac" />
-                                            <path d="M20,55 Q20,20 50,20 Q80,20 80,55" fill="none" stroke="#000" stroke-width="10" />
-                                            <rect x="10" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="#000" stroke-width="5" />
-                                            <rect x="76" y="48" width="14" height="22" rx="4" fill="#bb86fc" stroke="#000" stroke-width="5" />
-                                            <path d="M45,75 Q50,80 55,75" fill="none" stroke="#000" stroke-width="4" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Slide 2 -->
-                            <div class="slide slide-gem">
-                                <div class="slider-content">
-                                    <div class="slider-title">Оформи подписку и получи дополнительные возможности</div>
-                                    <a href="#" class="slider-link">Узнать подробнее ›</a>
-                                </div>
-                                <div class="gem-stage">
-                                    <div class="sparkle" style="top:20%; left:10%;"></div>
-                                    <div class="sparkle" style="bottom:10%; right:20%; animation-delay:0.5s;"></div>
-                                    <div class="sparkle" style="top:50%; left:85%; animation-delay:1s;"></div>
-                                    <div class="orbit" style="width:75px; height:25px;"></div>
-                                    <div class="orbit" style="width:55px; height:35px; border-color:#fff; animation-duration:2s;"></div>
-                                    <div class="diamond">💎</div>
-                                </div>
-                            </div>
-
-                            <!-- Slide 3 -->
-                            <div class="slide slide-crypto">
-                                <div class="slider-content">
-                                    <div class="slider-title">Оплачивай любой криптовалютой и получи скидку</div>
-                                    <a href="#" class="slider-link">Узнать подробнее ›</a>
-                                </div>
-                                <div class="crypto-stage">
-                                    <div class="confetti" style="background:#ffeb3b; top:20px; right:150px;"></div>
-                                    <div class="confetti" style="background:#00e5ff; bottom:20px; right:100px; animation-delay:1s;"></div>
-
-                                    <div class="coin-3d c-btc">₿</div>
-                                    <!-- TON монета -->
-                                    <div class="coin-3d c-ton">
-                                        <svg viewBox="0 0 100 100" fill="none">
-                                            <circle cx="50" cy="50" r="50" fill="#0098EA"/>
-                                            <path d="M72 36C72 31.5 68.5 28 64 28H36C31.5 28 28 31.5 28 36V38C28 39.5 28.5 41 29.5 42L47.5 69C48.5 70.5 51.5 70.5 52.5 69L70.5 42C71.5 41 72 39.5 72 38V36Z" stroke="white" stroke-width="6" stroke-linejoin="round"/>
-                                            <path d="M50 28V68" stroke="white" stroke-width="6" stroke-linecap="round"/>
-                                        </svg>
-                                    </div>
-                                    <div class="coin-3d c-usdt">₮</div>
-                                    <div class="coin-3d c-eth">Ξ</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="slider-dots">
-                            <div class="dot active"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                        </div>
-                    </div>
-                    <!-- КОНЕЦ СЛАЙДЕРА -->
-
-                </div>
-
-                <!-- Подборки музыки -->
-                <div class="moods-section">
-                    <h2 class="section-title">Подборки музыки</h2>
-                    <div class="moods-grid">
-                        <div class="mood-card" onclick="openCategory('genres')">
-                            <div class="mood-title">
-                                <div class="mood-icon"></div>
-                                Жанры
-                            </div>
-                            <div class="mood-subtitle">Рок, поп, хип-хоп, джаз, электроника</div>
-                        </div>
-                        <div class="mood-card" onclick="openCategory('activities')">
-                            <div class="mood-title">
-                                <div class="mood-icon"></div>
-                                Занятия
-                            </div>
-                            <div class="mood-subtitle">Для работы, тренировки, отдыха, учебы</div>
-                        </div>
-                        <div class="mood-card" onclick="openCategory('moods')">
-                            <div class="mood-title">
-                                <div class="mood-icon"></div>
-                                Настроения
-                            </div>
-                            <div class="mood-subtitle">Веселое, грустное, энергичное, спокойное</div>
+                    <!-- СЛАЙДЕР С ПОДНЯТЫМ МЕСТОПОЛОЖЕНИЕМ -->
+                    <div class="image-container">
+                        <img src="https://raw.githubusercontent.com/CarFix77/Frog/refs/heads/main/5B1EE03A-3DBE-4A3B-A99E-BDABEF05AC65.jpeg" 
+                             alt="MyRhythm" 
+                             class="main-image">
+                        <!-- Текст появляется только при наведении -->
+                        <div class="image-overlay">
+                            <div class="image-title">MyRhythm</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Табы контента -->
-                <div class="content-tabs">
-                    <button class="tab active" onclick="switchTab('for-you')">Для вас</button>
-                    <button class="tab" onclick="switchTab('trends')">Тренды</button>
-                    <button class="tab" onclick="switchTab('new')">Новинки</button>
-                </div>
-
-                <!-- Контент для таба "Для вас" - НОВАЯ СТРУКТУРА С КОЛОНКАМИ -->
-                <div class="tab-content active" id="tab-for-you">
-                    <div class="for-you-section">
-                        <div class="for-you-header">
-                            <div>
-                                <div class="for-you-title">На основе ваших предпочтений</div>
-                                <div class="for-you-subtitle">Треки, которые вам понравятся</div>
+                <!-- РАСШИРЕННЫЙ КОНТЕЙНЕР С ИСПРАВЛЕННЫМ ОТСТУПОМ -->
+                <div class="content-container">
+                    <!-- Подборки музыки -->
+                    <div class="moods-section">
+                        <h2 class="section-title">Подборки музыки</h2>
+                        <div class="moods-grid">
+                            <div class="mood-card" onclick="openCategory('genres')">
+                                <div class="mood-title">
+                                    <div class="mood-icon"></div>
+                                    Жанры
+                                </div>
+                                <div class="mood-subtitle">Рок, поп, хип-хоп, джаз, электроника</div>
                             </div>
-                            <div class="scroll-buttons">
-                                <button class="scroll-btn prev" onclick="scrollTracksColumns('prev')"></button>
-                                <button class="scroll-btn next" onclick="scrollTracksColumns('next')"></button>
+                            <div class="mood-card" onclick="openCategory('activities')">
+                                <div class="mood-title">
+                                    <div class="mood-icon"></div>
+                                    Занятия
+                                </div>
+                                <div class="mood-subtitle">Для работы, тренировки, отдыха, учебы</div>
+                            </div>
+                            <div class="mood-card" onclick="openCategory('moods')">
+                                <div class="mood-title">
+                                    <div class="mood-icon"></div>
+                                    Настроения
+                                </div>
+                                <div class="mood-subtitle">Веселое, грустное, энергичное, спокойное</div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- УЛУЧШЕННЫЙ КОНТЕЙНЕР ДЛЯ КОЛОНОК -->
-                        <div class="tracks-columns-container" id="tracksColumnsContainer">
-                            <!-- Колонки заполняются динамически -->
+                    <!-- Табы контента -->
+                    <div class="content-tabs">
+                        <button class="tab active" onclick="switchTab('for-you')">Для вас</button>
+                        <button class="tab" onclick="switchTab('trends')">Тренды</button>
+                        <button class="tab" onclick="switchTab('new')">Новинки</button>
+                    </div>
+
+                    <!-- Контент для таба "Для вас" -->
+                    <div class="tab-content active" id="tab-for-you">
+                        <div class="for-you-section">
+                            <div class="for-you-header">
+                                <div>
+                                    <div class="for-you-title">На основе ваших предпочтений</div>
+                                    <div class="for-you-subtitle">Треки, которые вам понравятся</div>
+                                </div>
+                                <div class="scroll-buttons">
+                                    <button class="scroll-btn prev" onclick="scrollTracksColumns('prev')"></button>
+                                    <button class="scroll-btn next" onclick="scrollTracksColumns('next')"></button>
+                                </div>
+                            </div>
+
+                            <!-- КОНТЕЙНЕР ДЛЯ КОЛОНОК -->
+                            <div class="tracks-columns-container" id="tracksColumnsContainer">
+                                <!-- Колонки заполняются динамически -->
+                            </div>
+
+                            <!-- ИНДИКАТОРЫ ПРОКРУТКИ - ТОЧКИ -->
+                            <div class="scroll-indicators" id="scrollIndicators">
+                                <!-- Точки заполняются динамически -->
+                            </div>
                         </div>
+                    </div>
 
-                        <!-- ИНДИКАТОРЫ ПРОКРУТКИ - ТОЧКИ -->
-                        <div class="scroll-indicators" id="scrollIndicators">
-                            <!-- Точки заполняются динамически -->
+                    <!-- Контент для таба "Тренды" - АЛЬБОМЫ -->
+                    <div class="tab-content" id="tab-trends">
+                        <div class="collections-grid" id="grid-trends">
+                            <!-- Заполняется динамически -->
+                        </div>
+                    </div>
+
+                    <!-- Контент для таба "Новинки" - АЛЬБОМЫ -->
+                    <div class="tab-content" id="tab-new">
+                        <div class="collections-grid" id="grid-new">
+                            <!-- Заполняется динамически -->
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Контент для таба "Тренды" - АЛЬБОМЫ -->
-                <div class="tab-content" id="tab-trends">
-                    <div class="collections-grid" id="grid-trends">
-                        <!-- Заполняется динамически -->
-                    </div>
-                </div>
+            <!-- Страница настроек звука (НОВЫЙ ДИЗАЙН) -->
+            <div class="sound-settings-page" id="soundSettingsPage">
+                <button class="back-btn" onclick="goBack()">
+                    ← Назад
+                </button>
 
-                <!-- Контент для таба "Новинки" - АЛЬБОМЫ -->
-                <div class="tab-content" id="tab-new">
-                    <div class="collections-grid" id="grid-new">
-                        <!-- Заполняется динамически -->
+                <h1>Настроить Ритм</h1>
+
+                <section>
+                    <span class="label">занятие</span>
+                    <div class="scroll-row">
+                        <div class="pill active" onclick="toggleActivity(this)">В дороге</div>
+                        <div class="pill" onclick="toggleActivity(this)">Работа</div>
+                        <div class="pill" onclick="toggleActivity(this)">Тренировка</div>
+                        <div class="pill" onclick="toggleActivity(this)">Дом</div>
+                        <div class="pill" onclick="toggleActivity(this)">Сон</div>
                     </div>
+                </section>
+
+                <section>
+                    <span class="label">источник</span>
+                    <div class="grid-3">
+                        <!-- 3D Сердце -->
+                        <div class="source-card active" onclick="toggleSource(this)">
+                            <div class="icon-box">
+                                <svg viewBox="0 0 50 50" width="44" height="44">
+                                    <defs>
+                                        <radialGradient id="heartGrad" cx="30%" cy="30%" r="70%">
+                                            <stop offset="0%" stop-color="#ff6b6b"/>
+                                            <stop offset="100%" stop-color="#8a0000"/>
+                                        </radialGradient>
+                                        <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="3" opacity="0.5"/></filter>
+                                    </defs>
+                                    <path fill="url(#heartGrad)" filter="url(#shadow)" d="M25,40l-2.4-2.2C14.1,30.2,8,24.7,8,18c0-5.5,4.5-10,10-10c3.1,0,6.1,1.4,8,3.7c1.9-2.2,4.9-3.7,8-3.7c5.5,0,10,4.5,10,10c0,6.7-6.1,12.2-14.6,19.8L25,40z"/>
+                                    <ellipse cx="20" cy="15" rx="4" ry="2" fill="white" fill-opacity="0.2" transform="rotate(-30 20 15)"/>
+                                </svg>
+                            </div>
+                            <span>избранное</span>
+                        </div>
+                        <!-- 3D Тренды -->
+                        <div class="source-card" onclick="toggleSource(this)">
+                            <div class="icon-box">
+                                <svg viewBox="0 0 50 50" width="44" height="44">
+                                    <defs>
+                                        <linearGradient id="trendGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#ffcc33"/>
+                                            <stop offset="100%" stop-color="#ff6600"/>
+                                        </linearGradient>
+                                        <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="3" opacity="0.5"/></filter>
+                                    </defs>
+                                    <rect x="10" y="25" width="6" height="15" rx="2" fill="url(#trendGrad)" filter="url(#shadow)"/>
+                                    <rect x="22" y="15" width="6" height="25" rx="2" fill="url(#trendGrad)" filter="url(#shadow)"/>
+                                    <rect x="34" y="20" width="6" height="20" rx="2" fill="url(#trendGrad)" filter="url(#shadow)"/>
+                                </svg>
+                            </div>
+                            <span>трендовое</span>
+                        </div>
+                        <!-- 3D Новое -->
+                        <div class="source-card" onclick="toggleSource(this)">
+                            <div class="icon-box">
+                                <svg viewBox="0 0 50 50" width="44" height="44">
+                                    <defs>
+                                        <radialGradient id="starGrad" cx="30%" cy="30%" r="70%">
+                                            <stop offset="0%" stop-color="#4facfe"/>
+                                            <stop offset="100%" stop-color="#0061ff"/>
+                                        </radialGradient>
+                                        <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="3" opacity="0.5"/></filter>
+                                    </defs>
+                                    <path fill="url(#starGrad)" filter="url(#shadow)" d="M25,5l6.5,13.5L46,20.5l-10.5,10L38,45L25,38L12,45l2.5-14.5L4,20.5l14.5-2L25,5z"/>
+                                </svg>
+                            </div>
+                            <span>новое</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <span class="label">настроение</span>
+                    <div class="mood-row">
+                        <div class="mood-item active" onclick="toggleMood(this)">
+                            <div class="sphere s-red"></div><span>Бодрое</span>
+                        </div>
+                        <div class="mood-item" onclick="toggleMood(this)">
+                            <div class="sphere s-green"></div><span>Весёлое</span>
+                        </div>
+                        <div class="mood-item" onclick="toggleMood(this)">
+                            <div class="sphere s-blue"></div><span>Спокойное</span>
+                        </div>
+                        <div class="mood-item" onclick="toggleMood(this)">
+                            <div class="sphere s-gold"></div><span>Грустное</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <span class="label">авторы</span>
+                    <div class="authors-list" id="auth-list">
+                        <!-- JS вставит кнопку и авторов -->
+                    </div>
+                </section>
+
+                <div class="sound-settings-footer">
+                    <button class="reset-sound-button" onclick="resetAllSettings()">
+                        СБРОСИТЬ ВСЁ
+                    </button>
                 </div>
+            </div>
+
+            <!-- ШТОРКА ДЛЯ АВТОРОВ -->
+            <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+            <div class="drawer" id="drawer">
+                <div style="width:40px; height:4px; background:#333; margin:0 auto 20px; border-radius:10px;"></div>
+                <input type="text" class="search-box" placeholder="Найти автора..." id="searchInput" oninput="filterAuthors()">
+                <div class="drawer-grid" id="drawer-list"></div>
             </div>
 
             <!-- Страница настроек -->
@@ -2634,6 +2952,30 @@
         let currentLanguage = 'ru';
         let currentColumnIndex = 0;
 
+        // Настройки звука - новое состояние
+        let currentSoundSettings = {
+            activity: 'В дороге',
+            source: 'избранное',
+            mood: 'Бодрое',
+            authors: []
+        };
+
+        // Авторы для настроек звука
+        const authors = [
+            { n: 'Aphex Twin', id: 1 },
+            { n: 'Burial', id: 2 },
+            { n: 'Moby', id: 3 },
+            { n: 'Lorn', id: 4 },
+            { n: 'Kiasmos', id: 5 },
+            { n: 'Moderat', id: 6 },
+            { n: 'Hans Zimmer', id: 7 },
+            { n: 'Daft Punk', id: 8 },
+            { n: 'Bonobo', id: 9 },
+            { n: 'Massive Attack', id: 10 },
+            { n: 'Thom Yorke', id: 11 },
+            { n: 'Four Tet', id: 12 }
+        ];
+
         // Тестовые изображения
         const testImages = [
             'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop',
@@ -2646,7 +2988,7 @@
             'https://images.unsplash.com/photo-1529255484355-cb73c33c04bb?w=400&h=400&fit=crop'
         ];
 
-        // Треки для раздела "Для вас" - теперь 12 треков
+        // Треки для раздела "Для вас"
         const forYouTracks = [
             {
                 id: 'fy-1',
@@ -2819,8 +3161,7 @@
                             plays: '4.2M',
                             image: testImages[0],
                             mood: 'Энергичное',
-                            genre: 'Хип-хоп',
-                            description: 'Популярный хит от дуэта Окрытонит и FEDUK'
+                            genre: 'Хип-хоп'
                         },
                         {
                             id: 't1-2',
@@ -2832,8 +3173,7 @@
                             plays: '3.1M',
                             image: testImages[1],
                             mood: 'Эмоциональное',
-                            genre: 'Хип-хоп',
-                            description: 'Глубокий трек от BIUSHDO ZHO'
+                            genre: 'Хип-хоп'
                         },
                         {
                             id: 't1-3',
@@ -2845,8 +3185,7 @@
                             plays: '2.8M',
                             image: testImages[2],
                             mood: 'Агрессивное',
-                            genre: 'Хип-хоп',
-                            description: 'Энергичная коллаборация ToxiS и Big Baby Tape'
+                            genre: 'Хип-хоп'
                         }
                     ]
                 },
@@ -2920,242 +3259,11 @@
             ]
         };
 
-        // Только русский и английский языки
+        // Языки
         const languages = [
             { code: 'ru', name: 'Русский', native: 'Русский', flag: 'https://flagcdn.com/w320/ru.png' },
             { code: 'en', name: 'Английский', native: 'English', flag: 'https://flagcdn.com/w320/gb.png' }
         ];
-
-        // Переводы для интерфейса (только русский и английский)
-        const translations = {
-            ru: {
-                searchPlaceholder: 'Найти треки, исполнителей, альбомы',
-                soundHeroTitle: 'МОЙ РИТМ',
-                soundHeroSubtitle: 'Персональные рекомендации на основе ваших предпочтений',
-                configureSound: 'Настроить звук',
-                listen: 'Слушать',
-                musicCollections: 'Подборки музыки',
-                genres: 'Жанры',
-                genresDesc: 'Рок, поп, хип-хоп, джаз, электроника',
-                activities: 'Занятия',
-                activitiesDesc: 'Для работы, тренировки, отдыха, учебы',
-                moods: 'Настроения',
-                moodsDesc: 'Веселое, грустное, энергичное, спокойное',
-                forYou: 'Для вас',
-                trends: 'Тренды',
-                new: 'Новинки',
-                basedOnPreferences: 'На основе ваших предпочтений',
-                tracksYouWillLike: 'Треки, которые вам понравятся',
-                trackCount: 'треков',
-                plays: 'прослушиваний',
-                trending: 'ТРЕНД',
-                newBadge: 'НОВОЕ',
-                back: '← Назад',
-                language: 'Язык',
-                support: 'Техподдержка',
-                onlineChat: 'Онлайн-чат',
-                onlineChatDesc: 'Быстрые ответы на ваши вопросы 24/7',
-                emailSupport: 'Email поддержка',
-                emailSupportDesc: 'Подробные ответы на complex@support.myrhythm.com',
-                faqHelp: 'FAQ и помощь',
-                faqHelpDesc: 'Ответы на часто задаваемые вопросы',
-                subscriptionTitle: 'ПОДПИСКА',
-                subscriptionSubtitle: 'Выберите подходящий план подписки',
-                year: 'ГОД',
-                halfYear: 'ПОЛГОДА',
-                month: 'МЕСЯЦ',
-                buySubscription: 'КУПИТЬ ПОДПИСКУ',
-                bestPrice: 'ЛУЧШАЯ ЦЕНА',
-                economy: 'Экономия',
-                collectionTitle: 'МОЯ КОЛЛЕКЦИЯ',
-                collectionSubtitle: 'Все ваши сохраненные треки, плейлисты и альбомы в одном месте',
-                emptyCollection: 'Коллекция пуста',
-                emptyCollectionDesc: 'Чтобы добавить трек в коллекцию, нажмите на сердечко ❤️ рядом с ним',
-                selectTrack: 'Выберите трек',
-                clickTrack: 'Нажмите на трек или альбом',
-                music: 'Музыка',
-                collection: 'Коллекция',
-                promocodeDesc: 'Введите промокод для получения скидки на подписку',
-                // Особенности подписок на русском
-                feature1: 'Высокое качество звука',
-                feature2: 'Скачивание треков',
-                feature3: 'Прослушивание без рекламы',
-                feature4: 'Персональные рекомендации',
-                feature5: 'Эксклюзивный контент',
-                feature6: 'Приоритетная поддержка',
-                feature7: 'Ограниченное скачивание',
-                feature8: 'Базовые рекомендации',
-                feature9: 'Стандартное качество',
-                feature10: 'Без скачивания',
-                // Убрали надпись для популярного выбора
-                popularChoice: ''
-            },
-            en: {
-                searchPlaceholder: 'Search tracks, artists, albums',
-                soundHeroTitle: 'MY RHYTHM',
-                soundHeroSubtitle: 'Personal recommendations based on your preferences',
-                configureSound: 'Configure Sound',
-                listen: 'Listen',
-                musicCollections: 'Music Collections',
-                genres: 'Genres',
-                genresDesc: 'Rock, pop, hip-hop, jazz, electronic',
-                activities: 'Activities',
-                activitiesDesc: 'For work, workout, rest, study',
-                moods: 'Moods',
-                moodsDesc: 'Happy, sad, energetic, calm',
-                forYou: 'For You',
-                trends: 'Trends',
-                new: 'New',
-                basedOnPreferences: 'Based on your preferences',
-                tracksYouWillLike: 'Tracks you will like',
-                trackCount: 'tracks',
-                plays: 'plays',
-                trending: 'TRENDING',
-                newBadge: 'NEW',
-                back: '← Back',
-                language: 'Language',
-                support: 'Support',
-                onlineChat: 'Online Chat',
-                onlineChatDesc: 'Quick answers to your questions 24/7',
-                emailSupport: 'Email Support',
-                emailSupportDesc: 'Detailed answers to complex@support.myrhythm.com',
-                faqHelp: 'FAQ & Help',
-                faqHelpDesc: 'Answers to frequently asked questions',
-                subscriptionTitle: 'SUBSCRIPTION',
-                subscriptionSubtitle: 'Choose the right subscription plan',
-                year: 'YEAR',
-                halfYear: 'HALF YEAR',
-                month: 'MONTH',
-                buySubscription: 'BUY SUBSCRIPTION',
-                bestPrice: 'BEST PRICE',
-                economy: 'Save',
-                collectionTitle: 'MY COLLECTION',
-                collectionSubtitle: 'All your saved tracks, playlists and albums in one place',
-                emptyCollection: 'Collection is empty',
-                emptyCollectionDesc: 'To add a track to collection, click the heart ❤️ next to it',
-                selectTrack: 'Select track',
-                clickTrack: 'Click on track or album',
-                music: 'Music',
-                collection: 'Collection',
-                promocodeDesc: 'Enter promo code to get discount on subscription',
-                // Особенности подписок на английском
-                feature1: 'High quality sound',
-                feature2: 'Download tracks',
-                feature3: 'Listening without ads',
-                feature4: 'Personal recommendations',
-                feature5: 'Exclusive content',
-                feature6: 'Priority support',
-                feature7: 'Limited downloads',
-                feature8: 'Basic recommendations',
-                feature9: 'Standard quality',
-                feature10: 'No downloads',
-                // Убрали надпись для популярного выбора
-                popularChoice: ''
-            }
-        };
-
-        // ПОДПИСКИ С ПЕРЕВОДАМИ - БЕЗ ОРАНЖЕВЫХ ПОЛОСОК
-        const subscriptionPlans = {
-            ru: [
-                {
-                    id: 'yearly',
-                    period: 'ГОД',
-                    price: '4.99',
-                    savings: 'Экономия 50%',
-                    features: [
-                        translations.ru.feature1,
-                        translations.ru.feature2,
-                        translations.ru.feature3,
-                        translations.ru.feature4,
-                        translations.ru.feature5,
-                        translations.ru.feature6
-                    ],
-                    popular: true
-                },
-                {
-                    id: 'half-year',
-                    period: 'ПОЛГОДА',
-                    price: '2.99',
-                    savings: 'Экономия 40%',
-                    features: [
-                        translations.ru.feature1,
-                        translations.ru.feature7,
-                        translations.ru.feature3,
-                        translations.ru.feature4,
-                        translations.ru.feature6
-                    ],
-                    popular: false
-                },
-                {
-                    id: 'monthly',
-                    period: 'МЕСЯЦ',
-                    price: '0.99',
-                    savings: '',
-                    features: [
-                        translations.ru.feature9,
-                        translations.ru.feature10,
-                        translations.ru.feature3,
-                        translations.ru.feature8
-                    ],
-                    popular: false
-                }
-            ],
-            en: [
-                {
-                    id: 'yearly',
-                    period: 'YEAR',
-                    price: '4.99',
-                    savings: 'Save 50%',
-                    features: [
-                        translations.en.feature1,
-                        translations.en.feature2,
-                        translations.en.feature3,
-                        translations.en.feature4,
-                        translations.en.feature5,
-                        translations.en.feature6
-                    ],
-                    popular: true
-                },
-                {
-                    id: 'half-year',
-                    period: 'HALF YEAR',
-                    price: '2.99',
-                    savings: 'Save 40%',
-                    features: [
-                        translations.en.feature1,
-                        translations.en.feature7,
-                        translations.en.feature3,
-                        translations.en.feature4,
-                        translations.en.feature6
-                    ],
-                    popular: false
-                },
-                {
-                    id: 'monthly',
-                    period: 'MONTH',
-                    price: '0.99',
-                    savings: '',
-                    features: [
-                        translations.en.feature9,
-                        translations.en.feature10,
-                        translations.en.feature3,
-                        translations.en.feature8
-                    ],
-                    popular: false
-                }
-            ]
-        };
-
-        // ИКОНКА TON
-        function createTonIcon(size = '20px') {
-            return `
-                <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="50" fill="#0098EA"/>
-                    <path d="M72 36C72 31.5 68.5 28 64 28H36C31.5 28 28 31.5 28 36V38C28 39.5 28.5 41 29.5 42L47.5 69C48.5 70.5 51.5 70.5 52.5 69L70.5 42C71.5 41 72 39.5 72 38V36Z" stroke="white" stroke-width="6" stroke-linejoin="round"/>
-                    <path d="M50 28V68" stroke="white" stroke-width="6" stroke-linecap="round"/>
-                </svg>
-            `;
-        }
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
@@ -3166,43 +3274,109 @@
             loadTabContent('new');
             loadLanguages();
             loadSubscriptionPlans();
-            updateInterfaceLanguage();
-            setupSlider();
-            setupTouchScrolling();
+            createFloatingParticles();
+            loadRandomAuthors();
         });
 
-        // Настройка слайдера
-        function setupSlider() {
-            const slider = document.getElementById('slider');
-            const dots = document.querySelectorAll('.slider-dots .dot');
-            
-            if (!slider) return;
+        // Загрузка случайных авторов
+        function loadRandomAuthors() {
+            const container = document.getElementById('auth-list');
+            if (!container) return;
 
-            slider.addEventListener('scroll', () => {
-                const index = Math.round(slider.scrollLeft / slider.offsetWidth);
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
+            const shuffled = [...authors].sort(() => 0.5 - Math.random()).slice(0, 4);
+            let html = '<div class="btn-trigger" onclick="openDrawer()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>';
+            shuffled.forEach(a => {
+                html += '<div class="author-circle"><div class="author-img"><img src="https://i.pravatar.cc/100?u=' + a.id + '"></div><span>' + a.n.split(' ')[0] + '</span></div>';
+            });
+            container.innerHTML = html;
+        }
+
+        // Открытие шторки с авторами
+        function openDrawer() {
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('drawer').classList.add('active');
+            filterAuthors();
+        }
+
+        // Закрытие шторки
+        function closeDrawer() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('drawer').classList.remove('active');
+        }
+
+        // Фильтрация авторов в шторке
+        function filterAuthors() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const list = document.getElementById('drawer-list');
+            list.innerHTML = '';
+            authors.filter(a => a.n.toLowerCase().includes(q)).forEach(a => {
+                list.innerHTML += '<div class="author-circle" onclick="selectAuthor(this)"><div class="author-img"><img src="https://i.pravatar.cc/100?u=' + a.id + '"></div><span>' + a.n.split(' ')[0] + '</span></div>';
+            });
+        }
+
+        // Выбор автора
+        function selectAuthor(el) {
+            const authorName = el.querySelector('span').textContent;
+            showNotification('Автор ' + authorName + ' выбран');
+            closeDrawer();
+        }
+
+        // Переключение активности
+        function toggleActivity(el) {
+            const parent = el.parentElement;
+            parent.querySelectorAll('.active').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            currentSoundSettings.activity = el.textContent;
+            showNotification('Занятие: ' + el.textContent);
+        }
+
+        // Переключение источника
+        function toggleSource(el) {
+            const parent = el.parentElement;
+            parent.querySelectorAll('.active').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            currentSoundSettings.source = el.querySelector('span').textContent;
+            showNotification('Источник: ' + currentSoundSettings.source);
+        }
+
+        // Переключение настроения
+        function toggleMood(el) {
+            const parent = el.parentElement;
+            parent.querySelectorAll('.active').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            currentSoundSettings.mood = el.querySelector('span').textContent;
+            showNotification('Настроение: ' + currentSoundSettings.mood);
+        }
+
+        // Сброс всех настроек
+        function resetAllSettings() {
+            // Сброс занятий
+            const activities = document.querySelectorAll('.pill');
+            activities.forEach((item, index) => {
+                item.classList.toggle('active', index === 0);
+                if (index === 0) currentSoundSettings.activity = item.textContent;
             });
 
-            // Автопрокрутка слайдера
-            let currentSlide = 0;
-            setInterval(() => {
-                if (!document.querySelector('.slider-wrapper').style.display) {
-                    currentSlide = (currentSlide + 1) % 3;
-                    slider.scrollTo({
-                        left: currentSlide * slider.offsetWidth,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 5000);
+            // Сброс источников
+            const sources = document.querySelectorAll('.source-card');
+            sources.forEach((item, index) => {
+                item.classList.toggle('active', index === 0);
+                if (index === 0) currentSoundSettings.source = item.querySelector('span').textContent;
+            });
 
-            // Блокировка вертикального скролла на мобильных
-            slider.addEventListener('touchmove', function(e) {
-                if (e.touches.length > 0) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
+            // Сброс настроений
+            const moods = document.querySelectorAll('.mood-item');
+            moods.forEach((item, index) => {
+                item.classList.toggle('active', index === 0);
+                if (index === 0) currentSoundSettings.mood = item.querySelector('span').textContent;
+            });
+
+            // Сброс авторов
+            currentSoundSettings.authors = [];
+            loadRandomAuthors();
+
+            soundConfigured = false;
+            showNotification('Все настройки сброшены');
         }
 
         // Создание визуализатора полос
@@ -3220,7 +3394,25 @@
             }
         }
 
-        // НОВАЯ ФУНКЦИЯ: Загрузка треков в колонки
+        // Создание парящих частиц
+        function createFloatingParticles() {
+            const bg = document.querySelector('.aurora-rhythm-bg');
+            if (!bg) return;
+
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                const size = Math.random() * 4 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.animationDuration = `${15 + Math.random() * 15}s`;
+                bg.appendChild(particle);
+            }
+        }
+
+        // Загрузка треков в колонки
         function loadTracksColumns() {
             const container = document.getElementById('tracksColumnsContainer');
             const indicators = document.getElementById('scrollIndicators');
@@ -3289,7 +3481,7 @@
             const container = document.getElementById('tracksColumnsContainer');
             if (!container) return;
 
-            const columnWidth = 350 + 20; // ширина колонки + отступ
+            const columnWidth = 350 + 20;
             container.scrollTo({
                 left: index * columnWidth,
                 behavior: 'smooth'
@@ -3315,223 +3507,6 @@
             currentColumnIndex = index;
         }
 
-        // УЛУЧШЕННАЯ НАСТРОЙКА ПРОКРУТКИ ПАЛЬЦЕМ
-        function setupTouchScrolling() {
-            const container = document.getElementById('tracksColumnsContainer');
-            if (!container) return;
-
-            let isDragging = false;
-            let startX = 0;
-            let scrollLeft = 0;
-            let velocity = 0;
-            let lastX = 0;
-            let lastTime = 0;
-            let animationId = null;
-            let isScrolling = false;
-
-            // Мышь события для десктопа
-            container.addEventListener('mousedown', (e) => {
-                // Проверяем, был ли клик по треку
-                if (e.target.closest('.track-card-for-you')) {
-                    return; // Не начинаем перетаскивание, если кликнули по треку
-                }
-
-                isDragging = true;
-                startX = e.pageX - container.offsetLeft;
-                scrollLeft = container.scrollLeft;
-                container.style.cursor = 'grabbing';
-                container.style.scrollBehavior = 'auto';
-
-                // Сброс анимации
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                    animationId = null;
-                }
-
-                velocity = 0;
-                lastX = e.pageX;
-                lastTime = Date.now();
-
-                // Отменяем выделение текста
-                e.preventDefault();
-            });
-
-            container.addEventListener('mouseleave', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    container.style.cursor = 'grab';
-                    container.style.scrollBehavior = 'smooth';
-
-                    // Запускаем инерцию при отпускании
-                    applyInertia();
-                }
-            });
-
-            container.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    container.style.cursor = 'grab';
-                    container.style.scrollBehavior = 'smooth';
-
-                    // Запускаем инерцию при отпускании
-                    applyInertia();
-                }
-            });
-
-            container.addEventListener('mousemove', (e) => {
-                if (!isDragging || isScrolling) return;
-                e.preventDefault();
-
-                const x = e.pageX - container.offsetLeft;
-                const walk = (x - startX) * 1.5;
-                container.scrollLeft = scrollLeft - walk;
-
-                // Собираем данные для инерции
-                const currentTime = Date.now();
-                if (currentTime !== lastTime) {
-                    velocity = (x - lastX) / (currentTime - lastTime);
-                }
-                lastX = x;
-                lastTime = currentTime;
-            });
-
-            // Touch события для мобильных устройств
-            container.addEventListener('touchstart', (e) => {
-                // Проверяем, было ли касание по треку
-                if (e.target.closest('.track-card-for-you')) {
-                    return; // Не начинаем перетаскивание, если коснулись трека
-                }
-
-                isDragging = true;
-                startX = e.touches[0].pageX - container.offsetLeft;
-                scrollLeft = container.scrollLeft;
-                container.style.scrollBehavior = 'auto';
-
-                // Сброс анимации
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                    animationId = null;
-                }
-
-                velocity = 0;
-                lastX = e.touches[0].pageX;
-                lastTime = Date.now();
-            }, { passive: true });
-
-            container.addEventListener('touchmove', (e) => {
-                if (!isDragging || isScrolling) return;
-                e.preventDefault();
-
-                const x = e.touches[0].pageX - container.offsetLeft;
-                const walk = (x - startX) * 1.5;
-                container.scrollLeft = scrollLeft - walk;
-
-                // Собираем данные для инерции
-                const currentX = e.touches[0].pageX;
-                const currentTime = Date.now();
-                if (currentTime !== lastTime) {
-                    velocity = (currentX - lastX) / (currentTime - lastTime);
-                }
-                lastX = currentX;
-                lastTime = currentTime;
-            }, { passive: false });
-
-            container.addEventListener('touchend', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    container.style.scrollBehavior = 'smooth';
-
-                    // Запускаем инерцию
-                    applyInertia();
-                }
-            });
-
-            container.addEventListener('touchcancel', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    container.style.scrollBehavior = 'smooth';
-
-                    // Запускаем инерцию
-                    applyInertia();
-                }
-            });
-
-            // Функция инерции
-            function applyInertia() {
-                if (Math.abs(velocity) > 0.1) {
-                    const inertia = () => {
-                        container.scrollLeft -= velocity * 20;
-                        velocity *= 0.92;
-
-                        if (Math.abs(velocity) > 0.1) {
-                            animationId = requestAnimationFrame(inertia);
-                        } else {
-                            animationId = null;
-                            snapToNearestColumn();
-                        }
-                    };
-                    animationId = requestAnimationFrame(inertia);
-                } else {
-                    snapToNearestColumn();
-                }
-            }
-
-            // Автоматическое выравнивание к ближайшей колонке
-            function snapToNearestColumn() {
-                isScrolling = true;
-                const columnWidth = 350 + 20;
-                const scrollPosition = container.scrollLeft;
-                const columnIndex = Math.round(scrollPosition / columnWidth);
-
-                container.scrollTo({
-                    left: columnIndex * columnWidth,
-                    behavior: 'smooth'
-                });
-
-                // Обновляем индикаторы
-                updateIndicators(columnIndex);
-
-                // Сбрасываем флаг после завершения анимации
-                setTimeout(() => {
-                    isScrolling = false;
-                }, 300);
-            }
-
-            // Обновление индикаторов при ручной прокрутке
-            container.addEventListener('scroll', () => {
-                if (!isDragging && !isScrolling) {
-                    const columnWidth = 350 + 20;
-                    const scrollPosition = container.scrollLeft;
-                    const columnIndex = Math.round(scrollPosition / columnWidth);
-                    updateIndicators(columnIndex);
-                }
-            });
-        }
-
-        // Скролл для колонок
-        function scrollTracksColumns(direction) {
-            const container = document.getElementById('tracksColumnsContainer');
-            if (!container) return;
-
-            const columnWidth = 350 + 20;
-            const currentScroll = container.scrollLeft;
-
-            let targetIndex = currentColumnIndex;
-            if (direction === 'prev') {
-                targetIndex = Math.max(0, currentColumnIndex - 1);
-            } else {
-                const maxIndex = Math.ceil(forYouTracks.length / 3) - 1;
-                targetIndex = Math.min(maxIndex, currentColumnIndex + 1);
-            }
-
-            container.scrollTo({
-                left: targetIndex * columnWidth,
-                behavior: 'smooth'
-            });
-
-            updateIndicators(targetIndex);
-        }
-
         // Загрузка контента для таба
         function loadTabContent(tabId) {
             const grid = document.getElementById(`grid-${tabId}`);
@@ -3547,11 +3522,8 @@
                 card.className = 'collection-card';
                 card.onclick = () => openAlbum(album, tabId);
 
-                const badgeText = album.badge === 'trending' ? translations[currentLanguage].trending : 
-                                 album.badge === 'new' ? translations[currentLanguage].newBadge : '';
-
-                const badgeClass = album.badge === 'trending' ? 'trending' : 
-                                  album.badge === 'new' ? 'new' : '';
+                const badgeText = album.badge === 'trending' ? 'ТРЕНД' : 'НОВОЕ';
+                const badgeClass = album.badge === 'trending' ? 'trending' : 'new';
 
                 const badge = badgeText ? `<div class="collection-badge ${badgeClass}">${badgeText}</div>` : '';
 
@@ -3563,11 +3535,11 @@
                         <div class="collection-stats">
                             <span>
                                 <div class="collection-icon icon-tracks"></div>
-                                ${album.tracks} ${translations[currentLanguage].trackCount}
+                                ${album.tracks} треков
                             </span>
                             <span>
                                 <div class="collection-icon icon-plays"></div>
-                                ${album.plays} ${translations[currentLanguage].plays}
+                                ${album.plays} прослушиваний
                             </span>
                         </div>
                         ${badge}
@@ -3578,7 +3550,7 @@
             });
         }
 
-        // Загрузка языков (только русский и английский)
+        // Загрузка языков
         function loadLanguages() {
             const languagesGrid = document.getElementById('languagesGrid');
             if (!languagesGrid) return;
@@ -3602,14 +3574,57 @@
             });
         }
 
-        // Загрузка подписок - БЕЗ ОРАНЖЕВЫХ ПОЛОСОК
+        // Загрузка подписок
         function loadSubscriptionPlans() {
             const plansContainer = document.getElementById('subscriptionPlans');
             if (!plansContainer) return;
 
             plansContainer.innerHTML = '';
 
-            const plans = subscriptionPlans[currentLanguage];
+            const plans = [
+                {
+                    id: 'yearly',
+                    period: 'ГОД',
+                    price: '4.99',
+                    savings: 'Экономия 50%',
+                    features: [
+                        'Высокое качество звука',
+                        'Скачивание треков',
+                        'Прослушивание без рекламы',
+                        'Персональные рекомендации',
+                        'Эксклюзивный контент',
+                        'Приоритетная поддержка'
+                    ],
+                    popular: true
+                },
+                {
+                    id: 'half-year',
+                    period: 'ПОЛГОДА',
+                    price: '2.99',
+                    savings: 'Экономия 40%',
+                    features: [
+                        'Высокое качество звука',
+                        'Ограниченное скачивание',
+                        'Прослушивание без рекламы',
+                        'Персональные рекомендации',
+                        'Приоритетная поддержка'
+                    ],
+                    popular: false
+                },
+                {
+                    id: 'monthly',
+                    period: 'МЕСЯЦ',
+                    price: '0.99',
+                    savings: '',
+                    features: [
+                        'Стандартное качество',
+                        'Без скачивания',
+                        'Прослушивание без рекламы',
+                        'Базовые рекомендации'
+                    ],
+                    popular: false
+                }
+            ];
 
             plans.forEach(plan => {
                 const planCard = document.createElement('div');
@@ -3622,16 +3637,19 @@
                 const savingsHtml = plan.savings ? 
                     `<div class="plan-savings">${plan.savings}</div>` : '';
 
-                const periodText = plan.period;
-                const buttonText = translations[currentLanguage].buySubscription;
-
                 planCard.innerHTML = `
                     <div class="plan-header">
-                        <div class="plan-period">${periodText}</div>
+                        <div class="plan-period">${plan.period}</div>
                         <div class="plan-price-container">
                             <div class="plan-price">${plan.price}</div>
                             <div class="plan-currency">
-                                <div class="ton-icon">${createTonIcon('20px')}</div>
+                                <div class="ton-icon">
+                                    <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="50" cy="50" r="50" fill="#0098EA"/>
+                                        <path d="M72 36C72 31.5 68.5 28 64 28H36C31.5 28 28 31.5 28 36V38C28 39.5 28.5 41 29.5 42L47.5 69C48.5 70.5 51.5 70.5 52.5 69L70.5 42C71.5 41 72 39.5 72 38V36Z" stroke="white" stroke-width="6" stroke-linejoin="round"/>
+                                        <path d="M50 28V68" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
                                 TON
                             </div>
                         </div>
@@ -3641,11 +3659,9 @@
                         ${featuresHtml}
                     </div>
                     <button class="plan-button" onclick="subscribeToPlan('${plan.id}', '${plan.price}')">
-                        ${buttonText}
+                        КУПИТЬ ПОДПИСКУ
                     </button>
                 `;
-
-                // УБРАЛ ДОБАВЛЕНИЕ НАДПИСИ "ПОПУЛЯРНЫЙ ВЫБОР"
 
                 plansContainer.appendChild(planCard);
             });
@@ -3653,7 +3669,6 @@
 
         // Переключение табов
         function switchTab(tabId) {
-            // Обновляем активные классы
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -3661,7 +3676,6 @@
                 content.classList.remove('active');
             });
 
-            // Активируем выбранный таб
             const activeTab = document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`);
             const activeContent = document.getElementById(`tab-${tabId}`);
 
@@ -3673,20 +3687,25 @@
 
         // Переключение страниц
         function switchPage(pageId) {
-            // Обновляем активные классы навигации
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             const activeNav = document.querySelector(`.nav-item[onclick="switchPage('${pageId}')"]`);
             if (activeNav) activeNav.classList.add('active');
 
-            // Скрываем все страницы
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('settingsPage').style.display = 'none';
             document.getElementById('collectionPage').style.display = 'none';
             document.getElementById('albumPage').style.display = 'none';
+            document.getElementById('soundSettingsPage').style.display = 'none';
 
-            // Показываем выбранную страницу
+            // Добавляем/убираем класс для управления фоном Aurora
+            if (pageId === 'settings' || pageId === 'collection' || pageId === 'album' || pageId === 'sound-settings') {
+                document.body.classList.add('settings-mode');
+            } else {
+                document.body.classList.remove('settings-mode');
+            }
+
             switch(pageId) {
                 case 'music':
                     document.getElementById('mainPage').style.display = 'block';
@@ -3708,7 +3727,6 @@
             const emptyCollection = document.getElementById('emptyCollection');
             const collectionGrid = document.getElementById('collectionGrid');
 
-            // Получаем все понравившиеся треки
             const likedTracksArray = Array.from(likedTracks).map(trackId => 
                 forYouTracks.find(t => t.id === trackId) ||
                 albumsDatabase.trends.flatMap(a => a.tracksList).find(t => t?.id === trackId) ||
@@ -3722,7 +3740,6 @@
                 emptyCollection.style.display = 'none';
                 collectionGrid.style.display = 'grid';
 
-                // Очищаем и заполняем сетку
                 collectionGrid.innerHTML = '';
 
                 likedTracksArray.forEach(track => {
@@ -3757,7 +3774,6 @@
         function openTrack(track, source) {
             currentTrack = track;
 
-            // Обновляем плеер
             updatePlayer({
                 title: track.title,
                 artist: track.artist,
@@ -3766,28 +3782,26 @@
                 isPlaying: true
             });
 
-            // Обновляем состояние сердечка
             const heartBtn = document.getElementById('playerHeartBtn');
             if (heartBtn) {
                 heartBtn.classList.toggle('liked', likedTracks.has(track.id));
             }
 
-            // Добавляем в предпочтения
             addToPreferences(track);
 
-            showNotification(`${translations[currentLanguage].selectTrack}: ${track.title} - ${track.artist}`);
+            showNotification(`Выбрано: ${track.title} - ${track.artist}`);
         }
 
         // Открытие альбома
         function openAlbum(album, source) {
             currentAlbum = album;
 
-            // Скрываем все остальное
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('settingsPage').style.display = 'none';
             document.getElementById('collectionPage').style.display = 'none';
+            document.getElementById('soundSettingsPage').style.display = 'none';
+            document.body.classList.add('settings-mode');
 
-            // Показываем страницу альбома
             const albumPage = document.getElementById('albumPage');
             albumPage.classList.add('active');
             albumPage.style.display = 'block';
@@ -3802,19 +3816,18 @@
                     <div class="album-meta-large">
                         <span>${album.year}</span>
                         <span>•</span>
-                        <span>${album.tracks} ${translations[currentLanguage].trackCount}</span>
+                        <span>${album.tracks} треков</span>
                         <span>•</span>
                         <span>${album.duration}</span>
                     </div>
                     <div class="album-actions">
                         <button class="play-album-btn" onclick="playAlbum()">
-                            ▶ ${translations[currentLanguage].listen}
+                            ▶ Слушать
                         </button>
                     </div>
                 </div>
             `;
 
-            // Заполняем список треков
             const tracksList = document.getElementById('tracksList');
             tracksList.innerHTML = '';
 
@@ -3874,7 +3887,6 @@
             const firstTrackItem = tracksList.querySelector('.track-item-album');
 
             if (firstTrackItem) {
-                // Находим первый трек
                 const trackIndex = parseInt(firstTrackItem.querySelector('.track-number-album').textContent) - 1;
                 const tracks = currentAlbum.tracksList && currentAlbum.tracksList.length > 0 
                     ? currentAlbum.tracksList 
@@ -3885,7 +3897,7 @@
                 }
             }
 
-            showNotification(`${translations[currentLanguage].listen}: ${currentAlbum.title}`);
+            showNotification(`Воспроизведение: ${currentAlbum.title}`);
         }
 
         // Воспроизведение трека из альбома
@@ -3900,16 +3912,14 @@
                 isPlaying: true
             });
 
-            // Обновляем состояние сердечка
             const heartBtn = document.getElementById('playerHeartBtn');
             if (heartBtn) {
                 heartBtn.classList.toggle('liked', likedTracks.has(track.id));
             }
 
-            // Добавляем в предпочтения
             addToPreferences(track);
 
-            showNotification(`${translations[currentLanguage].listen}: ${track.title} - ${track.artist}`);
+            showNotification(`Воспроизведение: ${track.title} - ${track.artist}`);
         }
 
         // Воспроизведение трека из коллекции
@@ -3924,147 +3934,30 @@
                 isPlaying: true
             });
 
-            // Обновляем состояние сердечка
             const heartBtn = document.getElementById('playerHeartBtn');
             if (heartBtn) {
                 heartBtn.classList.toggle('liked', likedTracks.has(track.id));
             }
 
-            showNotification(`${translations[currentLanguage].listen}: ${track.title} - ${track.artist}`);
+            showNotification(`Воспроизведение: ${track.title} - ${track.artist}`);
         }
 
         // Смена языка
         function changeLanguage(langCode) {
             currentLanguage = langCode;
             loadLanguages();
-            updateInterfaceLanguage();
-            loadSubscriptionPlans();
 
             showNotification(`Язык изменен на: ${languages.find(l => l.code === langCode).name}`);
         }
 
-        // Обновление интерфейса при смене языка
-        function updateInterfaceLanguage() {
-            const t = translations[currentLanguage];
-
-            // Обновляем поиск
-            const searchInput = document.querySelector('.search-input');
-            if (searchInput) searchInput.placeholder = t.searchPlaceholder;
-
-            // Обновляем главную страницу
-            const soundHeroTitle = document.querySelector('.sound-hero-title');
-            const soundHeroSubtitle = document.querySelector('.sound-hero-subtitle');
-            const configureBtn = document.querySelector('.hero-action-btn.primary');
-            const listenBtn = document.querySelector('.hero-action-btn.secondary');
-
-            if (soundHeroTitle) soundHeroTitle.textContent = t.soundHeroTitle;
-            if (soundHeroSubtitle) soundHeroSubtitle.textContent = t.soundHeroSubtitle;
-            if (configureBtn) configureBtn.textContent = t.configureSound;
-            if (listenBtn) listenBtn.textContent = t.listen;
-
-            // Обновляем подборки музыки
-            const sectionTitle = document.querySelector('.section-title');
-            const moodCards = document.querySelectorAll('.mood-title');
-            const moodSubtitles = document.querySelectorAll('.mood-subtitle');
-
-            if (sectionTitle) sectionTitle.textContent = t.musicCollections;
-            if (moodCards[0]) moodCards[0].innerHTML = `<div class="mood-icon"></div>${t.genres}`;
-            if (moodCards[1]) moodCards[1].innerHTML = `<div class="mood-icon"></div>${t.activities}`;
-            if (moodCards[2]) moodCards[2].innerHTML = `<div class="mood-icon"></div>${t.moods}`;
-
-            if (moodSubtitles[0]) moodSubtitles[0].textContent = t.genresDesc;
-            if (moodSubtitles[1]) moodSubtitles[1].textContent = t.activitiesDesc;
-            if (moodSubtitles[2]) moodSubtitles[2].textContent = t.moodsDesc;
-
-            // Обновляем табы
-            const forYouTab = document.querySelector('.tab[onclick="switchTab(\'for-you\')"]');
-            const trendsTab = document.querySelector('.tab[onclick="switchTab(\'trends\')"]');
-            const newTab = document.querySelector('.tab[onclick="switchTab(\'new\')"]');
-
-            if (forYouTab) forYouTab.textContent = t.forYou;
-            if (trendsTab) trendsTab.textContent = t.trends;
-            if (newTab) newTab.textContent = t.new;
-
-            // Обновляем "Для вас" заголовок
-            const forYouTitle = document.querySelector('.for-you-title');
-            const forYouSubtitle = document.querySelector('.for-you-subtitle');
-
-            if (forYouTitle) forYouTitle.textContent = t.basedOnPreferences;
-            if (forYouSubtitle) forYouSubtitle.textContent = t.tracksYouWillLike;
-
-            // Обновляем кнопку "Назад"
-            const backButtons = document.querySelectorAll('.back-btn');
-            backButtons.forEach(btn => {
-                btn.textContent = t.back;
-            });
-
-            // Обновляем заголовки настроек
-            const settingsTitles = document.querySelectorAll('.settings-title');
-            settingsTitles.forEach(title => {
-                if (title.classList.contains('language')) title.textContent = t.language;
-                if (title.classList.contains('support')) title.textContent = t.support;
-            });
-
-            // Обновляем техподдержку
-            const supportTitles = document.querySelectorAll('.support-title');
-            const supportDescriptions = document.querySelectorAll('.support-description');
-
-            if (supportTitles[0]) supportTitles[0].textContent = t.onlineChat;
-            if (supportDescriptions[0]) supportDescriptions[0].textContent = t.onlineChatDesc;
-            if (supportTitles[1]) supportTitles[1].textContent = t.emailSupport;
-            if (supportDescriptions[1]) supportDescriptions[1].textContent = t.emailSupportDesc;
-            if (supportTitles[2]) supportTitles[2].textContent = t.faqHelp;
-            if (supportDescriptions[2]) supportDescriptions[2].textContent = t.faqHelpDesc;
-
-            // Обновляем подписки заголовок
-            const subscriptionTitle = document.getElementById('subscriptionTitleText');
-            const subscriptionSubtitle = document.getElementById('subscriptionSubtitleText');
-            const promocodeDescription = document.getElementById('promocodeDescriptionText');
-
-            if (subscriptionTitle) subscriptionTitle.textContent = t.subscriptionTitle;
-            if (subscriptionSubtitle) subscriptionSubtitle.textContent = t.subscriptionSubtitle;
-            if (promocodeDescription) promocodeDescription.textContent = t.promocodeDesc;
-
-            // Обновляем коллекцию
-            const emptyTitle = document.querySelector('.empty-title');
-            const emptySubtitle = document.querySelector('.empty-subtitle');
-
-            if (emptyTitle) emptyTitle.textContent = t.emptyCollection;
-            if (emptySubtitle) emptySubtitle.textContent = t.emptyCollectionDesc;
-
-            // Обновляем плеер
-            const playerTitle = document.querySelector('.player-title');
-            const playerArtist = document.querySelector('.player-artist');
-
-            if (playerTitle && playerTitle.textContent === 'Выберите трек') playerTitle.textContent = t.selectTrack;
-            if (playerArtist && playerArtist.textContent === 'Нажмите на трек или альбом') playerArtist.textContent = t.clickTrack;
-
-            // Обновляем навигацию
-            const navLabels = document.querySelectorAll('.nav-label');
-            if (navLabels[0]) navLabels[0].textContent = t.music;
-            if (navLabels[1]) navLabels[1].textContent = t.collection;
-
-            // Обновляем треки в "Для вас"
-            loadTracksColumns();
-
-            // Обновляем статистику в коллекциях
-            const trackCounts = document.querySelectorAll('.collection-stats span:nth-child(1)');
-            const playsCounts = document.querySelectorAll('.collection-stats span:nth-child(2)');
-
-            trackCounts.forEach(el => {
-                const text = el.innerHTML;
-                el.innerHTML = text.replace(/треков|tracks/, t.trackCount);
-            });
-
-            playsCounts.forEach(el => {
-                const text = el.innerHTML;
-                el.innerHTML = text.replace(/прослушиваний|plays/, t.plays);
-            });
-        }
-
         // Подписка на план
         function subscribeToPlan(planId, price) {
-            const plans = subscriptionPlans[currentLanguage];
+            const plans = [
+                { id: 'yearly', period: 'ГОД' },
+                { id: 'half-year', period: 'ПОЛГОДА' },
+                { id: 'monthly', period: 'МЕСЯЦ' }
+            ];
+
             const plan = plans.find(p => p.id === planId);
             if (plan) {
                 const periodText = plan.period;
@@ -4082,7 +3975,6 @@
                 return;
             }
 
-            // Простая проверка тестового промокода
             if (promocode.toUpperCase() === 'MYRHYTHM2024' || promocode.toUpperCase() === 'TEST') {
                 showNotification('Промокод успешно применен! Скидка 10% активирована.');
                 promocodeInput.value = '';
@@ -4122,11 +4014,38 @@
             }
         }
 
+        // Открытие страницы настроек звука
+        function openSoundSettings() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('settingsPage').style.display = 'none';
+            document.getElementById('collectionPage').style.display = 'none';
+            document.getElementById('albumPage').style.display = 'none';
+            document.body.classList.add('settings-mode');
+
+            const soundSettingsPage = document.getElementById('soundSettingsPage');
+            soundSettingsPage.classList.add('active');
+            soundSettingsPage.style.display = 'block';
+        }
+
+        // Воспроизведение звука
+        function playSound() {
+            soundConfigured = true;
+            const randomTrack = forYouTracks[Math.floor(Math.random() * forYouTracks.length)];
+            openTrack(randomTrack, 'for-you');
+
+            showNotification('Запущена "Моя волна" - персонализированная подборка на основе ваших предпочтений');
+        }
+
         // Назад к основному контенту
         function goBack() {
-            if (document.getElementById('albumPage').style.display === 'block') {
+            if (document.getElementById('soundSettingsPage').style.display === 'block') {
+                document.getElementById('soundSettingsPage').style.display = 'none';
+                document.getElementById('mainPage').style.display = 'block';
+                document.body.classList.remove('settings-mode');
+            } else if (document.getElementById('albumPage').style.display === 'block') {
                 document.getElementById('albumPage').style.display = 'none';
                 document.getElementById('mainPage').style.display = 'block';
+                document.body.classList.remove('settings-mode');
                 currentAlbum = null;
             } else {
                 switchPage('music');
@@ -4162,33 +4081,8 @@
             }
         }
 
-        // Настройка звука
-        function configureSound() {
-            soundConfigured = true;
-            userPreferences = [
-                { id: 'fy-1', title: 'Рассвет', artist: 'Miyagi & Andy Panda', genre: 'Хип-хоп', mood: 'Спокойное', timestamp: Date.now() },
-                { id: 'fy-3', title: 'Дорога', artist: 'Кис-кис', genre: 'Рок', mood: 'Путешествие', timestamp: Date.now() }
-            ];
-
-            showNotification('Настройка "Моего ритма" завершена! Система изучила ваши предпочтения.');
-        }
-
-        // Воспроизведение звука
-        function playSound() {
-            if (!soundConfigured) {
-                alert('Сначала настройте "Мой ритм" для персонализированных рекомендаций!');
-                return;
-            }
-
-            const randomTrack = forYouTracks[Math.floor(Math.random() * forYouTracks.length)];
-            openTrack(randomTrack, 'for-you');
-
-            showNotification('Запущен "Мой ритм" - персонализированная подборка на основе ваших предпочтений');
-        }
-
         // Настройка обработчиков событий
         function setupEventListeners() {
-            // Кнопка плеера
             const playBtn = document.getElementById('playerPlayBtn');
             if (playBtn) {
                 playBtn.addEventListener('click', function() {
@@ -4197,7 +4091,7 @@
 
                     if (currentTrack) {
                         if (isPlaying) {
-                            showNotification(`${translations[currentLanguage].listen}: ${currentTrack.title}`);
+                            showNotification(`Воспроизведение: ${currentTrack.title}`);
                         } else {
                             showNotification('Воспроизведение остановлено');
                         }
@@ -4211,7 +4105,6 @@
                 });
             }
 
-            // Кнопка сердечка
             const heartBtn = document.getElementById('playerHeartBtn');
             if (heartBtn) {
                 heartBtn.addEventListener('click', function() {
@@ -4233,7 +4126,6 @@
                 });
             }
 
-            // Промокод ввод по Enter
             const promocodeInput = document.getElementById('promocodeInput');
             if (promocodeInput) {
                 promocodeInput.addEventListener('keypress', function(e) {
