@@ -1057,7 +1057,7 @@
         .content-container {
             background: linear-gradient(180deg, 
                 rgba(15, 12, 41, 0.95) 0%,
-                rgba(26, 26, 26, 0.98) 100%);
+                rgba(15, 12, 41, 0.98) 100%);
             border-radius: 24px 24px 0 0;
             padding: 0 0 30px 0;
             position: relative;
@@ -1255,7 +1255,7 @@
         body.theme-light .content-container {
             background: linear-gradient(180deg, 
                 rgba(245, 245, 247, 0.95) 0%,
-                rgba(255, 255, 255, 0.98) 100%);
+                rgba(245, 245, 247, 0.98) 100%);
             border: 1px solid rgba(0, 0, 0, 0.2);
         }
 
@@ -2347,6 +2347,146 @@
         }
         .player-info { flex: 1; min-width: 0; }
         
+        /* ========== НОВЫЙ ПОЛНОЭКРАННЫЙ ПЛЕЕР ========== */
+        .full-player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 12, 0.98);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            z-index: 2000;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            touch-action: pan-y;
+        }
+        .full-player.active {
+            transform: translateY(0);
+        }
+        .full-player .player-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            transition: 0.2s;
+        }
+        .full-player .player-close:active {
+            transform: scale(0.92);
+        }
+        .full-player .full-cover {
+            width: 280px;
+            height: 280px;
+            border-radius: 24px;
+            object-fit: cover;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            margin: 60px 0 30px;
+        }
+        .full-player .full-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 20px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        .full-player .full-artist {
+            font-size: 18px;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        .full-player .player-progress {
+            width: 85%;
+            margin: 30px 0 20px;
+            position: relative;
+        }
+        .full-player .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        .full-player .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+        .full-player .time-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+        .full-player .full-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+        }
+        .full-player .ctrl-btn {
+            background: none;
+            border: none;
+            width: 56px;
+            height: 56px;
+            border-radius: 40px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .full-player .ctrl-btn:active {
+            transform: scale(0.92);
+        }
+        .full-player .ctrl-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+        .full-player .ctrl-main {
+            background: white;
+            width: 72px;
+            height: 72px;
+        }
+        .full-player .ctrl-main svg {
+            fill: black;
+        }
+        .full-player .ctrl-heart svg {
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+        }
+        .full-player .ctrl-heart.liked svg {
+            fill: #ff3b30;
+            stroke: #ff3b30;
+        }
+
         .nav-glass {
             position: fixed;
             bottom: 20px;
@@ -3240,7 +3380,7 @@
                         <div class="blob blob-2"></div>
                     </div>
                 </div>
-                <div class="swipe-hint shimmer">Проведите, чтобы включить свои треки ← → 🥘🥘</div>
+                <div class="swipe-hint shimmer">← Проведите, чтобы включить свои треки → </div>
                 <div class="content-container" id="contentContainer">
                     <div class="image-container" id="bannerContainer">
                         <div class="close-banner" onclick="closeBanner(event)">✕</div>
@@ -3279,44 +3419,44 @@
                     <div class="recommend-carousel" id="recommendCarousel">
                         <div class="track-column">
                             <div class="track-item" data-track-id="rec1">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/100/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">SMS (Slowed)</div><div class="track-meta"><span class="explicit-badge">E</span>UncleFlexxx</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
                             <div class="track-item" data-track-id="rec2">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/101/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">Весь этот мир</div><div class="track-meta">Русский Размер</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
                             <div class="track-item" data-track-id="rec3">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1619983081563-430f63602796?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/102/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">NOBODY</div><div class="track-meta"><span class="explicit-badge">E</span>Aarne, Toxi$, Tape</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
                             <div class="track-item" data-track-id="rec4">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1514525253361-bee8718a342b?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/103/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">Save Your Tears</div><div class="track-meta"><span class="explicit-badge">E</span>The Weeknd</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
                         </div>
                         <div class="track-column">
                             <div class="track-item" data-track-id="rec5">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/104/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">Paint Town Red</div><div class="track-meta"><span class="explicit-badge">E</span>Doja Cat</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
                             <div class="track-item" data-track-id="rec6">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/105/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">FE!N</div><div class="track-meta"><span class="explicit-badge">E</span>Travis Scott</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
                             <div class="track-item" data-track-id="rec7">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/106/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">Rumble</div><div class="track-meta">Skrillex</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
                             <div class="track-item" data-track-id="rec8">
-                                <div class="track-cover-wrapper"><img src="https://images.unsplash.com/photo-1526218626217-dc65a29bb444?w=200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
+                                <div class="track-cover-wrapper"><img src="https://picsum.photos/id/107/200/200" class="track-cover"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div>
                                 <div class="track-info"><div class="track-name">LUNCH</div><div class="track-meta">Billie Eilish</div></div>
                                 <button class="menu-btn"><svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </div>
@@ -3332,11 +3472,11 @@
                             <!-- 1. The Weeknd -->
                             <div class="author-card">
                                 <div class="author-photo-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600" class="author-photo" alt="The Weeknd">
+                                    <img src="https://picsum.photos/id/108/600/400" class="author-photo" alt="The Weeknd">
                                     <div class="author-name-overlay">The Weeknd</div>
                                 </div>
                                 <div class="track-bar">
-                                    <img src="https://images.unsplash.com/photo-1619983081563-430f63602796?w=200" class="track-cover-small">
+                                    <img src="https://picsum.photos/id/103/200/200" class="track-cover-small">
                                     <div class="track-info">
                                         <span class="track-name">Blinding Lights</span>
                                     </div>
@@ -3349,11 +3489,11 @@
                             <!-- 2. Miyagi -->
                             <div class="author-card">
                                 <div class="author-photo-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=600" class="author-photo" alt="Miyagi">
+                                    <img src="https://picsum.photos/id/109/600/400" class="author-photo" alt="Miyagi">
                                     <div class="author-name-overlay">Miyagi</div>
                                 </div>
                                 <div class="track-bar">
-                                    <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=200" class="track-cover-small">
+                                    <img src="https://picsum.photos/id/101/200/200" class="track-cover-small">
                                     <div class="track-info">
                                         <span class="track-name">I Got Love</span>
                                     </div>
@@ -3366,11 +3506,11 @@
                             <!-- 3. Doja Cat -->
                             <div class="author-card">
                                 <div class="author-photo-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=600" class="author-photo" alt="Doja Cat">
+                                    <img src="https://picsum.photos/id/110/600/400" class="author-photo" alt="Doja Cat">
                                     <div class="author-name-overlay">Doja Cat</div>
                                 </div>
                                 <div class="track-bar">
-                                    <img src="https://images.unsplash.com/photo-1496293455970-f8581aae0e3c?w=200" class="track-cover-small">
+                                    <img src="https://picsum.photos/id/104/200/200" class="track-cover-small">
                                     <div class="track-info">
                                         <span class="track-name">Paint The Town Red</span>
                                     </div>
@@ -3383,11 +3523,11 @@
                             <!-- 4. Skrillex -->
                             <div class="author-card">
                                 <div class="author-photo-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600" class="author-photo" alt="Skrillex">
+                                    <img src="https://picsum.photos/id/111/600/400" class="author-photo" alt="Skrillex">
                                     <div class="author-name-overlay">Skrillex</div>
                                 </div>
                                 <div class="track-bar">
-                                    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=200" class="track-cover-small">
+                                    <img src="https://picsum.photos/id/106/200/200" class="track-cover-small">
                                     <div class="track-info">
                                         <span class="track-name">Rumble</span>
                                     </div>
@@ -3400,11 +3540,11 @@
                             <!-- 5. Travis Scott -->
                             <div class="author-card">
                                 <div class="author-photo-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600" class="author-photo" alt="Travis Scott">
+                                    <img src="https://picsum.photos/id/112/600/400" class="author-photo" alt="Travis Scott">
                                     <div class="author-name-overlay">Travis Scott</div>
                                 </div>
                                 <div class="track-bar">
-                                    <img src="https://images.unsplash.com/photo-1459749411177-042180ce673c?w=200" class="track-cover-small">
+                                    <img src="https://picsum.photos/id/105/200/200" class="track-cover-small">
                                     <div class="track-info">
                                         <span class="track-name">FE!N</span>
                                     </div>
@@ -3417,11 +3557,11 @@
                             <!-- 6. Billie Eilish -->
                             <div class="author-card">
                                 <div class="author-photo-wrapper">
-                                    <img src="https://images.unsplash.com/photo-1526218626217-dc65a29bb444?w=600" class="author-photo" alt="Billie Eilish">
+                                    <img src="https://picsum.photos/id/113/600/400" class="author-photo" alt="Billie Eilish">
                                     <div class="author-name-overlay">Billie Eilish</div>
                                 </div>
                                 <div class="track-bar">
-                                    <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=200" class="track-cover-small">
+                                    <img src="https://picsum.photos/id/107/200/200" class="track-cover-small">
                                     <div class="track-info">
                                         <span class="track-name">LUNCH</span>
                                     </div>
@@ -3717,7 +3857,8 @@
             <div class="category-page" id="trendsPage" style="display: none;"></div>
         </div>
     </div>
-    <!-- Плеер -->
+
+    <!-- Мини-плеер (пилюля) -->
     <div class="player-stage" id="playerStage">
         <div class="player" id="playerBar">
             <button class="play-btn" id="playerPlayBtn"></button>
@@ -3730,7 +3871,38 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- НОВЫЙ ПОЛНОЭКРАННЫЙ ПЛЕЕР -->
+    <div class="full-player" id="fullPlayer">
+        <div class="player-close" onclick="closeFullPlayer()">✕</div>
+        <img class="full-cover" id="fullCover" src="https://picsum.photos/id/100/280/280" alt="cover">
+        <div class="full-title" id="fullTitle">Выберите трек</div>
+        <div class="full-artist" id="fullArtist">Нажмите на трек</div>
+        <div class="player-progress">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="time-row">
+                <span id="currentTime">0:00</span>
+                <span id="totalTime">3:30</span>
+            </div>
+        </div>
+        <div class="full-controls">
+            <button class="ctrl-btn" id="fullPrevBtn">
+                <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+            </button>
+            <button class="ctrl-btn ctrl-main" id="fullPlayPauseBtn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="ctrl-btn" id="fullNextBtn">
+                <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+            </button>
+            <button class="ctrl-btn ctrl-heart" id="fullHeartBtn">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </button>
+        </div>
+    </div>
+
     <nav class="nav-glass">
         <div class="liquid-pill" id="pill"></div>
         <a href="#" class="nav-item active" onclick="activateTab(0, this, 'animate-music')">
@@ -3816,8 +3988,7 @@
             </div>
         </div>
     </div>
-
-    <script>
+<script>
         // ===================== ВСЕ ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ =====================
         let currentPage = 'music';
         let lastMainPage = 'music';
@@ -3845,6 +4016,12 @@
         let sheetCurrentY = 0;
         let sheetIsDragging = false;
 
+        // Переменные для нового полноэкранного плеера
+        let fullPlayerActive = false;
+        let progressInterval = null;
+        let currentDuration = 210; // секунд (3:30 по умолчанию)
+        let currentTimeSec = 0;
+
         let currentSoundSettings = {
             activity: 'В дороге',
             source: 'избранное',
@@ -3868,14 +4045,14 @@
         ];
 
         const testImages = [
-            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1519281682544-5b00a8dc84ea?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1529255484355-cb73c33c04bb?w=400&h=400&fit=crop'
+            'https://picsum.photos/id/100/400/400',
+            'https://picsum.photos/id/101/400/400',
+            'https://picsum.photos/id/102/400/400',
+            'https://picsum.photos/id/103/400/400',
+            'https://picsum.photos/id/104/400/400',
+            'https://picsum.photos/id/105/400/400',
+            'https://picsum.photos/id/106/400/400',
+            'https://picsum.photos/id/107/400/400'
         ];
 
         const onAirData = [
@@ -4033,9 +4210,170 @@
             { id: 'light', name: 'Дневная', description: 'Светлая тема для комфортного использования днем', iconClass: 'light' },
             { id: 'auto', name: 'Авто', description: 'Автоматическое переключение в зависимости от времени суток', iconClass: 'auto' }
         ];
-// ========== ПРОДОЛЖЕНИЕ JAVASCRIPT ==========
 
-        // ===================== ФУНКЦИИ =====================
+        // ========== ФУНКЦИИ ДЛЯ НОВОГО ПОЛНОЭКРАННОГО ПЛЕЕРА ==========
+        
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s < 10 ? '0' + s : s}`;
+        }
+
+        function startProgressTimer() {
+            if (progressInterval) clearInterval(progressInterval);
+            if (!isPlaying) return;
+            progressInterval = setInterval(() => {
+                if (isPlaying && currentTrack && currentTimeSec < currentDuration) {
+                    currentTimeSec += 1;
+                    if (currentTimeSec >= currentDuration) {
+                        currentTimeSec = currentDuration;
+                    }
+                    updateProgressUI();
+                } else if (currentTimeSec >= currentDuration) {
+                    clearInterval(progressInterval);
+                }
+            }, 1000);
+        }
+
+        function stopProgressTimer() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+        }
+
+        function updateProgressUI() {
+            const fill = document.getElementById('progressFill');
+            const currentSpan = document.getElementById('currentTime');
+            const totalSpan = document.getElementById('totalTime');
+            if (fill) fill.style.width = `${(currentTimeSec / currentDuration) * 100}%`;
+            if (currentSpan) currentSpan.textContent = formatTime(currentTimeSec);
+            if (totalSpan) totalSpan.textContent = formatTime(currentDuration);
+        }
+
+        function resetProgress(newDurationSec) {
+            currentDuration = newDurationSec || 210;
+            currentTimeSec = 0;
+            updateProgressUI();
+            if (isPlaying) {
+                stopProgressTimer();
+                startProgressTimer();
+            }
+        }
+
+        function openFullPlayer() {
+            if (!currentTrack) return;
+            const fullPlayer = document.getElementById('fullPlayer');
+            if (!fullPlayer) return;
+            fullPlayer.classList.add('active');
+            fullPlayerActive = true;
+            syncFullPlayerUI();
+        }
+
+        function closeFullPlayer() {
+            const fullPlayer = document.getElementById('fullPlayer');
+            if (!fullPlayer) return;
+            fullPlayer.classList.remove('active');
+            fullPlayerActive = false;
+        }
+
+        function syncFullPlayerUI() {
+            if (!currentTrack) return;
+            const fullCover = document.getElementById('fullCover');
+            const fullTitle = document.getElementById('fullTitle');
+            const fullArtist = document.getElementById('fullArtist');
+            const fullHeart = document.getElementById('fullHeartBtn');
+            const fullPlayPause = document.getElementById('fullPlayPauseBtn');
+            
+            if (fullCover) fullCover.src = currentTrack.image || testImages[0];
+            if (fullTitle) fullTitle.textContent = currentTrack.title || 'Без названия';
+            if (fullArtist) fullArtist.textContent = currentTrack.artist || 'Неизвестный исполнитель';
+            
+            if (fullHeart) {
+                if (likedTracks.has(currentTrack.id)) {
+                    fullHeart.classList.add('liked');
+                } else {
+                    fullHeart.classList.remove('liked');
+                }
+            }
+            
+            if (fullPlayPause) {
+                const svg = fullPlayPause.querySelector('svg');
+                if (svg) {
+                    if (isPlaying) {
+                        svg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    } else {
+                        svg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    }
+                }
+            }
+            
+            if (currentTrack.duration) {
+                const parts = currentTrack.duration.split(':');
+                let sec = 0;
+                if (parts.length === 2) sec = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+                else if (parts.length === 1) sec = parseInt(parts[0]);
+                if (!isNaN(sec) && sec > 0) currentDuration = sec;
+                else currentDuration = 210;
+            } else {
+                currentDuration = 210;
+            }
+            if (currentTimeSec > currentDuration) currentTimeSec = currentDuration;
+            updateProgressUI();
+        }
+
+        function toggleFullPlayerPlay() {
+            togglePlay();
+            const fullPlayPause = document.getElementById('fullPlayPauseBtn');
+            if (fullPlayPause) {
+                const svg = fullPlayPause.querySelector('svg');
+                if (svg) {
+                    if (isPlaying) {
+                        svg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    } else {
+                        svg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    }
+                }
+            }
+        }
+
+        function fullPlayerNext() {
+            navigatePlayerTrack(1);
+        }
+
+        function fullPlayerPrev() {
+            navigatePlayerTrack(-1);
+        }
+
+        function fullPlayerLike() {
+            if (currentTrack) {
+                addToPreferences(currentTrack);
+                const fullHeart = document.getElementById('fullHeartBtn');
+                if (fullHeart) {
+                    if (likedTracks.has(currentTrack.id)) {
+                        fullHeart.classList.add('liked');
+                    } else {
+                        fullHeart.classList.remove('liked');
+                    }
+                }
+            }
+        }
+
+        function handleProgressSeek(e) {
+            const bar = document.getElementById('progressBar');
+            if (!bar) return;
+            const rect = bar.getBoundingClientRect();
+            let clientX;
+            if (e.touches) clientX = e.touches[0].clientX;
+            else clientX = e.clientX;
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.min(Math.max(percent, 0), 1);
+            currentTimeSec = Math.floor(percent * currentDuration);
+            updateProgressUI();
+        }
+
+        // ========== ОСТАЛЬНЫЕ СУЩЕСТВУЮЩИЕ ФУНКЦИИ ==========
+        
         function updateNavigation(page) {
             const musicNav = document.querySelector('.nav-glass .nav-item:first-child');
             const collectionNav = document.querySelector('.nav-glass .nav-item:last-child');
@@ -4083,6 +4421,7 @@
                 document.body.classList.add('settings-mode');
                 currentPage = 'settings';
             }
+            if (fullPlayerActive) closeFullPlayer();
         }
 
         function goBack() {
@@ -4244,6 +4583,7 @@
                 listenBtn.innerHTML = '❚❚ Слушать';
             }
             renderPodcasts();
+            syncAllPlayingStates();
         }
 
         function renderPodcasts() {
@@ -4287,9 +4627,10 @@
                 card.className = 'on-air-card';
                 card.setAttribute('data-artists', item.artists);
                 card.onclick = () => {
+                    // Убираем выделение со всех карточек
                     document.querySelectorAll('.on-air-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
-                    playGenreTrack('На слуху', item.artists, item.img);
+                    playGenreTrack(item.artists, item.artists, item.img);
                 };
                 card.innerHTML = `<img src="${item.img}" alt="album"><div class="on-air-card-text">${item.artists}</div>`;
                 container.appendChild(card);
@@ -4318,12 +4659,9 @@
                 isPlaying: true
             });
             addToRecentlyPlayed(track);
-            renderPodcasts();
-            syncRecommendPlayingState();
-            syncGenrePlayingState();
+            syncAllPlayingStates();
         }
 
-        // Обновлённая функция рендера треков по жанрам (единый стиль с рекомендациями)
         function renderGenreTracks(genre) {
             const container = document.getElementById('musicContainer');
             if (!container) return;
@@ -4346,7 +4684,7 @@
                 const columnTracks = tracks.slice(startIndex, endIndex);
                 columnTracks.forEach(t => {
                     const trackElem = document.createElement('div');
-                    trackElem.className = 'genre-track-item'; // новый класс
+                    trackElem.className = 'genre-track-item';
                     trackElem.setAttribute('data-track-name', t.n);
                     trackElem.setAttribute('data-track-artist', t.a);
                     trackElem.onclick = () => {
@@ -4354,8 +4692,6 @@
                         currentTrackIndex = tracks.indexOf(t);
                         playGenreTrack(t.n, t.a, t.img);
                     };
-                    
-                    // Обёртка для обложки с анимацией
                     const coverWrapper = document.createElement('div');
                     coverWrapper.className = 'track-cover-wrapper';
                     coverWrapper.innerHTML = `
@@ -4367,7 +4703,6 @@
                     const trackInfoDiv = document.createElement('div');
                     trackInfoDiv.className = 'track-info';
                     trackInfoDiv.innerHTML = `<div class="track-name">${escapeHtml(t.n)}</div><div class="track-meta">${escapeHtml(t.a)}</div>`;
-                    
                     const optionsBtn = document.createElement('button');
                     optionsBtn.className = 'genre-track-options';
                     optionsBtn.innerHTML = '⋯';
@@ -4375,7 +4710,6 @@
                         e.stopPropagation();
                         openTrackActions({ id: t.n, title: t.n, artist: t.a, image: t.img }, e);
                     };
-                    
                     trackElem.appendChild(coverWrapper);
                     trackElem.appendChild(trackInfoDiv);
                     trackElem.appendChild(optionsBtn);
@@ -4383,26 +4717,7 @@
                 });
                 container.appendChild(column);
             }
-            syncGenrePlayingState();
-        }
-
-        // Синхронизация состояния "играет" для жанровых треков
-        function syncGenrePlayingState() {
-            if (!currentTrack) {
-                document.querySelectorAll('.genre-track-item').forEach(el => el.classList.remove('is-playing'));
-                return;
-            }
-            const trackName = currentTrack.title;
-            const artistName = currentTrack.artist;
-            document.querySelectorAll('.genre-track-item').forEach(el => {
-                const nameEl = el.querySelector('.track-name');
-                const artistEl = el.querySelector('.track-meta');
-                if (nameEl && artistEl && nameEl.innerText === trackName && artistEl.innerText === artistName) {
-                    el.classList.add('is-playing');
-                } else {
-                    el.classList.remove('is-playing');
-                }
-            });
+            syncAllPlayingStates();
         }
 
         function playPodcast(podcastId) {
@@ -4455,6 +4770,7 @@
                     listenBtn.innerHTML = '❚❚ Слушать';
                 }
             }
+            syncAllPlayingStates();
         }
 
         function toggleSavePodcast(podcastId) {
@@ -4492,8 +4808,23 @@
                     }
                 }
             }
-            syncRecommendPlayingState();
-            syncGenrePlayingState();
+            syncAllPlayingStates();
+            if (isPlaying) {
+                startProgressTimer();
+            } else {
+                stopProgressTimer();
+            }
+            const fullPlayPause = document.getElementById('fullPlayPauseBtn');
+            if (fullPlayPause) {
+                const svg = fullPlayPause.querySelector('svg');
+                if (svg) {
+                    if (isPlaying) {
+                        svg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    } else {
+                        svg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    }
+                }
+            }
         }
 
         function addToRecentlyPlayed(track) {
@@ -4526,7 +4857,6 @@
             document.getElementById('forYouPage').style.display = 'none';
             document.getElementById('trendsPage').style.display = 'none';
             document.getElementById('playlistScreen').classList.remove('active');
-
             document.body.classList.add('settings-mode');
             const recentPage = document.getElementById('recentPage');
             recentPage.classList.add('active');
@@ -4559,8 +4889,7 @@
                     });
                     addToRecentlyPlayed(track);
                     showNotification(`▶ ${track.title} — ${track.artist}`);
-                    syncRecommendPlayingState();
-                    syncGenrePlayingState();
+                    syncAllPlayingStates();
                 };
                 const optionsClick = (e) => {
                     e.stopPropagation();
@@ -4761,6 +5090,7 @@
                 });
                 container.appendChild(column);
             }
+            syncAllPlayingStates();
         }
 
         function escapeHtml(str) {
@@ -4866,8 +5196,7 @@
                 };
                 updatePlayer({ title: currentAlbum.title, artist: currentAlbum.artist, album: currentAlbum.title, image: currentAlbum.image, isPlaying: true });
                 addToRecentlyPlayed(albumTrack);
-                syncRecommendPlayingState();
-                syncGenrePlayingState();
+                syncAllPlayingStates();
             }
         }
 
@@ -4875,8 +5204,7 @@
             showNotification(`▶ Воспроизведение: ${track.title} - ${track.artist}`);
             updatePlayer({ title: track.title, artist: track.artist, album: track.album, image: track.image, isPlaying: true });
             addToRecentlyPlayed(track);
-            syncRecommendPlayingState();
-            syncGenrePlayingState();
+            syncAllPlayingStates();
         }
 
         function openTrack(track, source) {
@@ -4885,16 +5213,14 @@
             showNotification(`▶ Воспроизведение: ${track.title} - ${track.artist}`);
             updatePlayer({ title: track.title, artist: track.artist, album: track.album, image: track.image, isPlaying: true });
             addToRecentlyPlayed(track);
-            syncRecommendPlayingState();
-            syncGenrePlayingState();
+            syncAllPlayingStates();
         }
 
         function playTrackFromCollection(track) {
             showNotification(`▶ Воспроизведение из коллекции: ${track.title} - ${track.artist}`);
             updatePlayer({ title: track.title, artist: track.artist, album: track.album, image: track.image, isPlaying: true });
             addToRecentlyPlayed(track);
-            syncRecommendPlayingState();
-            syncGenrePlayingState();
+            syncAllPlayingStates();
         }
 
         function addToPreferences(track) {
@@ -4908,6 +5234,10 @@
             const heartBtn = document.getElementById('playerHeartBtn');
             if (heartBtn && currentTrack && currentTrack.id === track.id) {
                 heartBtn.classList.toggle('liked', likedTracks.has(track.id));
+            }
+            const fullHeart = document.getElementById('fullHeartBtn');
+            if (fullHeart && currentTrack && currentTrack.id === track.id) {
+                fullHeart.classList.toggle('liked', likedTracks.has(track.id));
             }
             updateCollectionPage();
             const countSpan = document.getElementById('collectionCount');
@@ -4982,8 +5312,7 @@
                 showNotification(`▶ ${currentTrack.title} — ${currentTrack.artist}`);
                 updatePlayer({ title: currentTrack.title, artist: currentTrack.artist, isPlaying: true });
                 addToRecentlyPlayed(currentTrack);
-                syncRecommendPlayingState();
-                syncGenrePlayingState();
+                syncAllPlayingStates();
 
                 if (pill) {
                     pill.style.transition = 'none';
@@ -5004,8 +5333,85 @@
             if (playBtn) playBtn.addEventListener('click', togglePlay);
             const heartBtn = document.getElementById('playerHeartBtn');
             if (heartBtn) heartBtn.addEventListener('click', toggleLikeCurrentTrack);
+            
+            const fullPlayPause = document.getElementById('fullPlayPauseBtn');
+            if (fullPlayPause) fullPlayPause.addEventListener('click', toggleFullPlayerPlay);
+            const fullPrev = document.getElementById('fullPrevBtn');
+            if (fullPrev) fullPrev.addEventListener('click', fullPlayerPrev);
+            const fullNext = document.getElementById('fullNextBtn');
+            if (fullNext) fullNext.addEventListener('click', fullPlayerNext);
+            const fullHeart = document.getElementById('fullHeartBtn');
+            if (fullHeart) fullHeart.addEventListener('click', fullPlayerLike);
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.addEventListener('click', handleProgressSeek);
+                progressBar.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleProgressSeek(e);
+                });
+            }
+            
             const playerStage = document.getElementById('playerStage');
-            const playerBar   = document.getElementById('playerBar');
+            if (playerStage) {
+                let touchStartY = 0;
+                let touchMoveY = 0;
+                let isVerticalSwipe = false;
+                playerStage.addEventListener('touchstart', (e) => {
+                    touchStartY = e.touches[0].clientY;
+                    touchMoveY = touchStartY;
+                    isVerticalSwipe = false;
+                }, { passive: true });
+                playerStage.addEventListener('touchmove', (e) => {
+                    touchMoveY = e.touches[0].clientY;
+                    const deltaY = touchMoveY - touchStartY;
+                    if (!isVerticalSwipe && Math.abs(deltaY) > 10) {
+                        isVerticalSwipe = true;
+                    }
+                    if (isVerticalSwipe && deltaY < 0 && Math.abs(deltaY) > 20) {
+                        if (currentTrack) openFullPlayer();
+                    }
+                }, { passive: true });
+            }
+            
+            const fullPlayer = document.getElementById('fullPlayer');
+            if (fullPlayer) {
+                let touchStartY = 0;
+                let touchMoveY = 0;
+                let isDraggingDown = false;
+                fullPlayer.addEventListener('touchstart', (e) => {
+                    touchStartY = e.touches[0].clientY;
+                    touchMoveY = touchStartY;
+                    isDraggingDown = false;
+                }, { passive: true });
+                fullPlayer.addEventListener('touchmove', (e) => {
+                    touchMoveY = e.touches[0].clientY;
+                    const deltaY = touchMoveY - touchStartY;
+                    if (!isDraggingDown && deltaY > 10) {
+                        isDraggingDown = true;
+                    }
+                    if (isDraggingDown) {
+                        e.preventDefault();
+                        const percent = Math.min(100, (deltaY / window.innerHeight) * 100);
+                        fullPlayer.style.transform = `translateY(${percent}%)`;
+                    }
+                }, { passive: false });
+                fullPlayer.addEventListener('touchend', () => {
+                    if (isDraggingDown) {
+                        const transform = fullPlayer.style.transform;
+                        let percent = 0;
+                        if (transform) {
+                            const match = transform.match(/translateY\(([\d.]+)%\)/);
+                            if (match) percent = parseFloat(match[1]);
+                        }
+                        if (percent > 15) {
+                            closeFullPlayer();
+                        }
+                        fullPlayer.style.transform = '';
+                    }
+                });
+            }
+            
+            const playerBar = document.getElementById('playerBar');
             if (playerStage && playerBar) {
                 let dragStartX = 0, dragStartY = 0, dragCurrentX = 0;
                 let isDragging = false, dirLocked = false, isHoriz = false;
@@ -5050,6 +5456,93 @@
             }
         }
 
+        function syncAllPlayingStates() {
+            syncRecommendPlayingState();
+            syncForYouPlayingState();
+            syncGenrePlayingState();
+            syncOnAirPlayingState();
+        }
+
+        function syncRecommendPlayingState() {
+            if (!currentTrack) {
+                document.querySelectorAll('.track-item').forEach(el => el.classList.remove('is-playing'));
+                return;
+            }
+            const trackName = currentTrack.title;
+            const artistName = currentTrack.artist;
+            document.querySelectorAll('.track-item').forEach(item => {
+                const nameEl = item.querySelector('.track-name');
+                const metaEl = item.querySelector('.track-meta');
+                if (!nameEl || !metaEl) return;
+                const name = nameEl.innerText;
+                const meta = metaEl.innerText;
+                const isMatch = (name === trackName && (meta.includes(artistName) || meta === artistName));
+                if (isMatch) {
+                    item.classList.add('is-playing');
+                } else {
+                    item.classList.remove('is-playing');
+                }
+            });
+        }
+
+        function syncForYouPlayingState() {
+            if (!currentTrack) {
+                document.querySelectorAll('.tracks-columns-container .track-item').forEach(el => el.classList.remove('is-playing'));
+                return;
+            }
+            const trackName = currentTrack.title;
+            const artistName = currentTrack.artist;
+            document.querySelectorAll('.tracks-columns-container .track-item').forEach(item => {
+                const nameEl = item.querySelector('.track-name');
+                const metaEl = item.querySelector('.track-meta');
+                if (!nameEl || !metaEl) return;
+                const name = nameEl.innerText;
+                const meta = metaEl.innerText;
+                const isMatch = (name === trackName && (meta.includes(artistName) || meta === artistName));
+                if (isMatch) {
+                    item.classList.add('is-playing');
+                } else {
+                    item.classList.remove('is-playing');
+                }
+            });
+        }
+
+        function syncGenrePlayingState() {
+            if (!currentTrack) {
+                document.querySelectorAll('.genre-track-item').forEach(el => el.classList.remove('is-playing'));
+                return;
+            }
+            const trackName = currentTrack.title;
+            const artistName = currentTrack.artist;
+            document.querySelectorAll('.genre-track-item').forEach(el => {
+                const nameEl = el.querySelector('.track-name');
+                const artistEl = el.querySelector('.track-meta');
+                if (nameEl && artistEl && nameEl.innerText === trackName && artistEl.innerText === artistName) {
+                    el.classList.add('is-playing');
+                } else {
+                    el.classList.remove('is-playing');
+                }
+            });
+        }
+
+        function syncOnAirPlayingState() {
+            // Снимаем выделение со всех карточек, если трек не из "На слуху"
+            if (!currentTrack || !currentTrack.genre) {
+                document.querySelectorAll('.on-air-card').forEach(c => c.classList.remove('selected'));
+                return;
+            }
+            // Если трек из "На слуху" - ищем соответствующую карточку
+            const trackArtist = currentTrack.artist;
+            document.querySelectorAll('.on-air-card').forEach(card => {
+                const artists = card.getAttribute('data-artists');
+                if (artists === trackArtist) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        }
+
         function toggleLikeCurrentTrack() {
             if (currentTrack) addToPreferences(currentTrack);
             else showNotification('Сначала выберите трек');
@@ -5065,6 +5558,8 @@
                 isPlaying = data.isPlaying;
                 const playBtn = document.getElementById('playerPlayBtn');
                 if (playBtn) playBtn.classList.toggle('playing', isPlaying);
+                if (isPlaying) startProgressTimer();
+                else stopProgressTimer();
             }
             const heartBtn = document.getElementById('playerHeartBtn');
             if (heartBtn && currentTrack) {
@@ -5072,6 +5567,18 @@
             }
             if (playerStage && data.title) {
                 playerStage.classList.add('visible');
+            }
+            if (fullPlayerActive) {
+                syncFullPlayerUI();
+            } else {
+                syncFullPlayerUI();
+            }
+            if (data.title && currentTrack) {
+                resetProgress(currentTrack.duration ? (() => {
+                    const parts = currentTrack.duration.split(':');
+                    if (parts.length === 2) return parseInt(parts[0])*60 + parseInt(parts[1]);
+                    return 210;
+                })() : 210);
             }
         }
 
@@ -5083,6 +5590,7 @@
                 isPlaying = true;
                 const playBtn = document.getElementById('playerPlayBtn');
                 if (playBtn) playBtn.classList.add('playing');
+                startProgressTimer();
             } else {
                 showNotification('Сначала настройте звук');
                 openSoundSettings();
@@ -5195,7 +5703,6 @@
             document.getElementById('podcastDetailPage').style.display = 'none';
             document.getElementById('recentPage').style.display = 'none';
             document.getElementById('playlistScreen').classList.remove('active');
-
             document.body.classList.add('settings-mode');
 
             let pageId, tracks, coverTitle, gradientClass;
@@ -5417,8 +5924,7 @@
                     updatePlayer({ title: t.title, artist: t.artist, album: t.album, image: t.image, isPlaying: true });
                     addToRecentlyPlayed(currentTrack);
                     showNotification(`▶ ${t.title} — ${t.artist}`);
-                    syncRecommendPlayingState();
-                    syncGenrePlayingState();
+                    syncAllPlayingStates();
                 };
                 trackItem.innerHTML = `
                     <div class="p-track-img" style="background-image: url('${t.image}'); background-size: cover;"></div>
@@ -5532,27 +6038,6 @@
             }
         }
 
-        function syncRecommendPlayingState() {
-            if (!currentTrack) {
-                document.querySelectorAll('.track-item').forEach(el => el.classList.remove('is-playing'));
-                return;
-            }
-            const trackName = currentTrack.title;
-            const artistName = currentTrack.artist;
-            const foundItem = Array.from(document.querySelectorAll('.track-item')).find(item => {
-                const nameEl = item.querySelector('.track-name');
-                const metaEl = item.querySelector('.track-meta');
-                if (!nameEl || !metaEl) return false;
-                const name = nameEl.innerText;
-                const meta = metaEl.innerText;
-                return (name === trackName && meta.includes(artistName)) || (name === trackName && meta === artistName);
-            });
-            document.querySelectorAll('.track-item').forEach(el => el.classList.remove('is-playing'));
-            if (foundItem) {
-                foundItem.classList.add('is-playing');
-            }
-        }
-
         function setupRecommendHandlers() {
             const carousel = document.getElementById('recommendCarousel');
             if (!carousel) return;
@@ -5574,9 +6059,7 @@
                     return;
                 }
                 const isCurrentlyPlaying = trackItem.classList.contains('is-playing');
-                carousel.querySelectorAll('.track-item').forEach(t => t.classList.remove('is-playing'));
                 if (!isCurrentlyPlaying) {
-                    trackItem.classList.add('is-playing');
                     const trackTitle = trackItem.querySelector('.track-name').innerText;
                     const trackArtistElem = trackItem.querySelector('.track-meta');
                     let trackArtist = '';
@@ -5636,7 +6119,7 @@
             renderOnAir();
             setupSheetTouchEvents();
             setupRecommendHandlers();
-            syncRecommendPlayingState();
+            syncAllPlayingStates();
             
             const pill = document.getElementById('pill');
             if (pill) {
@@ -5748,6 +6231,8 @@
         window.addToPreferencesFromSheet = addToPreferencesFromSheet;
         window.activateTab = activateTab;
         window.toggleAuthorPlay = toggleAuthorPlay;
+        window.openFullPlayer = openFullPlayer;
+        window.closeFullPlayer = closeFullPlayer;
     </script>
 </body>
 </html>
