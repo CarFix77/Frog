@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.2.3/css/flag-icons.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         /* ============================================================
            CSS CUSTOM PROPERTIES — ТЁМНАЯ И СВЕТЛАЯ ТЕМЫ
@@ -23,9 +24,9 @@
             --bg-card-active: rgba(255, 255, 255, 0.09);
             --bg-btn: rgba(255, 255, 255, 0.05);
             --bg-btn-hover: rgba(255, 255, 255, 0.10);
-            --bg-ring: #13192d;
-            --bg-ring-bg: #1f2740;
-            --bg-inner: #141c2e;
+            --bg-ring: #2a2a2a;             /* тёмно-серый */
+            --bg-ring-bg: #3a3a3a;           /* тёмно-серый */
+            --bg-inner: #4a4a5e;             /* светло-серый для тёмной темы */
             --bg-server-card: rgba(255, 255, 255, 0.03);
             --bg-server-card-hover: rgba(255, 255, 255, 0.06);
             --bg-server-container: rgba(6, 42, 94, 0.6);
@@ -72,13 +73,17 @@
             --power-inner-shadow: inset 0 5px 20px rgba(0, 0, 0, 0.7);
             --power-inner-shadow-active: inset 0 5px 30px rgba(0, 0, 0, 0.8), 0 0 30px rgba(74, 122, 255, 0.08);
 
-            /* Нижняя панель — тёмная, с размытием */
-            --nav-bg: rgba(0, 0, 0, 0.6);
+            /* Нижняя панель */
+            --nav-bg: rgba(20, 20, 30, 0.85);
             --nav-indicator-bg: rgba(255, 255, 255, 0.12);
             --nav-icon-color: rgba(255, 255, 255, 0.7);
             --nav-label-color: rgba(255, 255, 255, 0.5);
             --nav-icon-active: #ffffff;
             --nav-label-active: #ffffff;
+
+            /* Кнопки в светлой теме */
+            --light-btn-bg: #ffffff;
+            --light-btn-text: #1e293b;
         }
 
         /* ===== СВЕТЛАЯ ТЕМА ===== */
@@ -93,9 +98,9 @@
             --bg-card-active: rgba(74, 122, 255, 0.08);
             --bg-btn: rgba(0, 0, 0, 0.04);
             --bg-btn-hover: rgba(0, 0, 0, 0.08);
-            --bg-ring: #d0d8e8;
-            --bg-ring-bg: #e8ecf5;
-            --bg-inner: #f0f4ff;
+            --bg-ring: #d0d0d0;
+            --bg-ring-bg: #e8e8e8;
+            --bg-inner: #ffffff; /* чисто белый для светлой темы */
             --bg-server-card: rgba(255, 255, 255, 0.7);
             --bg-server-card-hover: rgba(255, 255, 255, 0.9);
             --bg-server-container: rgba(255, 255, 255, 0.7);
@@ -128,8 +133,6 @@
 
             --gradient-add-btn: linear-gradient(135deg, #4a7aff, #3a5fd5);
 
-            --bg-ring-bg: #d8def0;
-            --bg-inner: #eef2fc;
             --bg-server-container: rgba(255, 255, 255, 0.65);
             --bg-server-container-hover: rgba(255, 255, 255, 0.8);
 
@@ -140,12 +143,15 @@
             --accent-purple-glow: rgba(124, 77, 255, 0.25);
 
             /* Нижняя панель — светлая */
-            --nav-bg: rgba(255, 255, 255, 0.75);
+            --nav-bg: rgba(255, 255, 255, 0.92);
             --nav-indicator-bg: rgba(0, 0, 0, 0.08);
             --nav-icon-color: #1e293b;
             --nav-label-color: #1e293b;
             --nav-icon-active: #1e293b;
             --nav-label-active: #1e293b;
+
+            --light-btn-bg: #ffffff;
+            --light-btn-text: #1e293b;
         }
 
         /* ============================================================
@@ -201,7 +207,7 @@
             position: relative;
             overflow: hidden;
             min-height: 0;
-            padding-bottom: 86px; /* отступ под нижнюю панель */
+            padding-bottom: 100px;
         }
 
         .page {
@@ -215,7 +221,7 @@
             will-change: transform, opacity;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* скрываем полосу прокрутки */
+            scrollbar-width: none;
             -ms-overflow-style: none;
             background: transparent;
             backface-visibility: hidden;
@@ -315,14 +321,14 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            max-width: 480px;
+            max-width: 420px;
             margin: 0 auto;
             width: 100%;
             min-height: 0;
         }
 
         /* ============================================================
-           ОСТАЛЬНЫЕ СТИЛИ
+           ОСТАЛЬНЫЕ СТИЛИ (без изменений)
            ============================================================ */
         .settings-top,
         .servers-top {
@@ -764,7 +770,7 @@
             display: none;
         }
 
-        /* HEADER — убрана кнопка настроек, поднят логотип и кнопка планеты */
+        /* HEADER */
         .header {
             display: flex;
             justify-content: space-between;
@@ -831,14 +837,14 @@
             height: 28px;
         }
 
-        /* POWER BUTTON */
+        /* POWER BUTTON — переработанный цвет */
         .center {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 8px 0 6px;
             flex-shrink: 0;
-            margin-top: 20px;
+            margin-top: 16px;
         }
         .power-wrap {
             position: relative;
@@ -907,7 +913,7 @@
         }
         .power-wrap .ring-loader circle {
             fill: none;
-            stroke: var(--accent-primary);
+            stroke: var(--text-muted); /* серый в тёмной теме */
             stroke-width: 14;
             stroke-linecap: round;
             stroke-dasharray: 600 200;
@@ -925,13 +931,13 @@
         .power-wrap.loading .ring-loader {
             opacity: 1;
         }
-        /* Внутренний круг — цвет как у фона приложения (без синевы) */
+        /* Внутренний круг */
         .power-wrap .inner-circle {
             position: relative;
             width: 85%;
             height: 85%;
             border-radius: 50%;
-            background: var(--bg-app-end);
+            background: var(--bg-inner);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -999,22 +1005,22 @@
             opacity: 0 !important;
         }
 
-        /* INSTRUCTION */
+        /* INSTRUCTION — между кнопкой и статусом */
         .instruction {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 24px;
             flex-shrink: 0;
-            min-height: 56px;
+            min-height: 60px;
         }
         .instruction .status-container {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: 52px;
+            height: 56px;
             position: relative;
         }
         .instruction .status-container .label {
@@ -1315,6 +1321,27 @@
             stroke: var(--text-secondary);
         }
 
+        /* ===== СВЕТЛАЯ ТЕМА: кнопки "Добавить" и "QR-код" белые ===== */
+        [data-theme="light"] .big-btn.gray {
+            background: var(--light-btn-bg);
+            color: var(--light-btn-text);
+            border-color: rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        [data-theme="light"] .big-btn.gray svg {
+            stroke: var(--light-btn-text);
+        }
+        [data-theme="light"] .big-btn.gray:hover {
+            background: #f5f5f5;
+        }
+        .big-btn .bi {
+            font-size: 26px;
+            color: var(--text-secondary);
+        }
+        [data-theme="light"] .big-btn.gray .bi {
+            color: var(--light-btn-text);
+        }
+
         #fromBufferBtn.hidden {
             display: none;
         }
@@ -1484,8 +1511,7 @@
         }
 
         /* ============================================================
-           НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ — плотный фон, размытие, уменьшены боковые отступы,
-           увеличен вертикальный размер, опущена вниз (bottom: 0)
+           НИЖНЯЯ ПАНЕЛЬ — ЧУТЬ РАСТЯНУТА, ОПТИМАЛЬНЫЕ РАЗМЕРЫ
            ============================================================ */
         .bottom-nav {
             position: fixed;
@@ -1495,10 +1521,10 @@
             z-index: 50;
             display: flex;
             justify-content: center;
-            padding: 0 8px; /* минимальные отступы с боков */
+            padding: 0 16px 20px;
             background: transparent;
             pointer-events: none;
-            padding-bottom: env(safe-area-inset-bottom);
+            padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
         }
         .bottom-nav .nav-container {
             position: relative;
@@ -1506,48 +1532,50 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 80px;
-            padding: 10px 12px; /* увеличен вертикальный padding, уменьшен горизонтальный */
-            box-shadow: var(--shadow-nav);
+            padding: 8px 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
-            gap: 6px;
-            width: 100%;
-            max-width: 600px;
-            justify-content: space-around;
+            width: auto;
+            max-width: 640px; /* чуть шире */
+            margin: 0 auto;
+            justify-content: space-evenly;
             touch-action: none;
             pointer-events: auto;
             transition: background 0.3s, box-shadow 0.3s;
             border: 1px solid var(--border-subtle);
+            min-width: 340px;
         }
         .bottom-nav .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1px;
-            padding: 6px 10px;
+            gap: 4px;
+            padding: 6px 8px;
             border-radius: 60px;
             cursor: pointer;
             position: relative;
             z-index: 2;
-            min-width: 56px;
+            min-width: 70px;
+            flex: 1;
             touch-action: none;
             transition: transform 0.3s ease;
-            flex-shrink: 0;
             -webkit-tap-highlight-color: transparent;
+            text-align: center;
         }
         .bottom-nav .nav-item .icon {
-            font-size: 24px;
+            font-size: 28px; /* оптимальный размер */
             color: var(--nav-icon-color);
             line-height: 1;
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
         }
         .bottom-nav .nav-item.active .icon {
             color: var(--nav-icon-active);
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
         .bottom-nav .nav-item .label {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--nav-label-color);
             white-space: nowrap;
@@ -1567,8 +1595,8 @@
             pointer-events: none;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
             will-change: transform, width;
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                        width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .bottom-nav .indicator.no-transition {
             transition: none !important;
@@ -1576,45 +1604,44 @@
 
         @media (max-width: 500px) {
             .bottom-nav {
-                padding: 0 4px;
+                padding: 0 8px 20px;
             }
             .bottom-nav .nav-container {
                 border-radius: 60px;
-                padding: 8px 10px;
-                gap: 4px;
-                max-width: 100%;
+                padding: 6px 12px;
+                min-width: unset;
+                width: auto;
             }
             .bottom-nav .nav-item {
-                padding: 4px 8px;
-                min-width: 48px;
+                min-width: 60px;
+                padding: 4px 6px;
             }
             .bottom-nav .nav-item .icon {
-                font-size: 20px;
+                font-size: 24px;
             }
             .bottom-nav .nav-item .label {
-                font-size: 9px;
+                font-size: 11px;
             }
         }
 
         @media (max-width: 380px) {
             .bottom-nav .nav-item .icon {
-                font-size: 18px;
+                font-size: 20px;
             }
             .bottom-nav .nav-item .label {
-                font-size: 8px;
+                font-size: 10px;
             }
             .bottom-nav .nav-container {
-                padding: 6px 8px;
-                gap: 2px;
+                padding: 4px 10px;
             }
             .bottom-nav .nav-item {
-                min-width: 40px;
-                padding: 3px 6px;
+                min-width: 50px;
+                padding: 4px 4px;
             }
         }
 
         /* ============================================================
-           АДАПТИВ (остальное)
+           АДАПТИВ
            ============================================================ */
         @media (max-width: 600px) {
             .page {
@@ -1650,7 +1677,7 @@
                 font-size: 20px;
             }
             .instruction {
-                margin-top: 18px;
+                margin-top: 20px;
             }
             .server-container .country-name {
                 font-size: 20px;
@@ -1721,7 +1748,7 @@
             }
             .center {
                 padding: 4px 0 2px;
-                margin-top: 16px;
+                margin-top: 14px;
             }
             .server-container {
                 padding: 12px 16px;
@@ -1767,7 +1794,7 @@
                 padding: 14px 18px;
             }
             .pages-container {
-                padding-bottom: 78px;
+                padding-bottom: 100px;
             }
         }
 
@@ -1811,7 +1838,7 @@
                 font-size: 18px;
             }
             .instruction {
-                margin-top: 16px;
+                margin-top: 18px;
             }
             .server-stats-new {
                 gap: 10px;
@@ -1939,7 +1966,7 @@
             }
             .center {
                 padding: 2px 0 0;
-                margin-top: 14px;
+                margin-top: 12px;
             }
             .server-stats-header {
                 font-size: 13px;
@@ -1969,7 +1996,7 @@
                 padding: 12px 16px;
             }
             .pages-container {
-                padding-bottom: 72px;
+                padding-bottom: 94px;
             }
         }
 
@@ -2013,7 +2040,7 @@
                 height: 44px;
             }
             .instruction {
-                margin-top: 14px;
+                margin-top: 16px;
             }
             .server-container .country-name {
                 font-size: 16px;
@@ -2152,7 +2179,7 @@
             }
             .center {
                 padding: 0;
-                margin-top: 12px;
+                margin-top: 10px;
             }
             .server-stats-header {
                 font-size: 12px;
@@ -2205,7 +2232,7 @@
                 padding: 10px 14px;
             }
             .pages-container {
-                padding-bottom: 66px;
+                padding-bottom: 88px;
             }
         }
 
@@ -2324,44 +2351,7 @@
                             <span>Добавить</span>
                         </button>
                         <button id="qrBtn" class="big-btn gray" aria-label="QR-код">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
-                                <rect x="0.5" y="0.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
-                                <rect x="1.5" y="1.5" width="3" height="3" rx="0.3" fill="currentColor" />
-                                <rect x="18.5" y="0.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
-                                <rect x="19.5" y="1.5" width="3" height="3" rx="0.3" fill="currentColor" />
-                                <rect x="0.5" y="18.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
-                                <rect x="1.5" y="19.5" width="3" height="3" rx="0.3" fill="currentColor" />
-                                <rect x="18.5" y="18.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
-                                <rect x="19.5" y="19.5" width="3" height="3" rx="0.3" fill="currentColor" />
-                                <rect x="7" y="7" width="1" height="1" fill="currentColor" />
-                                <rect x="9" y="7" width="1" height="1" fill="currentColor" />
-                                <rect x="11" y="7" width="1" height="1" fill="currentColor" />
-                                <rect x="14" y="7" width="1" height="1" fill="currentColor" />
-                                <rect x="16" y="7" width="1" height="1" fill="currentColor" />
-                                <rect x="7" y="9" width="1" height="1" fill="currentColor" />
-                                <rect x="11" y="9" width="1" height="1" fill="currentColor" />
-                                <rect x="14" y="9" width="1" height="1" fill="currentColor" />
-                                <rect x="16" y="9" width="1" height="1" fill="currentColor" />
-                                <rect x="8" y="11" width="1" height="1" fill="currentColor" />
-                                <rect x="10" y="11" width="1" height="1" fill="currentColor" />
-                                <rect x="12" y="11" width="1" height="1" fill="currentColor" />
-                                <rect x="14" y="11" width="1" height="1" fill="currentColor" />
-                                <rect x="16" y="11" width="1" height="1" fill="currentColor" />
-                                <rect x="7" y="12" width="1" height="1" fill="currentColor" />
-                                <rect x="9" y="12" width="1" height="1" fill="currentColor" />
-                                <rect x="13" y="12" width="1" height="1" fill="currentColor" />
-                                <rect x="15" y="12" width="1" height="1" fill="currentColor" />
-                                <rect x="7" y="14" width="1" height="1" fill="currentColor" />
-                                <rect x="10" y="14" width="1" height="1" fill="currentColor" />
-                                <rect x="12" y="14" width="1" height="1" fill="currentColor" />
-                                <rect x="14" y="14" width="1" height="1" fill="currentColor" />
-                                <rect x="16" y="14" width="1" height="1" fill="currentColor" />
-                                <rect x="7" y="16" width="1" height="1" fill="currentColor" />
-                                <rect x="9" y="16" width="1" height="1" fill="currentColor" />
-                                <rect x="11" y="16" width="1" height="1" fill="currentColor" />
-                                <rect x="14" y="16" width="1" height="1" fill="currentColor" />
-                                <rect x="16" y="16" width="1" height="1" fill="currentColor" />
-                            </svg>
+                            <i class="bi bi-qr-code-scan"></i>
                             <span>QR-код</span>
                         </button>
                     </div>
@@ -2705,7 +2695,7 @@
 
         </div>
 
-        <!-- ===== НИЖНЯЯ ПАНЕЛЬ (плотный фон, размытие, опущена вниз) ===== -->
+        <!-- ===== НИЖНЯЯ ПАНЕЛЬ (ЧУТЬ РАСТЯНУТА) ===== -->
         <div class="bottom-nav">
             <div class="nav-container" id="navContainer">
                 <div class="indicator no-transition" id="indicator"></div>
@@ -2792,7 +2782,7 @@
         });
 
         // ============================================================
-        //  NAVIGATION: SETTINGS (через кнопку в хедере — её больше нет, но доступ через нижнюю панель)
+        //  NAVIGATION: SETTINGS
         // ============================================================
         const pageMain = document.getElementById('pageMain');
         const pageSettings = document.getElementById('pageSettings');
@@ -3176,7 +3166,7 @@
         });
 
         // ============================================================
-        //  НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ
+        //  НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ (обновлённая логика)
         // ============================================================
         const navContainer = document.getElementById('navContainer');
         const navItems = navContainer.querySelectorAll('.nav-item');
@@ -3203,7 +3193,7 @@
             const containerRect = navContainer.getBoundingClientRect();
             const targetRect = target.getBoundingClientRect();
             const targetWidth = target.offsetWidth;
-            const width = targetWidth * 0.85;
+            const width = targetWidth * 0.9;
             let leftOffset = (targetRect.left - containerRect.left) + (targetWidth - width) / 2;
             indicator.style.transform = `translateX(${leftOffset}px)`;
             indicator.style.width = width + 'px';
@@ -3246,6 +3236,7 @@
             });
         });
 
+        // Свайп для навигации
         let touchStartX = 0,
             touchStartY = 0;
         let isSwiping = false;
@@ -3326,7 +3317,8 @@
         document.querySelector('#providersToggle').classList.add('active');
         document.querySelector('#providersToggle').setAttribute('aria-checked', 'true');
 
-        console.log('🚀 Vex VPN v0.0.1 — все исправления применены');
+        console.log('🚀 Vex VPN v0.0.1 — финальная версия');
     </script>
 </body>
 </html>
+
