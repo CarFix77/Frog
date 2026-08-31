@@ -174,6 +174,45 @@
             fill: none;
         }
 
+        /* ===== СТИЛИ ДЛЯ НАТИВНОГО SELECT-МЕНЮ (вместо кнопки) ===== */
+        .menu-select-native {
+            background: transparent;
+            border: none;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            padding: 0;
+            cursor: pointer;
+            color: #7a84a0;
+            font-size: 0; /* скрываем текст */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237a84a0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='5' r='2'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Ccircle cx='12' cy='19' r='2'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 22px;
+            flex-shrink: 0;
+        }
+        .menu-select-native option {
+            font-size: 16px;
+            color: #000;
+            background: #fff;
+        }
+        /* адаптив для маленьких экранов */
+        @media (max-width: 480px) {
+            .menu-select-native {
+                width: 20px;
+                height: 20px;
+                background-size: 20px;
+            }
+        }
+        @media (max-width: 380px) {
+            .menu-select-native {
+                width: 18px;
+                height: 18px;
+                background-size: 18px;
+            }
+        }
+
         .auto-renew-text {
             font-size: 13px;
             font-weight: 500;
@@ -451,7 +490,7 @@
         .server-row.active {
             background: rgba(255, 255, 255, 0.10) !important;
             box-shadow: inset 4px 0 0 #ffffff;
-            cursor: pointer; /* чтобы было понятно, что по клику открывается picker */
+            cursor: pointer;
         }
         .server-row .entry-left {
             display: flex;
@@ -583,126 +622,9 @@
             color: #ff1744;
         }
 
-        /* ===== POPUP-МЕНЮ ===== */
-        .popup-menu {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            background: rgba(42, 42, 42, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 8px 0;
-            min-width: 280px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.92) translateY(-8px) translateX(0);
-            transition: opacity 0.25s cubic-bezier(0.32, 0.72, 0, 1),
-                transform 0.25s cubic-bezier(0.32, 0.72, 0, 1),
-                visibility 0.25s;
-            z-index: 100;
-            will-change: transform, opacity;
-        }
-        .popup-menu.active {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1) translateY(0) translateX(0);
-        }
-        .popup-menu .menu-header {
-            padding: 12px 24px 8px 24px;
-            font-size: 17px;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: 0.3px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.10);
-            margin-bottom: 4px;
-        }
-        .popup-menu .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            padding: 16px 24px;
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            cursor: pointer;
-            transition: background 0.15s ease;
-            white-space: nowrap;
-            opacity: 0;
-            transform: translateX(-12px);
-            transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
-        }
-        .popup-menu.active .menu-item {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .popup-menu.active .menu-item:nth-child(2) {
-            transition-delay: 0.03s;
-        }
-        .popup-menu.active .menu-item:nth-child(3) {
-            transition-delay: 0.06s;
-        }
-        .popup-menu.active .menu-item:nth-child(4) {
-            transition-delay: 0.09s;
-        }
-        .popup-menu.active .menu-item:nth-child(5) {
-            transition-delay: 0.12s;
-        }
-        .popup-menu.active .menu-item:nth-child(6) {
-            transition-delay: 0.15s;
-        }
-
-        .popup-menu .menu-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .popup-menu .menu-item .icon {
-            flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .popup-menu .menu-item .icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: #ffffff;
-            stroke-width: 2;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        .popup-menu .menu-item .label {
-            flex: 1;
-            color: #ffffff;
-        }
-        .popup-menu .menu-item.danger .label {
-            color: #ff453a;
-        }
-        .popup-menu .menu-item.danger .icon svg {
-            stroke: #ff453a;
-        }
-        .popup-menu .menu-item.danger:hover {
-            background: rgba(255, 69, 58, 0.12);
-        }
-        .popup-menu .divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.08);
-            margin: 6px 12px;
-            opacity: 0;
-            transition: opacity 0.2s 0.1s;
-        }
-        .popup-menu.active .divider {
-            opacity: 1;
-        }
-
         /* =============================================================
            ПОЛНОЭКРАННЫЙ РАЗДЕЛ НАСТРОЕК
            ============================================================= */
-
         .settings-overlay {
             display: none;
             position: fixed;
@@ -1418,22 +1340,6 @@
             .sub-row {
                 font-size: 12px;
             }
-            .popup-menu {
-                right: -6px;
-                min-width: 240px;
-            }
-            .popup-menu .menu-item {
-                font-size: 18px;
-                padding: 14px 20px;
-            }
-            .popup-menu .menu-header {
-                font-size: 16px;
-                padding: 10px 20px 6px;
-            }
-            .popup-menu .menu-item .icon svg {
-                width: 22px;
-                height: 22px;
-            }
             .settings-panel {
                 padding: 0;
                 max-width: 100%;
@@ -1583,14 +1489,6 @@
             .infinity-symbol {
                 font-size: 20px;
             }
-            .popup-menu {
-                min-width: 200px;
-                right: -4px;
-            }
-            .popup-menu .menu-item {
-                font-size: 16px;
-                padding: 12px 16px;
-            }
             .settings-panel {
                 padding: 0;
             }
@@ -1700,6 +1598,21 @@
                 opacity: 1;
             }
         }
+
+        /* ===== НАТИВНЫЙ SELECT ДЛЯ СЕРВЕРОВ (скрытый) ===== */
+        #nativeServerSelect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            pointer-events: auto;
+            overflow: hidden;
+            z-index: 999;
+            border: none;
+            background: transparent;
+        }
     </style>
 </head>
 <body>
@@ -1738,54 +1651,16 @@
                             <path d="M21 12a9 9 0 0 1-15 6.7L3 16" stroke="currentColor" />
                         </svg>
                     </button>
-                    <button class="icon-btn" id="menuBtn" aria-label="Меню">
-                        <svg viewBox="0 0 24 24">
-                            <circle cx="12" cy="5" r="2" stroke="currentColor" />
-                            <circle cx="12" cy="12" r="2" stroke="currentColor" />
-                            <circle cx="12" cy="19" r="2" stroke="currentColor" />
-                        </svg>
-                    </button>
 
-                    <div class="popup-menu" id="popupMenu">
-                        <div class="menu-header" id="popupMenuTitle">Ghost VPN</div>
-                        <div class="menu-item" data-action="settings">
-                            <span class="icon">
-                                <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
-                            </span>
-                            <span class="label">Настройки</span>
-                        </div>
-                        <div class="menu-item" data-action="share">
-                            <span class="icon">
-                                <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></svg>
-                            </span>
-                            <span class="label">Поделиться</span>
-                        </div>
-                        <div class="menu-item" data-action="copy">
-                            <span class="icon">
-                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-                            </span>
-                            <span class="label">Копировать URL</span>
-                        </div>
-                        <div class="menu-item" data-action="pin" id="pinMenuItem">
-                            <span class="icon">
-                                <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="12" y1="18" x2="12" y2="22" stroke-width="2.2" />
-                                    <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z" stroke-width="2" />
-                                </svg>
-                            </span>
-                            <span class="label" id="pinLabel">Закрепить</span>
-                        </div>
-                        <div class="divider"></div>
-                        <div class="menu-item danger" data-action="delete">
-                            <span class="icon">
-                                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18" />
-                                    <line x1="6" y1="6" x2="18" y2="18" />
-                                </svg>
-                            </span>
-                            <span class="label">Удалить</span>
-                        </div>
-                    </div>
+                    <!-- Нативный SELECT вместо кнопки меню -->
+                    <select id="menuSelect" class="menu-select-native" aria-label="Меню">
+                        <option value="">–– Меню ––</option>
+                        <option value="settings">⚙️ Настройки</option>
+                        <option value="share">📤 Поделиться</option>
+                        <option value="copy">📋 Копировать URL</option>
+                        <option value="pin">📌 Закрепить</option>
+                        <option value="delete">🗑️ Удалить</option>
+                    </select>
                 </div>
             </div>
 
@@ -1828,7 +1703,7 @@
         </div>
 
         <!-- Скрытый select для нативного выбора серверов (iOS жидкое стекло) -->
-        <select id="nativeServerSelect" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; overflow:hidden;"></select>
+        <select id="nativeServerSelect" style="position:absolute; opacity:0; pointer-events:auto; width:10px; height:10px; overflow:hidden; z-index:999; border:none; background:transparent;"></select>
 
     </div>
 
@@ -2251,7 +2126,9 @@
                 const pinIcon = document.getElementById('pinIcon');
                 pinIcon.classList.remove('visible', 'pinned');
                 isPinned = false;
-                document.getElementById('pinLabel').textContent = 'Закрепить';
+                // обновим текст пункта "Закрепить" в select
+                const pinOption = menuSelect.querySelector('option[value="pin"]');
+                if (pinOption) pinOption.text = '📌 Закрепить';
                 const updateEl = document.getElementById('updateTime');
                 if (updateEl) {
                     updateEl.innerHTML = `<span>Обновлено:</span> ${getCurrentTimeStr()}`;
@@ -2434,25 +2311,20 @@
             });
             container.innerHTML = html;
 
-            // Обработка клика по строке сервера — если клик по активному, открываем нативный picker
             document.querySelectorAll('.server-row').forEach(el => {
                 el.addEventListener('click', function() {
                     const index = parseInt(this.dataset.index);
                     if (index === selectedIndex) {
-                        // Клик по активному серверу — открываем picker
                         openNativePicker();
                         return;
                     }
-                    // Иначе просто меняем выделение
                     document.querySelectorAll('.server-row.active').forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
                     selectedIndex = index;
-                    // Синхронизируем select
                     nativeSelect.value = selectedIndex;
                 });
             });
 
-            // Синхронизируем select с текущим выбранным индексом
             if (nativeSelect) {
                 nativeSelect.value = selectedIndex;
             }
@@ -2567,7 +2439,6 @@
             });
         });
 
-        // Обработчик для нативного select
         if (sortSelect) {
             sortSelect.addEventListener('change', function() {
                 currentSort = this.value;
@@ -2575,7 +2446,6 @@
             });
         }
 
-        // Обработчик переключателя пинга — перерисовываем серверы
         pingToggle.addEventListener('change', function() {
             renderServers();
         });
@@ -2611,7 +2481,6 @@
             });
         });
 
-        // Синхронизация видимости
         visibilityToggle.addEventListener('change', function() {
             mainToggle.checked = this.checked;
         });
@@ -2644,7 +2513,6 @@
                 selectedIntervalValue = '60';
             }
 
-            // Синхронизация сортировки
             if (sortSelect) {
                 sortSelect.value = currentSort;
             }
@@ -2670,7 +2538,11 @@
             const newName = document.getElementById('settingsNameInput').value.trim() || 'Ghost VPN';
             document.getElementById('mainTitle').value = newName;
             document.getElementById('settingsMainTitle').textContent = newName;
-            document.getElementById('popupMenuTitle').textContent = newName;
+            // Обновим первую опцию меню (заголовок)
+            const menuSelect = document.getElementById('menuSelect');
+            if (menuSelect && menuSelect.options[0]) {
+                menuSelect.options[0].text = newName + ' (меню)';
+            }
             subscriptionData.title = newName;
 
             renderDetails();
@@ -2692,26 +2564,23 @@
         //  СИНХРОНИЗАЦИЯ ИМЕНИ
         // ============================================================
         const mainTitleInput = document.getElementById('mainTitle');
-        const popupMenuTitle = document.getElementById('popupMenuTitle');
-        const settingsMainTitle = document.getElementById('settingsMainTitle');
-        const settingsNameInput = document.getElementById('settingsNameInput');
 
         function syncTitle() {
             const val = mainTitleInput.value || 'Ghost VPN';
-            popupMenuTitle.textContent = val;
-            settingsMainTitle.textContent = val;
-            settingsNameInput.value = val;
+            const menuSelect = document.getElementById('menuSelect');
+            if (menuSelect && menuSelect.options[0]) {
+                menuSelect.options[0].text = val + ' (меню)';
+            }
             subscriptionData.title = val;
         }
 
         mainTitleInput.addEventListener('input', syncTitle);
 
         // ============================================================
-        //  НАТИВНЫЙ ПИКЕР (жидкое стекло для iOS)
+        //  НАТИВНЫЙ ПИКЕР ДЛЯ СЕРВЕРОВ
         // ============================================================
         const nativeSelect = document.getElementById('nativeServerSelect');
 
-        // Заполняем select опциями серверов
         servers.forEach((s, idx) => {
             const opt = document.createElement('option');
             opt.value = idx;
@@ -2719,26 +2588,79 @@
             nativeSelect.appendChild(opt);
         });
 
-        // Обработчик выбора в нативном picker
         nativeSelect.addEventListener('change', function() {
             const idx = parseInt(this.value);
             if (idx === selectedIndex) return;
             selectedIndex = idx;
-            renderServers(); // перерисовка обновит активный класс
+            renderServers();
             showToast(`Выбран сервер: ${servers[idx].name}`);
         });
 
-        // Функция открытия нативного picker (с жидким стеклом на iOS)
         function openNativePicker() {
-            nativeSelect.value = selectedIndex; // устанавливаем текущий выбранный
+            nativeSelect.value = selectedIndex;
             if (nativeSelect.showPicker) {
-                // iOS 15+ откроет picker с эффектом жидкого стекла
                 nativeSelect.showPicker();
             } else {
-                // Android и старые браузеры — обычный выпадающий список
                 nativeSelect.click();
             }
         }
+
+        // ============================================================
+        //  НАТИВНЫЙ ПИКЕР ДЛЯ МЕНЮ (теперь это просто select)
+        // ============================================================
+        const menuSelect = document.getElementById('menuSelect');
+
+        // Обработчик выбора пункта меню
+        menuSelect.addEventListener('change', function() {
+            const action = this.value;
+            if (!action) return; // выбрана заглушка
+
+            // Сбросим выбор, чтобы можно было повторно выбрать тот же пункт
+            this.value = '';
+
+            switch (action) {
+                case 'settings':
+                    openSettings();
+                    break;
+                case 'share':
+                    openShareModal();
+                    break;
+                case 'copy': {
+                    const link = 'https://ghostvpn.example.com/ref/abc123';
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(link).then(() => {
+                            showToast('Ссылка скопирована в буфер');
+                        }).catch(() => {
+                            copyFallback(link);
+                        });
+                    } else {
+                        copyFallback(link);
+                    }
+                    break;
+                }
+                case 'pin': {
+                    const pinIcon = document.getElementById('pinIcon');
+                    isPinned = !isPinned;
+                    if (isPinned) {
+                        pinIcon.classList.add('visible');
+                        pinIcon.classList.add('pinned');
+                        const pinOption = menuSelect.querySelector('option[value="pin"]');
+                        if (pinOption) pinOption.text = '📌 Открепить';
+                    } else {
+                        pinIcon.classList.remove('pinned');
+                        pinIcon.classList.remove('visible');
+                        const pinOption = menuSelect.querySelector('option[value="pin"]');
+                        if (pinOption) pinOption.text = '📌 Закрепить';
+                    }
+                    break;
+                }
+                case 'delete':
+                    if (confirm('Удалить подписку?')) alert('🗑️ Подписка удалена');
+                    break;
+                default:
+                    break;
+            }
+        });
 
         // ============================================================
         //  ИНИЦИАЛИЗАЦИЯ
@@ -2772,7 +2694,6 @@
                 toggleBtn.classList.remove('rotated');
             }
 
-            // ===== ОБНОВЛЕНИЕ (кнопка refresh) =====
             const refreshBtn = document.getElementById('refreshBtn');
             if (refreshBtn) {
                 refreshBtn.addEventListener('click', function() {
@@ -2796,84 +2717,10 @@
                 });
             }
 
-            // POPUP МЕНЮ
-            const menuBtn = document.getElementById('menuBtn');
-            const popup = document.getElementById('popupMenu');
-
-            function togglePopup(e) {
-                e.stopPropagation();
-                popup.classList.toggle('active');
-            }
-
-            function closePopup() {
-                popup.classList.remove('active');
-            }
-
-            if (menuBtn) {
-                menuBtn.addEventListener('click', togglePopup);
-            }
-
-            document.addEventListener('click', function(e) {
-                if (!popup.contains(e.target) && e.target !== menuBtn) {
-                    closePopup();
-                }
-            });
-
-            document.querySelectorAll('.popup-menu .menu-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    const action = this.dataset.action;
-                    closePopup();
-
-                    switch (action) {
-                        case 'settings':
-                            openSettings();
-                            break;
-                        case 'share':
-                            openShareModal();
-                            break;
-                        case 'copy': {
-                            const link = 'https://ghostvpn.example.com/ref/abc123';
-                            if (navigator.clipboard) {
-                                navigator.clipboard.writeText(link).then(() => {
-                                    showToast('Ссылка скопирована в буфер');
-                                }).catch(() => {
-                                    copyFallback(link);
-                                });
-                            } else {
-                                copyFallback(link);
-                            }
-                            break;
-                        }
-                        case 'pin': {
-                            const pinIcon = document.getElementById('pinIcon');
-                            const pinLabel = document.getElementById('pinLabel');
-                            isPinned = !isPinned;
-                            if (isPinned) {
-                                pinIcon.classList.add('visible');
-                                pinIcon.classList.add('pinned');
-                                pinLabel.textContent = 'Открепить';
-                            } else {
-                                pinIcon.classList.remove('pinned');
-                                pinIcon.classList.remove('visible');
-                                pinLabel.textContent = 'Закрепить';
-                            }
-                            break;
-                        }
-                        case 'delete':
-                            if (confirm('Удалить подписку?')) alert('🗑️ Подписка удалена');
-                            break;
-                        default:
-                            break;
-                    }
-                });
-            });
-
             const updateEl = document.getElementById('updateTime');
             if (updateEl) {
                 updateEl.innerHTML = `<span>Обновлено:</span> ${subscriptionData.lastUpdate || getCurrentTimeStr()}`;
             }
-
-            // При клике на активный сервер открывается нативный picker (обработчик уже в renderServers)
         }
 
         if (document.readyState === 'loading') {
